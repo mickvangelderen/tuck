@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Tuck.Mod;
@@ -32,53 +33,62 @@ internal sealed class Options
     public ScalarSetting ReturnHoldDuration { get; }
     public ScalarSetting BellHoldDuration { get; }
 
+    private readonly Func<string, object[], string> _localize;
+
+    public string Text(string key, params object[] args) => _localize(key, args);
+
     public Options(ModManifest manifest)
+        : this(manifest, (key, args) => ModHelper.GetLocalized(manifest.ID, key, args)) { }
+
+    internal Options(ModManifest manifest, Func<string, object[], string> localize)
     {
-        Pack = new KeyBinding(manifest, "pack_key", "Pack", KeyCode.G);
-        Scavenge = new KeyBinding(manifest, "scavenge_key", "Scavenge", KeyCode.Space);
-        Return = new KeyBinding(manifest, "return_key", "Return from night activity (hold)", KeyCode.R);
-        Shutters = new KeyBinding(manifest, "shutters_key", "Open/close shutters", KeyCode.C);
-        NightActivities = new KeyBinding(manifest, "night_activities_key", "Open night activities", KeyCode.Q);
-        DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", "Drag all matching items (hold)", KeyCode.LeftShift);
-        DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", "Drag entire inventory (hold)", KeyCode.LeftControl);
-        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", "Place dragged items in formation (hold)", KeyCode.LeftAlt);
+        // Localization loads after Init/OnEnable; only resolve inside display callbacks.
+        _localize = localize;
+        Pack = new KeyBinding(manifest, "pack_key", () => Text("pack"), KeyCode.G);
+        Scavenge = new KeyBinding(manifest, "scavenge_key", () => Text("scavenge"), KeyCode.Space);
+        Return = new KeyBinding(manifest, "return_key", () => Text("return_from_night_activity_hold"), KeyCode.R);
+        Shutters = new KeyBinding(manifest, "shutters_key", () => Text("open_close_shutters"), KeyCode.C);
+        NightActivities = new KeyBinding(manifest, "night_activities_key", () => Text("open_night_activities"), KeyCode.Q);
+        DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftShift);
+        DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
+        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftAlt);
         ScavengingLeaveWarningMinimumValue = new ScalarSetting(manifest,
-            "scavenging_leave_warning_minimum_value", "Scavenging warning threshold",
-            "Warn before returning from scavenging when items left behind are worth at least this many credits. Vanilla: 0. Disable: 1000.",
+            "scavenging_leave_warning_minimum_value", () => Text("scavenging_warning_threshold"),
+            () => Text("warn_before_returning_when_items_left_behind_are_worth"),
             defaultValue: 50f, min: 0f, max: 1000f, step: 10f,
-            valueText: value => value >= 1000f ? "Disabled" : $"{value:0}{GeneralHelper.CreditIcon(spaced: true)}");
+            valueText: value => value >= 1000f ? Text("disabled") : Text("x_credits", value, GeneralHelper.CreditIcon(spaced: true)));
         CenterBackpackSelection = new ToggleSetting(manifest,
-            "center_backpack_selection", "Center backpack selection menu",
-            "Center the backpack selection menu when opening night activities.", defaultValue: false);
+            "center_backpack_selection", () => Text("center_backpack_selection_menu"),
+            () => Text("center_the_backpack_selection_menu_when_opening_night_activities"), defaultValue: false);
         AppraisalFiftyButtons = new ToggleSetting(manifest,
-            "appraisal_fifty_buttons", "Appraisal ±50 buttons",
-            "Arrange +/-5, 10, 50 and 100 appraisal buttons in two rows above the estimate and send button.", defaultValue: false);
+            "appraisal_fifty_buttons", () => Text("appraisal_plus_minus_50_buttons"),
+            () => Text("arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button"), defaultValue: false);
         ChemFinisherBatches = new ToggleSetting(manifest,
-            "chem_finisher_batches", "Chem finisher batch buttons",
-            "Add 1, 5 and 20 batch buttons to the chem finisher. Turn off to restore its original controls.", defaultValue: false);
+            "chem_finisher_batches", () => Text("chem_finisher_batch_buttons"),
+            () => Text("add_1_5_and_20_batch_buttons_to_the_chem_finisher"), defaultValue: false);
         ReplaceFilters = new ToggleSetting(manifest,
-            "replace_filters", "Quick swap filters",
-            "Quickly swap filters by dragging a new filter onto the installed filter in an open filter slot. The removed filter must fit in the dragged filter's original space.", defaultValue: true);
+            "replace_filters", () => Text("quick_swap_filters"),
+            () => Text("quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter"), defaultValue: true);
         DiscardAppraisalSlips = new ToggleSetting(manifest,
-            "discard_appraisal_slips", "Auto-discard appraisal slips",
-            "Move newly received appraisal slips to the trash.", defaultValue: false);
+            "discard_appraisal_slips", () => Text("auto_discard_appraisal_slips"),
+            () => Text("move_newly_received_appraisal_slips_to_the_trash"), defaultValue: false);
         DiscardEventReceipts = new ToggleSetting(manifest,
-            "discard_event_receipts", "Auto-discard event receipts",
-            "Move newly received event receipts to the trash.", defaultValue: false);
+            "discard_event_receipts", () => Text("auto_discard_event_receipts"),
+            () => Text("move_newly_received_event_receipts_to_the_trash"), defaultValue: false);
         // Keep the existing config key; its value now represents occupied space rather than clear space.
         WorkspaceOccupiedPercent = new ScalarSetting(manifest,
-            "workspace_clear_percent", "Workspace warning threshold",
-            "Warn before going outside when more than this percentage of the workspace is occupied. Vanilla: 0%. Disable: 100%.",
+            "workspace_clear_percent", () => Text("workspace_warning_threshold"),
+            () => Text("warn_before_going_outside_when_more_than_this_percentage_of_the_workspace_is_occupied"),
             defaultValue: 40f, min: 0f, max: 100f, step: 5f,
-            valueText: value => value >= 100f ? "Disabled" : $"{value:0}%");
+            valueText: value => value >= 100f ? Text("disabled") : Text("x_percent", value));
         ReturnHoldDuration = new ScalarSetting(manifest,
-            "return_hold_duration", "Return hold duration",
-            "How long to hold the return key before releasing it to leave a night activity. Set to 0.0 s to return on key press.",
-            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => $"{value:0.0} s");
+            "return_hold_duration", () => Text("return_hold_duration"),
+            () => Text("how_long_to_hold_the_return_key"),
+            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
         BellHoldDuration = new ScalarSetting(manifest,
-            "bell_hold_duration", "Bell hold duration",
-            "How long to hold the bell button or key when the game's instant next customer setting is off and a customer is present. Set to 0.0 s for no hold.",
-            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => $"{value:0.0} s");
+            "bell_hold_duration", () => Text("bell_hold_duration"),
+            () => Text("how_long_to_hold_the_bell_button_or_key"),
+            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
     }
 
     public void Register()

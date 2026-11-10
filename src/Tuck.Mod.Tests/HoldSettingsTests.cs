@@ -18,7 +18,9 @@ public class HoldSettingsTests : IDisposable
         _config = (ModConfig)Activator.CreateInstance(typeof(ModConfig), BindingFlags.Instance | BindingFlags.NonPublic,
             binder: null, args: [_modId], culture: null)!;
         Configs.Add(_modId, _config);
-        _options = new Options(new ModManifest { ID = _modId, Name = "Tuck" });
+        var english = LocalizationTests.ReadEnglish();
+        _options = new Options(new ModManifest { ID = _modId, Name = "Tuck" },
+            (key, args) => string.Format(english[key], args));
         _options.ReturnHoldDuration.Register();
         _options.BellHoldDuration.Register();
     }

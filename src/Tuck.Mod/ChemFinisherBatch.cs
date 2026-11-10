@@ -68,7 +68,7 @@ internal static class ChemFinisherBatch
                 || stack.elements.Count != 4 || stack.elements[2] is not MachineryText status
                 || stack.elements[3] is not MachineryButton original
                 || original.isHidden) continue;
-            Controls.Add(ChemFinisherControls.Install(machine, input, output, stack, original, status));
+            Controls.Add(ChemFinisherControls.Install(machine, input, output, stack, original, status, _options!));
             break;
         }
     }

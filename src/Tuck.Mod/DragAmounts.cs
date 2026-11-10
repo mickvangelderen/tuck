@@ -40,12 +40,13 @@ internal static class DragAmounts
     private static Vector2 HomePosition(GameItemElement item) =>
         RenderHandler.current.overlayRoot.rectTransform.InverseTransformPoint(item.GetRotatorCenteredPosition());
 
-    [HarmonyPrefix, HarmonyPatch(typeof(ItemMultiSelectHandler), "IsPreciseModifierHeld")]
-    private static bool PreciseModifier(ref bool __result)
+    [HarmonyPostfix, HarmonyPatch(typeof(ItemMultiSelectHandler), "IsPreciseModifierHeld")]
+    private static void PreciseModifier(ref bool __result)
     {
-        if (_options == null) return true;
-        __result = Held(_options.DragPrecisePlacement);
-        return false;
+        if (_options == null) return;
+        // Leave vanilla and other mods' result alone unless a binding needs to override it.
+        if (Held(_options.DragPrecisePlacement)) __result = true;
+        else if (_options.DragAllMatching.Key != KeyCode.None) __result = false;
     }
 
     // Run before release dispatch as well as mouse movement: a stationary key change,

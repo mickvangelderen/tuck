@@ -59,6 +59,8 @@
     <None Include="@(TuckSprite)" Link="assets\tuck\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="manifest.xml" CopyToOutputDirectory="PreserveNewest" />
     <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
+    <TuckLocalization Include="Localization\*.csv" />
+    <None Update="@(TuckLocalization)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
@@ -84,6 +86,8 @@
     <Copy SourceFiles="@(_ModFiles)" DestinationFolder="$(ModStagingDir)" />
     <Copy SourceFiles="@(TuckSprite->'$(TargetDir)assets\tuck\%(Filename)%(Extension)')"
           DestinationFolder="$(ModStagingDir)assets\tuck\" />
+    <Copy SourceFiles="@(TuckLocalization->'$(TargetDir)Localization\%(Filename)%(Extension)')"
+          DestinationFolder="$(ModStagingDir)Localization\" />
   </Target>
 
   <Target Name="Package" DependsOnTargets="StageMod">

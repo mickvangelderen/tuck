@@ -1,0 +1,40 @@
+# English fallback. Keep keys and numbered placeholders unchanged in translations.
+# Values use string.Format; no Smart String or plural syntax.
+pack,Pack
+scavenge,Scavenge
+return_from_night_activity_hold,Return from night activity (hold)
+open_close_shutters,Open/close shutters
+open_night_activities,Open night activities
+drag_all_matching_items_hold,Drag all matching items (hold)
+drag_entire_inventory_hold,Drag entire inventory (hold)
+place_dragged_items_in_formation_hold,Place dragged items in formation (hold)
+scavenging_warning_threshold,Scavenging warning threshold
+warn_before_returning_when_items_left_behind_are_worth,Warn before returning from scavenging when items left behind are worth at least this many credits. Vanilla: 0. Disable: 1000.
+center_backpack_selection_menu,Center backpack selection menu
+center_the_backpack_selection_menu_when_opening_night_activities,Center the backpack selection menu when opening night activities.
+appraisal_plus_minus_50_buttons,Appraisal ±50 buttons
+arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button,"Arrange +/-5, 10, 50 and 100 appraisal buttons in two rows above the estimate and send button."
+chem_finisher_batch_buttons,Chem finisher batch buttons
+add_1_5_and_20_batch_buttons_to_the_chem_finisher,"Add 1, 5 and 20 batch buttons to the chem finisher. Turn off to restore its original controls."
+quick_swap_filters,Quick swap filters
+quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter,Quickly swap filters by dragging a new filter onto the installed filter in an open filter slot. The removed filter must fit in the dragged filter's original space.
+auto_discard_appraisal_slips,Auto-discard appraisal slips
+move_newly_received_appraisal_slips_to_the_trash,Move newly received appraisal slips to the trash.
+auto_discard_event_receipts,Auto-discard event receipts
+move_newly_received_event_receipts_to_the_trash,Move newly received event receipts to the trash.
+workspace_warning_threshold,Workspace warning threshold
+warn_before_going_outside_when_more_than_this_percentage_of_the_workspace_is_occupied,Warn before going outside when more than this percentage of the workspace is occupied. Vanilla: 0%. Disable: 100%.
+return_hold_duration,Return hold duration
+how_long_to_hold_the_return_key,How long to hold the return key before releasing it to leave a night activity. Set to 0.0 s to return on key press.
+bell_hold_duration,Bell hold duration
+how_long_to_hold_the_bell_button_or_key,How long to hold the bell button or key when the game's instant next customer setting is off and a customer is present. Set to 0.0 s for no hold.
+disabled,Disabled
+x_credits,{0:0}{1}
+x_percent,{0:0}%
+x_seconds,{0:0.0} s
+printing_x_of_y,Printing {0}/{1}
+youre_leaving_that_theres_room_watch,Tuck: You’re leaving that? There’s room. Watch.
+you_bought_all_this_without_checking_the_bag,Tuck: You bought all this without checking the bag?
+heavy_things_at_the_bottom_weve_been_over_this,Tuck: Heavy things at the bottom. We’ve been over this.
+let_me_see_what_fits,Tuck: Let me see what fits.
+text_with_key_hint,{0} {1}

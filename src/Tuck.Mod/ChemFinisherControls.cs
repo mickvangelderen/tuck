@@ -5,6 +5,7 @@ namespace Tuck.Mod;
 internal sealed class ChemFinisherControls : MonoBehaviour
 {
     private GameItem _machine = null!;
+    private Options _options = null!;
     private GameSlotInventory _input = null!;
     private GameGridInventory _output = null!;
     private MachineryStack _stack = null!;
@@ -18,10 +19,11 @@ internal sealed class ChemFinisherControls : MonoBehaviour
     private float _nextRefresh;
 
     internal static ChemFinisherControls Install(GameItem machine, GameSlotInventory input,
-        GameGridInventory output, MachineryStack stack, MachineryButton original, MachineryText status)
+        GameGridInventory output, MachineryStack stack, MachineryButton original, MachineryText status, Options options)
     {
         var controls = machine.contentWindow.handler.gameObject.AddComponent<ChemFinisherControls>();
         controls._machine = machine;
+        controls._options = options;
         controls._input = input;
         controls._output = output;
         controls._stack = stack;
@@ -112,7 +114,7 @@ internal sealed class ChemFinisherControls : MonoBehaviour
     {
         string value;
         if (_queue.State == ChemPrintQueue.PrintState.Printing)
-            value = $"Printing {_queue.Completed}/{_queue.Total}";
+            value = _options.Text("printing_x_of_y", _queue.Completed, _queue.Total);
         else if (_recipe == null)
             value = LocHelper.GetLocalizedMechanic("mech_chem_finisher_status_no_target");
         else if (MachineChemFinisher.CanOutput(_machine, _input))

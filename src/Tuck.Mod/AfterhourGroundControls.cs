@@ -23,15 +23,16 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
 
     public string PackTooltip()
     {
-        var line = MapUIManager.Instance?.Current?.Id switch
+        var key = MapUIManager.Instance?.Current?.Id switch
         {
-            "dumping_ground" => "You’re leaving that? There’s room. Watch.",
-            "commissary" => "You bought all this without checking the bag?",
-            "dr_jackson" => "Heavy things at the bottom. We’ve been over this.",
-            _ => "Let me see what fits."
+            "dumping_ground" => "youre_leaving_that_theres_room_watch",
+            "commissary" => "you_bought_all_this_without_checking_the_bag",
+            "dr_jackson" => "heavy_things_at_the_bottom_weve_been_over_this",
+            _ => "let_me_see_what_fits"
         };
         var hint = _options.Pack.Format();
-        return $"Tuck: {line}" + (hint.Length == 0 ? "" : $" {hint}");
+        var line = _options.Text(key);
+        return hint.Length == 0 ? line : _options.Text("text_with_key_hint", line, hint);
     }
 
     // The old column inherited the Ground window's visibility. The scene object must check it explicitly.

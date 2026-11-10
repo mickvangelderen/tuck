@@ -9,15 +9,15 @@ internal sealed class KeyBinding
     // Stored as the key name rather than an enum so the Mods settings window shows a text field, not ~300 keys.
     private readonly ConfigEntry<string> _setting;
     // The Options menu mixes our rows with the game's, so it gets the mod name; the Mods settings window doesn't need it.
-    private readonly string _menuLabel;
+    private readonly Func<string> _menuLabel;
 
     public KeyCode Key { get; private set; }
     public event Action? Changed;
 
-    public KeyBinding(ModManifest manifest, string id, string label, KeyCode defaultKey = KeyCode.None)
+    public KeyBinding(ModManifest manifest, string id, Func<string> label, KeyCode defaultKey = KeyCode.None)
     {
-        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultKey.ToString(), "Keybind", () => label);
-        _menuLabel = Options.FormatMenuLabel(manifest, label);
+        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultKey.ToString(), "Keybind", label);
+        _menuLabel = () => Options.FormatMenuLabel(manifest, label());
         Key = Parse();
         _setting.OnChanged += _ =>
         {
@@ -32,7 +32,7 @@ internal sealed class KeyBinding
     {
         ModHelper.AddGameOptionKeyBind(
             _setting.Config.ModId, ModHelper.OPTION_SECTION_KEYBIND, _setting.Key,
-            () => _menuLabel,
+            _menuLabel,
             () => Key,
             key => _setting.Set(key.ToString()));
     }

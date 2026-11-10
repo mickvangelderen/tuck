@@ -6,21 +6,21 @@ namespace Tuck.Mod;
 internal sealed class ScalarSetting
 {
     private readonly ConfigEntry<float> _setting;
-    private readonly string _menuLabel;
+    private readonly Func<string> _menuLabel;
     private readonly float _step;
     private readonly Func<float, string>? _valueText;
 
     public float Value => Snap(float.IsNaN(_setting.Value) ? _setting.Default : _setting.Value);
 
-    public ScalarSetting(ModManifest manifest, string id, string label, string tooltip,
+    public ScalarSetting(ModManifest manifest, string id, Func<string> label, Func<string> tooltip,
         float defaultValue, float min, float max, float step = 0f, Func<float, string>? valueText = null)
     {
         if (step < 0f || float.IsNaN(step) || float.IsInfinity(step))
             throw new ArgumentOutOfRangeException(nameof(step));
         _step = step;
-        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultValue, "Gameplay", () => label,
-            min, max, () => tooltip);
-        _menuLabel = Options.FormatMenuLabel(manifest, label);
+        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultValue, "Gameplay", label,
+            min, max, tooltip);
+        _menuLabel = () => Options.FormatMenuLabel(manifest, label());
         _valueText = valueText;
     }
 
@@ -28,7 +28,7 @@ internal sealed class ScalarSetting
     {
         ModHelper.AddGameOptionSlider(
             _setting.Config.ModId, ModHelper.OPTION_SECTION_GAMEPLAY, _setting.Key,
-            () => _menuLabel,
+            _menuLabel,
             () => ToSlider(Value),
             value => _setting.Set(FromSlider(value)),
             ToSlider(_setting.Min), ToSlider(_setting.Max), _step > 0f, _setting.Tooltip,
