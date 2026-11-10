@@ -10,6 +10,12 @@ description: Knowledge useful when developing mods for Probably Stolen. Use when
 The game loads mods once, at launch: for each enabled mod, `ModLoader` calls `Init` and then immediately `OnEnable`.
 Enabling a mod in the main-menu Mods screen only takes effect after a restart.
 
+## Asset reads during startup
+
+During `Init` and `OnEnable`, the game has not yet associated your mod ID with the directory containing `manifest.xml` and the mod's DLLs.
+Consequently, `ModHelper.ReadModFileText` and `ReadModFileBytes` fail with `Unknown mod`, even when the files exist.
+Read packaged files after `ModHook.OnModAssetsLoaded` fires for your mod.
+
 ## Localization
 
 Name keys after the English phrases in `snake_case` so call sites convey their meaning. Shorten long text to distinctive phrases, and keep keys stable across minor wording edits.
