@@ -23,6 +23,7 @@ links at the bottom once the corresponding Git tags exist.
 
 - Interactions that have a tooltip and keybinding now display their associated hotkey in the tooltip.
   This feature can be toggled through the options.
+- Water filter swaps now try rotations and nearby positions to fit the removed filter back into your inventory.
 
 ## [1.0.0] - 2026-11-09
 
