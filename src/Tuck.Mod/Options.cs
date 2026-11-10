@@ -22,6 +22,7 @@ internal sealed class Options
     public KeyBinding DragAllMatching { get; }
     public KeyBinding DragEntireInventory { get; }
     public KeyBinding DragPrecisePlacement { get; }
+    public ToggleSetting ShowHotkeysInTooltips { get; }
     public ScalarSetting ScavengingLeaveWarningMinimumValue { get; }
     public ToggleSetting CenterBackpackSelection { get; }
     public ToggleSetting AppraisalFiftyButtons { get; }
@@ -52,6 +53,9 @@ internal sealed class Options
         DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftShift);
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
         DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftAlt);
+        ShowHotkeysInTooltips = new ToggleSetting(manifest,
+            "show_hotkeys_in_tooltips", () => Text("show_hotkeys_in_tooltips"),
+            () => Text("show_current_hotkeys_in_action_tooltips"), defaultValue: true);
         ScavengingLeaveWarningMinimumValue = new ScalarSetting(manifest,
             "scavenging_leave_warning_minimum_value", () => Text("scavenging_warning_threshold"),
             () => Text("warn_before_returning_when_items_left_behind_are_worth"),
@@ -103,6 +107,7 @@ internal sealed class Options
         DragAllMatching.Register();
         DragEntireInventory.Register();
         DragPrecisePlacement.Register();
+        ShowHotkeysInTooltips.Register();
         ScavengingLeaveWarningMinimumValue.Register();
         CenterBackpackSelection.Register();
         AppraisalFiftyButtons.Register();
@@ -127,6 +132,7 @@ internal sealed class Options
         AppraisalFiftyButtons.Unregister();
         CenterBackpackSelection.Unregister();
         ScavengingLeaveWarningMinimumValue.Unregister();
+        ShowHotkeysInTooltips.Unregister();
         DragPrecisePlacement.Unregister();
         DragEntireInventory.Unregister();
         DragAllMatching.Unregister();

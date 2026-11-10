@@ -30,9 +30,8 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
             "dr_jackson" => "heavy_things_at_the_bottom_weve_been_over_this",
             _ => "let_me_see_what_fits"
         };
-        var hint = _options.Pack.Format();
         var line = _options.Text(key);
-        return hint.Length == 0 ? line : _options.Text("text_with_key_hint", line, hint);
+        return HotkeyTooltips.AppendHint(_options, line, _options.Pack.Key);
     }
 
     // The old column inherited the Ground window's visibility. The scene object must check it explicitly.

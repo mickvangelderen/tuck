@@ -21,6 +21,9 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+- Interactions that have a tooltip and keybinding now display their associated hotkey in the tooltip.
+  This feature can be toggled through the options.
+
 ## [1.0.0] - 2026-11-09
 
 Initial public release.
