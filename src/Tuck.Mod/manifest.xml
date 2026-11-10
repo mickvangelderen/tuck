@@ -2,9 +2,13 @@
 <Manifest>
   <ID>tuck</ID>
   <Name>Tuck</Name>
-  <Author>mick</Author>
-  <ModVersion />
-  <Description>Quality of life mod for night activity packing, keybindings, and more!</Description>
+  <Author>Mick van Gelderen</Author>
+  <ModVersion>1.0.0</ModVersion>
+  <Description>Love Probably Stolen, but tired of the repetitive clicking? Give your hands a break with Tuck, your one-stop quality-of-life mod.
+
+Pack your loot, move items in bulk, appraise goods, and run the chem finisher with fewer clicks and less fuss. You've got a shop to run.
+
+Named after Tuck, the helpful rat who fits more loot into your bags. Small paws, big ambitions.Quality of life mod for night activity packing, keybindings, and more!</Description>
   <GameVersions>
     <Version />
   </GameVersions>
