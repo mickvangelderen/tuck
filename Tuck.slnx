@@ -8,4 +8,8 @@
     <Project Path="src/Tuck.ProbablyStolenTestModel/Tuck.ProbablyStolenTestModel.csproj" />
     <Project Path="src/Tuck.ProbablyStolenTestModel.Tests/Tuck.ProbablyStolenTestModel.Tests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/ReadGameVersion/ReadGameVersion.csproj" />
+    <Project Path="tools/WorkshopImageUpload/WorkshopImageUpload.csproj" />
+  </Folder>
 </Solution>

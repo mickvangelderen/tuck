@@ -5,7 +5,9 @@
   <Author>mick</Author>
   <ModVersion />
   <Description>Quality of life mod for night activity packing, keybindings, and more!</Description>
-  <GameVersions />
+  <GameVersions>
+    <Version />
+  </GameVersions>
   <Prerequisites />
   <Assemblies>
     <Assembly>Tuck.PackSolver.dll</Assembly>

@@ -17,7 +17,10 @@ New-Item -ItemType Directory -Path (Split-Path $dependencyDir) -Force | Out-Null
 $hadPrevious = $true
 try { [IO.Directory]::Move($dependencyDir, $oldDependencyDir) }
 catch [IO.DirectoryNotFoundException] { $hadPrevious = $false }
-catch [IO.IOException] {
+catch [IO.IOException], [UnauthorizedAccessException] {
+    if (($_.Exception.HResult -band 0xFFFF) -in @(5, 32, 33)) {
+        throw "Cannot rename '$dependencyDir'. Close VS Code and other programs watching or using this folder, then rerun fetch.ps1 from an external terminal. Existing dependencies have not been changed."
+    }
     if ($_.Exception.HResult -ne 0x800700B7) { throw } # ERROR_ALREADY_EXISTS
     throw "'$oldDependencyDir' exists from an interrupted fetch; restore or delete it first."
 }
@@ -30,6 +33,17 @@ try {
     New-Item -ItemType Directory -Path $assembliesDir -Force | Out-Null
     Write-Host "Copying game assemblies from $managedDir..."
     Get-ChildItem -LiteralPath $managedDir -Filter '*.dll' -File | Copy-Item -Destination $assembliesDir
+
+    # Capture Application.version from the same installation as the assemblies.
+    $gameSettingsPath = Join-Path $GameDir 'Probably Stolen_Data/globalgamemanagers'
+    $gameVersionPath = Join-Path $dependencyDir 'game-version.txt'
+    # Player builds strip type trees; pin the definitions used to read PlayerSettings.
+    $classDataPath = Join-Path $dependencyDir 'unity-classdata.tpk'
+    Write-Host 'Fetching Unity class definitions...'
+    $classData = Invoke-RestMethod -Uri 'https://api.github.com/repos/nesrak1/UABEA/git/blobs/a68aff1288d95bd6a58ec6ad99813ea9c59e0abc'
+    [IO.File]::WriteAllBytes($classDataPath, [Convert]::FromBase64String($classData.content))
+    dotnet run --project "$PSScriptRoot/tools/ReadGameVersion" -- $gameSettingsPath $classDataPath $gameVersionPath
+    if ($LASTEXITCODE -ne 0) { throw "Game version extraction failed (exit $LASTEXITCODE)." }
 
     # Decompile assembly.
     $assemblyPath = Join-Path $assembliesDir 'Assembly-CSharp.dll'

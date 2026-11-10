@@ -1,4 +1,8 @@
 {
+  "files.watcherExclude": {
+    "**/artifacts/**": true,
+    "**/dependencies/**": true
+  },
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.formatOnSave": true

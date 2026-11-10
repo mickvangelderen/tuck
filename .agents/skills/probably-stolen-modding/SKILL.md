@@ -10,6 +10,10 @@ description: Knowledge useful when developing mods for Probably Stolen. Use when
 The game loads mods once, at launch: for each enabled mod, `ModLoader` calls `Init` and then immediately `OnEnable`.
 Enabling a mod in the main-menu Mods screen only takes effect after a restart.
 
+## Localization
+
+Name keys after the English phrases in `snake_case` so call sites convey their meaning. Shorten long text to distinctive phrases, and keep keys stable across minor wording edits.
+
 ## Exceptions in input callbacks
 
 Exceptions thrown during input handling can leave a button selected or pressed. Let them propagate rather than catching them or adding cleanup to fix the button state: the mod has no meaningful way to recover from arbitrary errors.

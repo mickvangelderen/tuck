@@ -2,8 +2,13 @@
 .SYNOPSIS
 Builds and publishes Tuck to Steam Workshop.
 .DESCRIPTION
-The description is generated from README.md as Steam BBCode, omitting images
-and local link destinations. Edit workshop.template.vdf for the title, change
+The description is generated from README.md as Steam BBCode. Referenced images
+are uploaded once under content-hash filenames and reused from Steam thereafter.
+Keep the Steam desktop client online as the Workshop item's owner for media uploads.
+PrepareOnly builds an offline text-only preview and never uploads images.
+For a new item (publishedfileid 0), the first publish creates the item; publish
+again to include images once it has an ID. Local link destinations are omitted.
+Edit workshop.template.vdf for the title, change
 note, and visibility (2 = private, 0 = public). The generated VDF and a readable
 description.txt live under Git-ignored artifacts/workshop/.
 SteamCMD prompts for authentication; credentials are never stored in the VDF.
@@ -79,10 +84,6 @@ if (-not $PrepareOnly) {
 }
 
 New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
-dotnet run --file (Join-Path $PSScriptRoot 'tools/WorkshopDescription.cs') -- (Join-Path $PSScriptRoot 'README.md') $descriptionPath
-if ($LASTEXITCODE -ne 0) { throw 'README to Steam BBCode conversion failed.' }
-$description = [IO.File]::ReadAllText($descriptionPath).TrimEnd()
-
 $project = Join-Path $PSScriptRoot 'src/Tuck.Mod/Tuck.Mod.csproj'
 dotnet build $project -c Release -t:Package
 if ($LASTEXITCODE -ne 0) { throw "Release packaging failed (exit $LASTEXITCODE)." }
@@ -98,6 +99,21 @@ if (-not (Test-Path -LiteralPath (Join-Path $contentFolder 'manifest.xml') -Path
 foreach ($placeholder in '{{CONTENT_FOLDER}}', '{{PREVIEW_FILE}}', '{{DESCRIPTION}}') {
     if (-not $template.Contains($placeholder)) { throw "Template is missing $placeholder." }
 }
+
+# Resolve the README's own image references while materializing the description.
+# Steam holds the hash-filename -> URL index; no local media registry is maintained.
+$descriptionArgs = @('description', (Join-Path $PSScriptRoot 'README.md'), $descriptionPath)
+$workshopId = Get-WorkshopId $template
+if (-not $PrepareOnly -and $workshopId -ne '0') {
+    $descriptionArgs += $workshopId
+}
+elseif (-not $PrepareOnly) {
+    Write-Host 'Creating the Workshop item without inline images. Publish again after its ID is saved to include them.'
+}
+dotnet run --project (Join-Path $PSScriptRoot 'tools/WorkshopImageUpload') -- @descriptionArgs
+if ($LASTEXITCODE -ne 0) { throw 'README media resolution or Steam BBCode conversion failed.' }
+$description = [IO.File]::ReadAllText($descriptionPath).TrimEnd()
+
 $vdf = $template.Replace('{{CONTENT_FOLDER}}', (ConvertTo-VdfString $contentFolder)).Replace('{{PREVIEW_FILE}}', (ConvertTo-VdfString $previewFile)).Replace('{{DESCRIPTION}}', (ConvertTo-VdfString $description))
 [IO.File]::WriteAllText($vdfPath, $vdf, $utf8)
 Write-Host "Prepared $vdfPath"
