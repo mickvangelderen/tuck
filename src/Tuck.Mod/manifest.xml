@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>tuck</ID>
+  <Name>Tuck</Name>
+  <Author>mick</Author>
+  <ModVersion />
+  <Description>Quality of life mod for night activity packing, keybindings, and more!</Description>
+  <GameVersions />
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>Tuck.PackSolver.dll</Assembly>
+    <Assembly>Tuck.Mod.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>

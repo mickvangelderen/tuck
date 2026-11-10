@@ -1,0 +1,112 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>0.1.0</Version>
+    <Copyright>Copyright (c) 2026 Mick van Gelderen</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IsPackable>false</IsPackable>
+    <GameAssembliesDir>$(MSBuildProjectDirectory)\..\..\dependencies\probably-stolen\assemblies</GameAssembliesDir>
+    <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
+    <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
+  </PropertyGroup>
+
+  <!-- Keep recording code out of Release and every other non-Debug configuration. -->
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <Compile Remove="DebugRecording\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Reference Include="Newtonsoft.Json" HintPath="$(GameAssembliesDir)\Newtonsoft.Json.dll" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tuck.Mod.Tests" />
+    <ProjectReference Include="..\Tuck.PackSolver\Tuck.PackSolver.csproj" />
+    <Reference Include="0Harmony">
+      <HintPath>$(GameAssembliesDir)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(GameAssembliesDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameAssembliesDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(GameAssembliesDir)\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(GameAssembliesDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(GameAssembliesDir)\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(GameAssembliesDir)\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(GameAssembliesDir)\UnityEngine.ImageConversionModule.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(GameAssembliesDir)\Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="UnityEngine.Physics2DModule" HintPath="$(GameAssembliesDir)\UnityEngine.Physics2DModule.dll" Private="false" />
+    <TuckSprite Include="..\..\assets\tuck\rail-walk.png;..\..\assets\tuck\hang.png;..\..\assets\tuck\hang-mask.png;..\..\assets\tuck\hang-wire.png;..\..\assets\tuck\stand.png" />
+    <None Include="@(TuckSprite)" Link="assets\tuck\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="manifest.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="ValidateGameReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(GameAssembliesDir)\Assembly-CSharp.dll')"
+           Text="Game dependency is missing. Run fetch.ps1 with your game installation folder first." />
+  </Target>
+
+  <Target Name="UpdateModManifest" AfterTargets="Build">
+    <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/ModVersion" Value="$(Version)" />
+  </Target>
+
+  <Target Name="StageMod" DependsOnTargets="Build">
+    <PropertyGroup>
+      <ModStagingDir>$(TargetDir)mod\</ModStagingDir>
+      <ModPackageDir>$(TargetDir)packages\</ModPackageDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(ModStagingDir)" />
+    <ItemGroup>
+      <_ModFiles Include="$(TargetPath);$(TargetDir)Tuck.PackSolver.dll;$(TargetDir)manifest.xml;$(TargetDir)preview.png;$(TargetDir)LICENSE;$(TargetDir)THIRD-PARTY-NOTICES.txt" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_ModFiles)" DestinationFolder="$(ModStagingDir)" />
+    <Copy SourceFiles="@(TuckSprite->'$(TargetDir)assets\tuck\%(Filename)%(Extension)')"
+          DestinationFolder="$(ModStagingDir)assets\tuck\" />
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="StageMod">
+    <PropertyGroup>
+      <ModArchive>$(ModPackageDir)Tuck-$(Version)-$(Configuration).zip</ModArchive>
+    </PropertyGroup>
+    <MakeDir Directories="$(ModPackageDir)" />
+    <ZipDirectory SourceDirectory="$(ModStagingDir)" DestinationFile="$(ModArchive)" Overwrite="true" />
+    <Message Importance="high" Text="Packaged $(ModArchive)" />
+  </Target>
+
+  <Target Name="Deploy" DependsOnTargets="StageMod">
+    <Error Condition="'$(GameDir)' == '' Or !Exists('$(GameDir)\Probably Stolen.exe')"
+           Text="Game installation not found. Pass -p:GameDir=&quot;path to Probably Stolen&quot;." />
+    <PropertyGroup>
+      <ModInstallDir>$([MSBuild]::NormalizeDirectory('$(GameDir)', 'Mods', 'Tuck'))</ModInstallDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <_StagedModFiles Include="$(ModStagingDir)**\*" />
+    </ItemGroup>
+    <RemoveDir Directories="$(ModInstallDir)" />
+    <Copy SourceFiles="@(_StagedModFiles)"
+          DestinationFiles="@(_StagedModFiles->'$(ModInstallDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Deployed to $(ModInstallDir)" />
+  </Target>
+</Project>

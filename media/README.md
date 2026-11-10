@@ -1,0 +1,1 @@
+Media used in documentation.

@@ -1,0 +1,4787 @@
+{
+  "capturedUtc": "2026-11-09T04:08:27.2192294Z",
+  "commissary": null,
+  "complete": true,
+  "draggingItem": false,
+  "errors": [ ],
+  "gameAssemblyVersion": "0.0.0.0",
+  "gameDay": 2,
+  "gameVersion": "0.46D",
+  "inTransit": false,
+  "locationId": "dumping_ground",
+  "locationState": [
+    {
+      "fields": [ ],
+      "isNull": false,
+      "name": "scavengingAttempts",
+      "type": "System.Int32",
+      "value": "5"
+    }
+  ],
+  "modVersion": "0.1.0.0",
+  "nodes": [
+    {
+      "children": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "id": 0,
+      "inventory": {
+        "defaultOrientation": 0,
+        "identifier": null,
+        "insertLocked": false,
+        "items": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "kind": "grid",
+        "removeLocked": false,
+        "ruleCallbacks": [
+          "mayInventoryAddItemFunc: EmporiumEntry+<>c.<SetupAfterhourInv>b__284_0",
+          "slotPriorityFunc: EmporiumEntry+<>c.<SetupAfterhourInv>b__284_1"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "identifier",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockInsert",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockRemove",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "renderDynamicBackground",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "SupportsGroupPlacement",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "144"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isMachineryStyle",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "transparency",
+            "type": "System.Single",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "192"
+          }
+        ],
+        "shape": {
+          "cells": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "flipped": false,
+          "height": 9,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 1,
+          "width": 12
+        },
+        "state": [ ],
+        "supportsGroupPlacement": true
+      },
+      "item": null,
+      "kind": "inventory",
+      "runtimeType": "GameGridInventory"
+    },
+    {
+      "children": [
+        9,
+        10
+      ],
+      "id": 1,
+      "inventory": {
+        "defaultOrientation": 0,
+        "identifier": null,
+        "insertLocked": false,
+        "items": [
+          9
+        ],
+        "kind": "slot",
+        "removeLocked": false,
+        "ruleCallbacks": [
+          "mayInventoryAddItemFunc: ContainerHelper+<>c__DisplayClass9_0.<AllowOnlyTaggedItem>b__0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "defaultOrientation",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "identifier",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isUIDown",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockInsert",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockRemove",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "stealUI",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "SupportsGroupPlacement",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "48"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isHidden",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isMachineryStyle",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "transparency",
+            "type": "System.Single",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "96"
+          }
+        ],
+        "shape": null,
+        "state": [ ],
+        "supportsGroupPlacement": false
+      },
+      "item": null,
+      "kind": "inventory",
+      "runtimeType": "GameSlotInventory"
+    },
+    {
+      "children": [ ],
+      "id": 2,
+      "inventory": {
+        "defaultOrientation": 0,
+        "identifier": null,
+        "insertLocked": false,
+        "items": [ ],
+        "kind": "slot",
+        "removeLocked": false,
+        "ruleCallbacks": [
+          "mayInventoryAddItemFunc: ContainerHelper+<>c.<AllowOnlyOwnedItems>b__13_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "defaultOrientation",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "identifier",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isUIDown",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockInsert",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockRemove",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "stealUI",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "SupportsGroupPlacement",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "48"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isHidden",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isMachineryStyle",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "transparency",
+            "type": "System.Single",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": null,
+        "state": [ ],
+        "supportsGroupPlacement": false
+      },
+      "item": null,
+      "kind": "inventory",
+      "runtimeType": "GameSlotInventory"
+    },
+    {
+      "children": [ ],
+      "id": 3,
+      "inventory": {
+        "defaultOrientation": 0,
+        "identifier": null,
+        "insertLocked": false,
+        "items": [ ],
+        "kind": "slot",
+        "removeLocked": false,
+        "ruleCallbacks": [
+          "mayInventoryAddItemFunc: ContainerHelper+<>c.<AllowOnlyOwnedItems>b__13_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "defaultOrientation",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "identifier",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isUIDown",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockInsert",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockRemove",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "stealUI",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "SupportsGroupPlacement",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "48"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isHidden",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isMachineryStyle",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "transparency",
+            "type": "System.Single",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": null,
+        "state": [ ],
+        "supportsGroupPlacement": false
+      },
+      "item": null,
+      "kind": "inventory",
+      "runtimeType": "GameSlotInventory"
+    },
+    {
+      "children": [ ],
+      "id": 4,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [
+          {
+            "fields": [
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "actualDisplay",
+                "type": "System.String",
+                "value": "Durability: 1000\/1000"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "customIntValue1",
+                "type": "System.Int32",
+                "value": "0"
+              },
+              {
+                "fields": [ ],
+                "isNull": true,
+                "name": "fakeCondition",
+                "type": "ItemCondition",
+                "value": null
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "featureType",
+                "type": "ItemFeature+FeatureType",
+                "value": "Normale"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "initiallyShown",
+                "type": "System.Boolean",
+                "value": "True"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isDisabled",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isExposable",
+                "type": "System.Boolean",
+                "value": "True"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isExposing",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isFeatureDiscovered",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isFeatureExposed",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isPublicHidden",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "parentItemUniqueId",
+                "type": "System.Int32",
+                "value": "40"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "preExposeValueModifier",
+                "type": "System.Int32",
+                "value": "0"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "publicDisplay",
+                "type": "System.String",
+                "value": "Durability: 1000\/1000"
+              },
+              {
+                "fields": [ ],
+                "isNull": true,
+                "name": "realCondition",
+                "type": "ItemCondition",
+                "value": null
+              },
+              {
+                "fields": [ ],
+                "isNull": true,
+                "name": "removedByTool",
+                "type": "System.String",
+                "value": null
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "useCondition",
+                "type": "System.Boolean",
+                "value": "False"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "usePreExposeValue",
+                "type": "System.Boolean",
+                "value": "True"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "valueModifier",
+                "type": "System.Int32",
+                "value": "0"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "valueStage",
+                "type": "ItemFeature+ValueStage",
+                "value": "Innate"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "category",
+                "type": "System.String",
+                "value": "DURABILITY_TAG"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "identifier",
+                "type": "System.String",
+                "value": "DURABILITY_TAG"
+              },
+              {
+                "fields": [ ],
+                "isNull": false,
+                "name": "isFeatureMatch",
+                "type": "System.Boolean",
+                "value": "True"
+              }
+            ],
+            "isNull": false,
+            "name": "feature[0]",
+            "type": "ItemFeature",
+            "value": null
+          }
+        ],
+        "gameUniqueId": 40,
+        "identifier": "kotton_fabric",
+        "itemTypes": [
+          "MATERIAL",
+          "FILTER"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 1,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DEFAULT_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "DEFAULT_DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "DEFAULT_DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DURABILITY_FAKE_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "DURABILITY_FAKE_TAG",
+            "intValue": 1000,
+            "key": "DURABILITY_FAKE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_FILTER",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "FILTER",
+            "intValue": 0,
+            "key": "FILTER",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_FILTER_SIZE_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "FILTER_SIZE_TAG",
+            "intValue": 150,
+            "key": "FILTER_SIZE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MAX_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "MAX_DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "MAX_DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_WATER_FILTER",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "WATER_FILTER",
+            "intValue": 0,
+            "key": "WATER_FILTER",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_manufacturer",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "manufacturer",
+            "intValue": 0,
+            "key": "manufacturer",
+            "longValue": 0,
+            "stringValue": "pastel"
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "65"
+          }
+        ],
+        "parentInventoryId": 0,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": "A versatile fabric made of organic fibers. Commonly used for reinforced workwear and shock-insulating wraps."
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "16"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "kotton_fabric"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_kotton_fabric"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Kotton Fabric"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": "Used in chemistry to strain large particles from liquids. Far too coarse for water purification."
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "textile_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "textile_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_armor"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "kotton_fabric"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "40"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "65"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 1,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DEFAULT_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "DEFAULT_DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "DEFAULT_DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DURABILITY_FAKE_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "DURABILITY_FAKE_TAG",
+            "intValue": 1000,
+            "key": "DURABILITY_FAKE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_FILTER",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "FILTER",
+            "intValue": 0,
+            "key": "FILTER",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_FILTER_SIZE_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "FILTER_SIZE_TAG",
+            "intValue": 150,
+            "key": "FILTER_SIZE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MAX_DURABILITY_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "MAX_DURABILITY_TAG",
+            "intValue": 1000,
+            "key": "MAX_DURABILITY_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_WATER_FILTER",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "WATER_FILTER",
+            "intValue": 0,
+            "key": "WATER_FILTER",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_manufacturer",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "manufacturer",
+            "intValue": 0,
+            "key": "manufacturer",
+            "longValue": 0,
+            "stringValue": "pastel"
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [ ],
+      "id": 5,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 41,
+        "identifier": "junk",
+        "itemTypes": [
+          "MATERIAL",
+          "BASIC_MATERIAL",
+          "JUNK"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 3,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "3"
+          }
+        ],
+        "parentInventoryId": 0,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "canSelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_1",
+          "canThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_3",
+          "maySelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_0",
+          "mayThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_2",
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0",
+          "onThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_4"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": "Broken scraps and useless rubbish. Barely recyclable, worth next to nothing."
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "scrap_metal_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "scrap_metal_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_material"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "scrap_metal_2"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "41"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "3"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [ ],
+      "id": 6,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 42,
+        "identifier": "hemostatic_bandage_item",
+        "itemTypes": [
+          "MEDICAL"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 6,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 1
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_MEDICAL_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_MEDICAL_TAG",
+            "intValue": 0,
+            "key": "ITEM_MEDICAL_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MEDICAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MEDICAL",
+            "intValue": 0,
+            "key": "MEDICAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_proficiency",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "proficiency",
+            "intValue": 0,
+            "key": "proficiency",
+            "longValue": 0,
+            "stringValue": "MEDICAL_PROFICIENCY"
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "16"
+          }
+        ],
+        "parentInventoryId": 0,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "canActivateSlotItemFunc: MedsItemDirectory+<>c.<HemostaticBandage>b__16_0",
+          "mayActivateSlotItemFunc: MedsItemDirectory+<>c.<HemostaticBandage>b__16_1",
+          "onActivateSlotItemFunc: MedsItemDirectory+<>c.<HemostaticBandage>b__16_2",
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "hemostatic_bandage_item"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_hemostatic_bandage_item"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Hemostatic Bandage"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": "A bandage coated with a potent hemostatic agent capable of stopping heavy and light bleeding."
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "textile_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "textile_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_medical"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "hemostatic_bandage_small"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "42"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "16"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "16"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 1
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_MEDICAL_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_MEDICAL_TAG",
+            "intValue": 0,
+            "key": "ITEM_MEDICAL_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MEDICAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MEDICAL",
+            "intValue": 0,
+            "key": "MEDICAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_proficiency",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "proficiency",
+            "intValue": 0,
+            "key": "proficiency",
+            "longValue": 0,
+            "stringValue": "MEDICAL_PROFICIENCY"
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [ ],
+      "id": 7,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 43,
+        "identifier": "junk",
+        "itemTypes": [
+          "MATERIAL",
+          "BASIC_MATERIAL",
+          "JUNK"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 7,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "3"
+          }
+        ],
+        "parentInventoryId": 0,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "canSelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_1",
+          "canThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_3",
+          "maySelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_0",
+          "mayThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_2",
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0",
+          "onThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_4"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": "Broken scraps and useless rubbish. Barely recyclable, worth next to nothing."
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "scrap_metal_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "scrap_metal_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_material"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "scrap_metal_2"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "43"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "3"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [ ],
+      "id": 8,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 44,
+        "identifier": "junk",
+        "itemTypes": [
+          "MATERIAL",
+          "BASIC_MATERIAL",
+          "JUNK"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 1,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "3"
+          }
+        ],
+        "parentInventoryId": 0,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "canSelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_1",
+          "canThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_3",
+          "maySelectSlotItemFunc: MaterialDirectory+<>c.<Junk>b__15_0",
+          "mayThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_2",
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0",
+          "onThisTargetItemFunc: MaterialDirectory+<>c.<Junk>b__15_4"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": "Broken scraps and useless rubbish. Barely recyclable, worth next to nothing."
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Junk"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "scrap_metal_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "scrap_metal_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_material"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "scrap_metal_2"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "44"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "3"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BASIC_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BASIC_MATERIAL",
+            "intValue": 0,
+            "key": "BASIC_MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_JUNK",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "JUNK",
+            "intValue": 0,
+            "key": "JUNK",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MATERIAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MATERIAL",
+            "intValue": 0,
+            "key": "MATERIAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_SCRAP_METAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "SCRAP_METAL",
+            "intValue": 0,
+            "key": "SCRAP_METAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [
+        11
+      ],
+      "id": 9,
+      "inventory": null,
+      "item": {
+        "contentNodeId": 11,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 38,
+        "identifier": "fanny_pack",
+        "itemTypes": [ ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BACKPACK_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BACKPACK_TAG",
+            "intValue": 0,
+            "key": "BACKPACK_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_CONTAINER_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "CONTAINER_TAG",
+            "intValue": 0,
+            "key": "CONTAINER_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IMPORTANT_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IMPORTANT_TAG",
+            "intValue": 0,
+            "key": "IMPORTANT_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_TYPE_STRING",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_TYPE_STRING",
+            "intValue": 0,
+            "key": "ITEM_TYPE_STRING",
+            "longValue": 0,
+            "stringValue": "BACKPACK_TAG"
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_backpack",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "backpack",
+            "intValue": 0,
+            "key": "backpack",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_equippable",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "equippable",
+            "intValue": 0,
+            "key": "equippable",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "50"
+          }
+        ],
+        "parentInventoryId": 1,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "fanny_pack"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_fanny_pack"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Fanny Pack"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": "zipper"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "zipper3"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "pouch_move1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "pouch_move2"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_backpack2"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "fanny_pack"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "38"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "50"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BACKPACK_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "BACKPACK_TAG",
+            "intValue": 0,
+            "key": "BACKPACK_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_CONTAINER_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "CONTAINER_TAG",
+            "intValue": 0,
+            "key": "CONTAINER_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IMPORTANT_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IMPORTANT_TAG",
+            "intValue": 0,
+            "key": "IMPORTANT_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_TYPE_STRING",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_TYPE_STRING",
+            "intValue": 0,
+            "key": "ITEM_TYPE_STRING",
+            "longValue": 0,
+            "stringValue": "BACKPACK_TAG"
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_backpack",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "backpack",
+            "intValue": 0,
+            "key": "backpack",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_equippable",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "equippable",
+            "intValue": 0,
+            "key": "equippable",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [
+        12,
+        13
+      ],
+      "id": 10,
+      "inventory": {
+        "defaultOrientation": 0,
+        "identifier": null,
+        "insertLocked": false,
+        "items": [
+          12,
+          13
+        ],
+        "kind": "grid",
+        "removeLocked": false,
+        "ruleCallbacks": [
+          "mayInventoryAddItemFunc: ContainerHelper+<>c__DisplayClass21_0.<InitContainerItem>b__0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "identifier",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockInsert",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "overrideLockRemove",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "renderDynamicBackground",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "SupportsGroupPlacement",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "48"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isMachineryStyle",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "transparency",
+            "type": "System.Single",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "flipped": false,
+          "height": 3,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 1,
+          "width": 3
+        },
+        "state": [ ],
+        "supportsGroupPlacement": true
+      },
+      "item": null,
+      "kind": "inventory",
+      "runtimeType": "GameGridInventory"
+    },
+    {
+      "children": [
+        10
+      ],
+      "id": 11,
+      "inventory": null,
+      "item": null,
+      "kind": "graph",
+      "runtimeType": "PixelWindow"
+    },
+    {
+      "children": [ ],
+      "id": 12,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 37,
+        "identifier": "topical_bandage_item",
+        "itemTypes": [
+          "MEDICAL"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 1
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BOUGHT_PRICE_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "BOUGHT_PRICE_TAG",
+            "intValue": 0,
+            "key": "BOUGHT_PRICE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_MEDICAL_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_MEDICAL_TAG",
+            "intValue": 0,
+            "key": "ITEM_MEDICAL_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MEDICAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MEDICAL",
+            "intValue": 0,
+            "key": "MEDICAL",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_WINE_SCORE_INT",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "WINE_SCORE_INT",
+            "intValue": 0,
+            "key": "WINE_SCORE_INT",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "16"
+          }
+        ],
+        "parentInventoryId": 10,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "canActivateSlotItemFunc: MedsItemDirectory+<>c.<TopicalBandage>b__17_0",
+          "mayActivateSlotItemFunc: MedsItemDirectory+<>c.<TopicalBandage>b__17_1",
+          "onActivateSlotItemFunc: MedsItemDirectory+<>c.<TopicalBandage>b__17_2",
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "32"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "topical_bandage_item"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_topical_bandage_item"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Topical Medication Bandage"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": "A bandage coated with a mild topical medical gel that aids in the healing process."
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": "textile_drop"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "textile_drag"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_medical"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "topical_bandage_small"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "37"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "16"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "16"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 2,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 1
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_ITEM_MEDICAL_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "ITEM_MEDICAL_TAG",
+            "intValue": 0,
+            "key": "ITEM_MEDICAL_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_MEDICAL",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "MEDICAL",
+            "intValue": 0,
+            "key": "MEDICAL",
+            "longValue": 0,
+            "stringValue": ""
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    },
+    {
+      "children": [ ],
+      "id": 13,
+      "inventory": null,
+      "item": {
+        "contentNodeId": -1,
+        "effects": [ ],
+        "examineNodeId": -1,
+        "features": [ ],
+        "gameUniqueId": 16,
+        "identifier": "toothpaste",
+        "itemTypes": [
+          "HOUSEHOLD_GOOD"
+        ],
+        "modifiedShape": {
+          "cells": [
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 1,
+          "minX": 0,
+          "minY": 2,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "modifiedState": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_BOUGHT_PRICE_TAG",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "BOUGHT_PRICE_TAG",
+            "intValue": 0,
+            "key": "BOUGHT_PRICE_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_HOUSEHOLD_GOOD",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "HOUSEHOLD_GOOD",
+            "intValue": 0,
+            "key": "HOUSEHOLD_GOOD",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_WINE_SCORE_INT",
+            "doubleValue": "0",
+            "enabled": false,
+            "floatValue": "0",
+            "identifier": "WINE_SCORE_INT",
+            "intValue": 0,
+            "key": "WINE_SCORE_INT",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_manufacturer",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "manufacturer",
+            "intValue": 0,
+            "key": "manufacturer",
+            "longValue": 0,
+            "stringValue": "pastel"
+          }
+        ],
+        "observations": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "owned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "effectivelyOwned",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "getValue",
+            "type": "System.Int64",
+            "value": "15"
+          }
+        ],
+        "parentInventoryId": 10,
+        "quantity": 1,
+        "ruleCallbacks": [
+          "onSlotAddItemFunc: GameItem.<.ctor>b__177_0"
+        ],
+        "scalars": [
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "activateDefault",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "backupUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "bonusAccuracy",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canResize",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "canUseOutsideCombat",
+            "type": "System.Boolean",
+            "value": "True"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "customText",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "flavorText",
+            "type": "System.String",
+            "value": "A minty gel that promises fresh breath."
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableActivate",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "forceDisableUse",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "heightPixels",
+            "type": "System.Int32",
+            "value": "16"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifier",
+            "type": "System.String",
+            "value": "toothpaste"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "identifierName",
+            "type": "System.String",
+            "value": "TYPE-STRING_toothpaste"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isCombatBackpack",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "isDebugMenu",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "lateUnitValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "longDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedXOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "modifiedYOrigin",
+            "type": "System.Int32",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "name",
+            "type": "System.String",
+            "value": "Tube of Toothpaste"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "shortDescription",
+            "type": "System.String",
+            "value": ""
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundActivate",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundContainerClose",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundContainerOpen",
+            "type": "System.String",
+            "value": "light_click"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundDragEnd",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "soundDragStart",
+            "type": "System.String",
+            "value": "move_item_default"
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundExamineOpen",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundSelect",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundToggle",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": true,
+            "name": "soundUse",
+            "type": "System.String",
+            "value": null
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spriteAtlasPath",
+            "type": "System.String",
+            "value": "Items\/items_amenities"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "spritePath",
+            "type": "System.String",
+            "value": "toothpaste"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "triggerOverwatch",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "uniqueId",
+            "type": "System.Int32",
+            "value": "16"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitBaseValue",
+            "type": "System.Int64",
+            "value": "0"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitCount",
+            "type": "System.Int32",
+            "value": "1"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "unitValue",
+            "type": "System.Int64",
+            "value": "15"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "useSpriteFromMod",
+            "type": "System.Boolean",
+            "value": "False"
+          },
+          {
+            "fields": [ ],
+            "isNull": false,
+            "name": "widthPixels",
+            "type": "System.Int32",
+            "value": "48"
+          }
+        ],
+        "shape": {
+          "cells": [
+            1,
+            1,
+            1
+          ],
+          "flipped": false,
+          "height": 1,
+          "minX": 0,
+          "minY": 0,
+          "orientation": 0,
+          "outside": 0,
+          "width": 3
+        },
+        "state": [
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_HOUSEHOLD_GOOD",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "HOUSEHOLD_GOOD",
+            "intValue": 0,
+            "key": "HOUSEHOLD_GOOD",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_IS_OWNED_TAG",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "IS_OWNED_TAG",
+            "intValue": 0,
+            "key": "IS_OWNED_TAG",
+            "longValue": 0,
+            "stringValue": ""
+          },
+          {
+            "boolValue": false,
+            "displayName": "TYPE-STRING_manufacturer",
+            "doubleValue": "0",
+            "enabled": true,
+            "floatValue": "0",
+            "identifier": "manufacturer",
+            "intValue": 0,
+            "key": "manufacturer",
+            "longValue": 0,
+            "stringValue": "pastel"
+          }
+        ]
+      },
+      "kind": "item",
+      "runtimeType": "GameItemElement"
+    }
+  ],
+  "reason": "before-collect",
+  "roots": [
+    {
+      "nodeId": 0,
+      "role": "ground"
+    },
+    {
+      "nodeId": 1,
+      "role": "backpack"
+    },
+    {
+      "nodeId": 2,
+      "role": "left-hand"
+    },
+    {
+      "nodeId": 3,
+      "role": "right-hand"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "Observed inventory graph and item data; executable callbacks and full game restoration are not serialized. Placement probes and recursive pricing are not evaluated.",
+  "snapshotId": "47f3d55d93184e54aa4c69af4d2fd2de"
+}

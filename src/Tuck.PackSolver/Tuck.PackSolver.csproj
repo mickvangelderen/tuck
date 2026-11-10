@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>0.1.0</Version>
+    <Copyright>Copyright (c) 2026 Mick van Gelderen</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Solver tests also exercise internal search and replay components. -->
+    <InternalsVisibleTo Include="Tuck.PackSolver.Tests" />
+  </ItemGroup>
+</Project>

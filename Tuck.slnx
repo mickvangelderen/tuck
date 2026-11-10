@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tuck.Mod/Tuck.Mod.csproj" />
+    <Project Path="src/Tuck.Mod.Tests/Tuck.Mod.Tests.csproj" />
+    <Project Path="src/Tuck.PackSolver/Tuck.PackSolver.csproj" />
+    <Project Path="src/Tuck.PackSolver.Tests/Tuck.PackSolver.Tests.csproj" />
+    <Project Path="src/Tuck.PackSolver.Benchmarks/Tuck.PackSolver.Benchmarks.csproj" />
+    <Project Path="src/Tuck.ProbablyStolenTestModel/Tuck.ProbablyStolenTestModel.csproj" />
+    <Project Path="src/Tuck.ProbablyStolenTestModel.Tests/Tuck.ProbablyStolenTestModel.Tests.csproj" />
+  </Folder>
+</Solution>
