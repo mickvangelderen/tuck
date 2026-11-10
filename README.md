@@ -48,7 +48,7 @@ https://www.youtube.com/watch?v=hEUUApJs9Zo
 - Adds optional ±50 buttons and arranges the ±5, ±10, ±50 and ±100 buttons in two rows above the estimate and send button, off by default.
 - Adds an option to automatically move newly received appraisal slips to the trash, off by default.
 
-![Appraisal adjustment buttons](./media/appraisal.png)
+![Appraisal UI](./media/appraisal.gif)
 
 ### Chem finisher
 
