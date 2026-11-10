@@ -3,7 +3,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>14.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.1.0</Version>
     <Copyright>Copyright (c) 2026 Mick van Gelderen</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
@@ -12,6 +11,8 @@
     <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
     <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
   </PropertyGroup>
+
+  <Import Project="..\ModVersion.targets" />
 
   <!-- Keep recording code out of Release and every other non-Debug configuration. -->
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
@@ -58,7 +59,7 @@
     <Reference Include="UnityEngine.Physics2DModule" HintPath="$(GameAssembliesDir)\UnityEngine.Physics2DModule.dll" Private="false" />
     <TuckSprite Include="..\..\assets\tuck\rail-walk.png;..\..\assets\tuck\hang.png;..\..\assets\tuck\hang-mask.png;..\..\assets\tuck\hang-wire.png;..\..\assets\tuck\stand.png" />
     <None Include="@(TuckSprite)" Link="assets\tuck\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Update="manifest.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="manifest.xml" CopyToOutputDirectory="Always" />
     <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
     <TuckLocalization Include="Localization\*.csv" />
     <None Update="@(TuckLocalization)" CopyToOutputDirectory="PreserveNewest" />
@@ -79,7 +80,6 @@
   </Target>
 
   <Target Name="UpdateModManifest" AfterTargets="Build" DependsOnTargets="ValidateGameReferences">
-    <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/ModVersion" Value="$(Version)" />
     <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/GameVersions/Version" Value="$(GameVersion)" />
   </Target>
 

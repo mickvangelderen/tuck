@@ -34,19 +34,20 @@ try {
     Write-Host "Copying game assemblies from $managedDir..."
     Get-ChildItem -LiteralPath $managedDir -Filter '*.dll' -File | Copy-Item -Destination $assembliesDir
 
-    # Capture Application.version from the same installation as the assemblies.
+    # Capture both the manifest compatibility version and the public release label.
     $gameSettingsPath = Join-Path $GameDir 'Probably Stolen_Data/globalgamemanagers'
     $gameVersionPath = Join-Path $dependencyDir 'game-version.txt'
+    $gameDisplayVersionPath = Join-Path $dependencyDir 'game-display-version.txt'
+    $assemblyPath = Join-Path $assembliesDir 'Assembly-CSharp.dll'
     # Player builds strip type trees; pin the definitions used to read PlayerSettings.
     $classDataPath = Join-Path $dependencyDir 'unity-classdata.tpk'
     Write-Host 'Fetching Unity class definitions...'
     $classData = Invoke-RestMethod -Uri 'https://api.github.com/repos/nesrak1/UABEA/git/blobs/a68aff1288d95bd6a58ec6ad99813ea9c59e0abc'
     [IO.File]::WriteAllBytes($classDataPath, [Convert]::FromBase64String($classData.content))
-    dotnet run --project "$PSScriptRoot/tools/ReadGameVersion" -- $gameSettingsPath $classDataPath $gameVersionPath
+    dotnet run --project "$PSScriptRoot/tools/ReadGameVersion" -- $gameSettingsPath $classDataPath $assemblyPath $gameVersionPath $gameDisplayVersionPath
     if ($LASTEXITCODE -ne 0) { throw "Game version extraction failed (exit $LASTEXITCODE)." }
 
     # Decompile assembly.
-    $assemblyPath = Join-Path $assembliesDir 'Assembly-CSharp.dll'
     $decompiledDir = Join-Path $dependencyDir 'decompiled'
     Write-Host 'Decompiling Assembly-CSharp.dll...'
     dotnet tool execute ilspycmd@11.2.0.10050 -- -p --disable-updatecheck -r $assembliesDir -o $decompiledDir $assemblyPath

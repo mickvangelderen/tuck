@@ -12,7 +12,6 @@
     <PackageReference Include="Steamworks.NET" Version="2024.8.0" />
     <!-- Steamworks.NET supplies the managed bindings; this supplies the native SDK. -->
     <PackageReference Include="Facepunch.Steamworks.Dll" Version="1.62.0" />
-    <Compile Include="..\WorkshopDescription.cs" Link="WorkshopDescription.cs" />
-    <None Update="steam_appid.txt" CopyToOutputDirectory="PreserveNewest" />
+    <InternalsVisibleTo Include="WorkshopPublish.Tests" />
   </ItemGroup>
 </Project>

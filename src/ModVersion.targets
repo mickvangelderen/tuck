@@ -1,0 +1,8 @@
+<Project>
+  <Target Name="ReadModVersion" BeforeTargets="PrepareForBuild;GetAssemblyVersion">
+    <XmlPeek XmlInputPath="$(MSBuildThisFileDirectory)Tuck.Mod/manifest.xml" Query="/Manifest/ModVersion/text()">
+      <Output TaskParameter="Result" PropertyName="Version" />
+    </XmlPeek>
+    <Error Condition="'$(Version)' == ''" Text="The mod manifest must specify a ModVersion." />
+  </Target>
+</Project>

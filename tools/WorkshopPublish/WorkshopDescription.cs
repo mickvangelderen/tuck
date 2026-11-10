@@ -19,6 +19,18 @@ internal sealed class WorkshopDescription
             .UsePipeTables()
             .Build();
         _document = Markdown.Parse(File.ReadAllText(path), pipeline);
+        // Installation instructions belong in the README, not on the Workshop page.
+        for (int index = 0; index < _document.Count; index++)
+        {
+            if (_document[index] is not HeadingBlock { Level: 2 } heading ||
+                !RenderInlines(heading.Inline).Trim().Equals("Installation", StringComparison.OrdinalIgnoreCase))
+                continue;
+            _document.RemoveAt(index);
+            while (index < _document.Count &&
+                (_document[index] is not HeadingBlock next || next.Level > heading.Level))
+                _document.RemoveAt(index);
+            index--;
+        }
     }
 
     // Markdown parsing handles image references, links, escaped paths and code blocks.

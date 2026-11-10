@@ -6,6 +6,8 @@ Pack your loot, move items in bulk, appraise goods, and run the chem finisher wi
 
 Named after Tuck, the helpful rat who fits more loot into your bags. Small paws, big ambitions.
 
+https://www.youtube.com/watch?v=hEUUApJs9Zo
+
 ## Feature overview
 
 | Activity | Improvements |
