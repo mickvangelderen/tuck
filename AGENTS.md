@@ -4,5 +4,6 @@ README.md files are intended for human consumption and generally should generall
 Agents are **NOT** allowed to modify CHANGELOG.md without explicit approval from the user.
 CHANGELOG.md is intended to be read by human mod users and should only contain information relevant to them.
 
-On completion of a new feature a bug fix to the Tuck mod, and on completion of subsequent revisions of that change, suggest a small and succinct update to the CHANGELOG.md.
+On completion of a **MOD USER-FACING** change, suggest a small and succinct update to [CHANGELOG.md](CHANGELOG.md).
 Read the changelog at least once to understand the existing style and rules.
+Formatted the suggestion as a markdown code block.
