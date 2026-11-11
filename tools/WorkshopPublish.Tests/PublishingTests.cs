@@ -9,13 +9,16 @@ public sealed class PublishingTests : IDisposable
     private string Receipt => Path.Combine(Output, "publishedfileid.txt");
     private string ImagePath => Path.Combine(_root, "image.png");
     private string Readme => Path.Combine(_root, "description.md");
+    private string Changelog => Path.Combine(_root, "CHANGELOG.md");
+    private string Manifest => Path.Combine(_root, "mod", "manifest.xml");
 
     public PublishingTests()
     {
         File.WriteAllBytes(ImagePath, Enumerable.Range(0, 32).Select(i => (byte)i).ToArray());
         File.WriteAllText(Readme, "# Tuck\n\nDescription.\n\n![demo](image.png)\n");
         Directory.CreateDirectory(Path.Combine(_root, "mod"));
-        File.WriteAllText(Path.Combine(_root, "mod", "manifest.xml"), "<Manifest />");
+        File.WriteAllText(Manifest, "<Manifest><ModVersion>1.0.0</ModVersion></Manifest>");
+        File.WriteAllText(Changelog, "# Changelog\n\n## [Unreleased]\n\n## [1.0.0] - 2026-11-09\n\nTest release\n");
         WriteSettings(42);
     }
 
@@ -29,6 +32,8 @@ public sealed class PublishingTests : IDisposable
         string text = File.ReadAllText(Path.Combine(Output, "description.txt"));
         Assert.Contains("Description.", text);
         Assert.DoesNotContain("[img]", text);
+        Assert.Equal("[h2][1.0.0] - 2026-11-09[/h2]\n\nTest release\n",
+            File.ReadAllText(Path.Combine(Output, "change-note.txt")));
     }
 
     [Fact]
@@ -51,8 +56,7 @@ public sealed class PublishingTests : IDisposable
         Assert.Equal(["create", "query", "images", "query", "publish"], _steam.Calls);
         Assert.Contains("[img]https://example.com/", _steam.Description);
         Assert.Equal(_steam.Description, File.ReadAllText(Path.Combine(Output, "description.txt")));
-        Assert.Equal(WorkshopVisibility.Private, _steam.Settings!.Visibility);
-        Assert.Equal("Test release", _steam.Settings.ChangeNote);
+        Assert.Equal(File.ReadAllText(Path.Combine(Output, "change-note.txt")), _steam.ChangeNote);
     }
 
     [Fact]
@@ -200,18 +204,93 @@ public sealed class PublishingTests : IDisposable
     }
 
     [Theory]
-    [InlineData("title", 64, false)]
-    [InlineData("title", 65, true)]
-    [InlineData("changeNote", 3999, false)]
-    [InlineData("changeNote", 4000, true)]
-    public void MetadataLimitsAreValidatedOfflineInUtf8Bytes(string field, int characters, bool tooLong)
+    [InlineData(64, false)]
+    [InlineData(65, true)]
+    public void TitleLimitsAreValidatedOfflineInUtf8Bytes(int characters, bool tooLong)
     {
         string value = new('\u00e9', characters);
         var settings = WorkshopSettings.Load(SettingsPath);
-        settings = field == "title" ? settings with { Title = value } : settings with { ChangeNote = value + "x" };
+        settings = settings with { Title = value };
         File.WriteAllText(SettingsPath, JsonSerializer.Serialize(settings, WorkshopSettings.JsonOptions));
         void Prepare() => Run("prepare", () => throw new Exception("Must not connect."));
         if (tooLong) Assert.Throws<InvalidDataException>(Prepare);
+        else Prepare();
+    }
+
+    [Theory]
+    [InlineData("prepare")]
+    [InlineData("check")]
+    [InlineData("publish")]
+    public void UnreleasedChangesStopBeforeConnectingOrSavingAnId(string mode)
+    {
+        WriteSettings(0);
+        File.WriteAllText(Changelog, "## [Unreleased]\n\n- Not released yet.\n\n## [1.0.0]\n\nReleased.");
+        var error = Assert.Throws<InvalidDataException>(() => Run(mode, () => throw new Exception("Must not connect.")));
+        Assert.Contains("Unreleased section must be empty", error.Message);
+        Assert.Equal(0UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
+        Assert.False(File.Exists(Receipt));
+    }
+
+    [Theory]
+    [InlineData("prepare")]
+    [InlineData("check")]
+    [InlineData("publish")]
+    public void VersionMismatchStopsBeforeConnectingEvenIfAnOlderReleaseMatches(string mode)
+    {
+        File.WriteAllText(Changelog, "## [Unreleased]\n\n## [1.1.0]\n\nNew release.\n\n## [1.0.0]\n\nOld release.");
+        var error = Assert.Throws<InvalidDataException>(() => Run(mode, () => throw new Exception("Must not connect.")));
+        Assert.Contains("'1.1.0' does not match manifest ModVersion '1.0.0'", error.Message);
+    }
+
+    [Theory]
+    [InlineData("# Changelog", "## [Unreleased]")]
+    [InlineData("## [1.0.0]\n\n## [Unreleased]", "## [Unreleased]")]
+    [InlineData("## [Unreleased]", "versioned release section")]
+    [InlineData("## [Unreleased]\n\n## Other\n\n## [1.0.0]", "does not match")]
+    public void MissingOrMisorderedSectionsPreventPublication(string markdown, string expectedError)
+    {
+        File.WriteAllText(Changelog, markdown);
+        var error = Assert.Throws<InvalidDataException>(() => Run("publish", () => throw new Exception("Must not connect.")));
+        Assert.Contains(expectedError, error.Message);
+    }
+
+    [Fact]
+    public void MissingManifestVersionPreventsPublication()
+    {
+        File.WriteAllText(Manifest, "<Manifest />");
+        Assert.Contains("must specify a ModVersion", Assert.Throws<InvalidDataException>(() =>
+            Run("publish", () => throw new Exception("Must not connect."))).Message);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void OnlyTheLatestReleaseIsPublishedWithSteamFormattingAndResolvedLinks(bool olderRelease)
+    {
+        File.WriteAllText(Manifest, "<Manifest><ModVersion>1.1.0-beta.1</ModVersion></Manifest>");
+        File.WriteAllText(Changelog, "# Changelog\n\n<!--\n## [VERSION] - YYYY-MM-DD\nRelease instructions.\n-->\n\n"
+            + "## [Unreleased]\n \t\n## [1.1.0-beta.1] - 2026-11-11\n\n- Added **hotkeys**.\n  With tooltips.\n"
+            + (olderRelease ? "\n## [1.0.0] - 2026-11-09\n\nOld release.\n" : "")
+            + "\n[1.1.0-beta.1]: https://example.com/release\n");
+        Run("publish");
+        Assert.Equal("[h2][url=https://example.com/release]1.1.0-beta.1[/url] - 2026-11-11[/h2]\n\n"
+            + "[list]\n[*]Added [b]hotkeys[/b]. With tooltips.\n[/list]\n", _steam.ChangeNote);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RenderedChangeNoteLimitIncludesFormattingAndCountsUtf8Bytes(bool tooLong)
+    {
+        const string heading = "## [Unreleased]\n\n## [1.0.0]\n\n";
+        File.WriteAllText(Changelog, heading + "x");
+        int overhead = System.Text.Encoding.UTF8.GetByteCount(WorkshopReleaseNotes.Load(Changelog, Manifest)) - 1;
+        int bodyBytes = WorkshopLimits.ChangeNoteMaxBytes - overhead;
+        string body = new('\u00e9', bodyBytes / 2);
+        if (bodyBytes % 2 != 0) body += "x";
+        File.WriteAllText(Changelog, heading + body + (tooLong ? "x" : ""));
+        void Prepare() => Run("prepare", () => throw new Exception("Must not connect."));
+        if (tooLong) Assert.Contains("Change note", Assert.Throws<InvalidDataException>(Prepare).Message);
         else Prepare();
     }
 
@@ -275,11 +354,11 @@ public sealed class PublishingTests : IDisposable
     }
 
     private void WriteSettings(ulong id) => File.WriteAllText(SettingsPath, JsonSerializer.Serialize(
-        new WorkshopSettings { PublishedFileId = id, Title = "Tuck", Visibility = WorkshopVisibility.Private, ChangeNote = "Test release" },
+        new WorkshopSettings { PublishedFileId = id, Title = "Tuck" },
         WorkshopSettings.JsonOptions));
 
     private void Run(string mode, Func<IWorkshopClient>? connect = null) => WorkshopPublisher.Run(mode,
-        SettingsPath, Readme, Path.Combine(_root, "mod"), ImagePath, Output, connect ?? (() => _steam));
+        SettingsPath, Readme, Changelog, Path.Combine(_root, "mod"), ImagePath, Output, connect ?? (() => _steam));
 
     public void Dispose() => Directory.Delete(_root, recursive: true);
 
@@ -295,8 +374,8 @@ public sealed class PublishingTests : IDisposable
         public bool ReturnUploadedUrls = true;
         public int UploadedImageCount;
         public string? Description;
+        public string? ChangeNote;
         public string? ImageUrlOverride;
-        public WorkshopSettings? Settings;
         public Action? BeforeCreate, BeforeUpload;
 
         public ulong CreateItem()
@@ -324,7 +403,7 @@ public sealed class PublishingTests : IDisposable
                 foreach (var image in images) Urls.Add(image.Name, ImageUrlOverride ?? "https://example.com/" + image.Name);
         }
 
-        public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description)
+        public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote)
         {
             Assert.Equal(ItemId, id);
             Assert.True(File.Exists(Path.Combine(contentFolder, "manifest.xml")));
@@ -332,7 +411,7 @@ public sealed class PublishingTests : IDisposable
             Calls.Add("publish");
             if (FailPublish) throw new IOException("Simulated upload failure.");
             Description = description;
-            Settings = settings;
+            ChangeNote = changeNote;
         }
 
         public void Dispose() { }

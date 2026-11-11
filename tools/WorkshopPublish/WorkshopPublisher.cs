@@ -24,14 +24,14 @@ internal interface IWorkshopClient : IDisposable
     ulong CreateItem();
     WorkshopItem Query(ulong id);
     void UploadImages(ulong id, IReadOnlyList<WorkshopImage> images);
-    void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description);
+    void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote);
 }
 
 internal static class WorkshopPublisher
 {
     public const uint AppId = 4348910;
 
-    public static void Run(string mode, string settingsPath, string readmePath, string contentFolder,
+    public static void Run(string mode, string settingsPath, string readmePath, string changelogPath, string contentFolder,
         string previewFile, string outputFolder, Func<IWorkshopClient> connect)
     {
         // Resolve upload paths and validate inputs before connecting to Steam.
@@ -42,6 +42,7 @@ internal static class WorkshopPublisher
         var settings = WorkshopSettings.Load(settingsPath);
         if (!File.Exists(Path.Combine(contentFolder, "manifest.xml")))
             throw new InvalidDataException("The staged mod is missing manifest.xml.");
+        string changeNote = WorkshopReleaseNotes.Load(changelogPath, Path.Combine(contentFolder, "manifest.xml"));
         _ = WorkshopImage.Load(previewFile);
         var description = new WorkshopDescription(readmePath);
         string textOnly = description.Render();
@@ -56,8 +57,11 @@ internal static class WorkshopPublisher
         Directory.CreateDirectory(outputFolder);
         string descriptionPath = Path.Combine(outputFolder, "description.txt");
         File.WriteAllText(descriptionPath, textOnly);
-        Console.WriteLine($"{settings.Title}: {settings.Visibility}; content: {contentFolder}");
+        string changeNotePath = Path.Combine(outputFolder, "change-note.txt");
+        File.WriteAllText(changeNotePath, changeNote);
+        Console.WriteLine($"{settings.Title}; content: {contentFolder}");
         Console.WriteLine($"Description preview: {descriptionPath}");
+        Console.WriteLine($"Change note preview: {changeNotePath}");
         if (mode == "prepare") return;
 
         string receiptPath = Path.Combine(outputFolder, "publishedfileid.txt");
@@ -128,7 +132,7 @@ internal static class WorkshopPublisher
             Console.WriteLine("Check complete. No changes submitted.");
             return;
         }
-        steam.Publish(id, settings, contentFolder, previewFile, rendered);
+        steam.Publish(id, settings, contentFolder, previewFile, rendered, changeNote);
         Console.WriteLine($"Workshop upload confirmed: https://steamcommunity.com/sharedfiles/filedetails/?id={id}");
     }
 

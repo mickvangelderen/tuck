@@ -2,7 +2,7 @@
 .SYNOPSIS
 Builds and publishes Tuck through the logged-in Steam desktop client.
 .DESCRIPTION
-Edit workshop.json for the title and visibility (private/public/friendsOnly/unlisted).
+Edit workshop.json for the title. Manage visibility on Steam's Workshop page.
 Keep Steam online as the Workshop item's owner.
 CHANGELOG.md must have an empty Unreleased section followed by a release section
 whose version matches the staged manifest. That section becomes Steam's change note.

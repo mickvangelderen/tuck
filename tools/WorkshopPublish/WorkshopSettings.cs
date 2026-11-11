@@ -1,31 +1,25 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-internal enum WorkshopVisibility { Public, FriendsOnly, Private, Unlisted }
-
 internal sealed record WorkshopSettings
 {
     internal static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true,
-        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
-        Converters = { new JsonStringEnumConverter<WorkshopVisibility>(JsonNamingPolicy.CamelCase, allowIntegerValues: false) }
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
     };
 
     public required ulong PublishedFileId { get; init; }
     public required string Title { get; init; }
-    public required WorkshopVisibility Visibility { get; init; }
-    public required string ChangeNote { get; init; }
 
     public static WorkshopSettings Load(string path)
     {
         var settings = JsonSerializer.Deserialize<WorkshopSettings>(File.ReadAllText(path), JsonOptions)
             ?? throw new InvalidDataException("Workshop settings are empty.");
-        if (string.IsNullOrWhiteSpace(settings.Title) || settings.ChangeNote == null || !Enum.IsDefined(settings.Visibility))
-            throw new InvalidDataException("Workshop settings require a title, change note, and valid visibility.");
+        if (string.IsNullOrWhiteSpace(settings.Title))
+            throw new InvalidDataException("Workshop settings require a title.");
         WorkshopLimits.Validate("Title", settings.Title, WorkshopLimits.TitleMaxBytes);
-        WorkshopLimits.Validate("Change note", settings.ChangeNote, WorkshopLimits.ChangeNoteMaxBytes);
         return settings;
     }
 

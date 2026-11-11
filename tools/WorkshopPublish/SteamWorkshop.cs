@@ -81,16 +81,15 @@ internal sealed class SteamWorkshop : IWorkshopClient
         finally { Directory.Delete(staging, recursive: true); }
     }
 
-    public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description)
+    public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote)
     {
         var update = StartUpdate(id);
         Require(SteamUGC.SetItemTitle(update, settings.Title), "set the title");
         Require(SteamUGC.SetItemDescription(update, description), "set the description");
-        Require(SteamUGC.SetItemVisibility(update, (ERemoteStoragePublishedFileVisibility)settings.Visibility), "set visibility");
         Require(SteamUGC.SetItemContent(update, contentFolder), "set the content folder");
         Require(SteamUGC.SetItemPreview(update, previewFile), "set the preview image");
         Console.WriteLine("Publishing mod content and metadata...");
-        Submit(update, id, settings.ChangeNote);
+        Submit(update, id, changeNote);
     }
 
     private static UGCUpdateHandle_t StartUpdate(ulong id)

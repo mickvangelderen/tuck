@@ -11,14 +11,14 @@ internal sealed class WorkshopDescription
     private readonly string _directory;
     private IReadOnlyDictionary<string, string> _imageUrls = new Dictionary<string, string>();
 
-    public WorkshopDescription(string path)
+    public WorkshopDescription(string path, MarkdownDocument? document = null)
     {
         _directory = Path.GetDirectoryName(Path.GetFullPath(path))!;
         var pipeline = new MarkdownPipelineBuilder()
             .UseEmphasisExtras(EmphasisExtraOptions.Strikethrough)
             .UsePipeTables()
             .Build();
-        _document = Markdown.Parse(File.ReadAllText(path), pipeline);
+        _document = document ?? Markdown.Parse(File.ReadAllText(path), pipeline);
         // Installation instructions belong in the README, not on the Workshop page.
         for (int index = 0; index < _document.Count; index++)
         {
