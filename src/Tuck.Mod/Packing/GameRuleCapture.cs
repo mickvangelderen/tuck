@@ -5,7 +5,7 @@ using global::Tuck.PackSolver;
 
 namespace Tuck.Mod.Packing;
 
-/// <summary>Explicit mappings from audited vanilla rules, without inspecting delegate methods or closures.</summary>
+/// <summary>Known vanilla rules for speculative planning; execution checks live transfer callbacks.</summary>
 internal static class GameRuleCapture
 {
     // ContainerItemDirectory and ShipSystemDirectory: ordinary InitBackpackItem/InitContainerItem grids.
@@ -29,6 +29,8 @@ internal static class GameRuleCapture
     internal static readonly string[] Types = { "STORAGE", "MACHINE", "TOOL", "MELEE_WEAPON" };
 
     internal static ItemDefinition Definition(GameItem item) => new(item.identifier, rules: new ItemRules(
+        // Plan existing stacks whole; execution checks the game's current quantity limits.
+        quantity: new(maximum: int.MaxValue),
         parentShape: item.parentItemShapeModifierForItemFunc == null ? ParentShapeRule.None
             : GunAttachments.Supports(item.identifier) ? ParentShapeRule.GunAttachment : ParentShapeRule.Unsupported,
         unsupportedParentState: item.parentItemStateModifierForItemFunc != null, unsupportedTransfer: ItemUnsupported(item)));
@@ -37,19 +39,6 @@ internal static class GameRuleCapture
     {
         if (item.parentItemStateModifierForItemFunc != null || item.parentItemShapeModifierForItemFunc != null && !GunAttachments.Supports(item.identifier))
             return "Parent modifier is not represented.";
-        // ModuleHelper.InitModuleItem's single removal callback checks MODULE_STUCK_TAG, already
-        // represented by the global removal check. Additional callbacks still require a mapping.
-        bool knownModuleRemoval = item.identifier == "system_module_ruined"
-            && item.mayInventoryRemoveItemFunc?.GetInvocationList().Length == 1;
-        if (item.mayInventoryAddItemFunc != null || item.mayInventoryRemoveItemFunc != null && !knownModuleRemoval || item.isItemStateValidFunc != null)
-            return "Item admission/removal/state callback is not represented.";
-        // MayStack only governs merges. Whole-item packing neither captures nor invokes it.
-        if (item.maxSlotAmountItemFunc != null || item.minSlotAmountItemFunc != null || item.maxSlotAddItemFunc != null
-            || item.maxSlotRemoveItemFunc != null || item.onChangeAmountItemFunc != null || item.onSlotChangeAmountItemFunc != null)
-            return "Quantity/amount-change rules are not mapped for this definition.";
-        // GameItem's single constructor callback removes selling-only features. Additional handlers need an audit.
-        if ((item.onSlotAddItemFunc?.GetInvocationList().Length ?? 0) > 1 || item.onSlotRemoveItemFunc != null)
-            return "Additional item transfer effects are not represented.";
         return null;
     }
 
@@ -57,15 +46,8 @@ internal static class GameRuleCapture
         PackRoots roots, bool allowsHazardousWaste)
     {
         string? unsupported = null;
-        if (inventory.parentItemShapeModifierForItemFunc != null || inventory.parentItemStateModifierForItemFunc != null
-            || inventory.isItemStateValidFunc != null || inventory.mayInventoryRemoveItemFunc != null
-            || inventory.maxSlotAmountItemFunc != null || inventory.minSlotAmountItemFunc != null
-            || inventory.maxSlotAddItemFunc != null || inventory.maxSlotRemoveItemFunc != null
-            || inventory.onSlotAddItemFunc != null || inventory.onSlotRemoveItemFunc != null
-            || inventory.onSlotAddItemEndFunc != null || inventory.onSlotRemoveItemEndFunc != null
-            || inventory.onSlotAddItemLateFunc != null || inventory.onSlotRemoveItemLateFunc != null
-            || inventory.onSlotChangeAmountItemFunc != null)
-            unsupported = "Inventory transfer effects or quantity rules are not represented.";
+        if (inventory.parentItemShapeModifierForItemFunc != null || inventory.parentItemStateModifierForItemFunc != null)
+            unsupported = "Inventory parent modifiers are not represented.";
         if (unsupported != null) return (new(AdmissionKind.Unsupported), unsupported);
         if (id == roots.Backpack) return (new(AdmissionKind.Backpack), null);
         if (id == roots.Ground) return (new(AdmissionKind.Ground, allowsHazardousWaste: allowsHazardousWaste), null);

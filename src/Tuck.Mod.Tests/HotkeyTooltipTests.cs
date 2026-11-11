@@ -89,13 +89,14 @@ public class HotkeyTooltipTests : IDisposable
     [Fact]
     public void VanillaHintsAndTranslationsAreResolvedAtDisplayTime()
     {
-        Assert.Equal("open_options (K)", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Options));
-        KeyBindHelper.Set(KeyBindHelper.OPEN_OPTIONS, KeyCode.F10);
-        KeyBindHelper.Find(KeyBindHelper.OPEN_OPTIONS).label = () => "translated options";
+        KeyBindHelper.Set(KeyBindHelper.CONTROL_HINTS, KeyCode.K);
+        Assert.Equal($"{KeyBindHelper.CONTROL_HINTS} (K)", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.ControlHints));
+        KeyBindHelper.Set(KeyBindHelper.CONTROL_HINTS, KeyCode.F10);
+        KeyBindHelper.Find(KeyBindHelper.CONTROL_HINTS).label = () => "translated control hints";
         _english["text_with_key_hint"] = "{1}: {0}";
-        Assert.Equal("(F10): translated options", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Options));
-        KeyBindHelper.Set(KeyBindHelper.OPEN_OPTIONS, KeyCode.None);
-        Assert.Equal("", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Options));
+        Assert.Equal("(F10): translated control hints", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.ControlHints));
+        KeyBindHelper.Set(KeyBindHelper.CONTROL_HINTS, KeyCode.None);
+        Assert.Equal("", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.ControlHints));
     }
 
     [Theory]
@@ -105,7 +106,7 @@ public class HotkeyTooltipTests : IDisposable
     [InlineData(typeof(MapUIManager), "LeaveScavenging", "Return")]
     [InlineData(typeof(MapUIManager), "LeaveCommissary", "Return")]
     [InlineData(typeof(MapUIManager), "LeaveUpgradeMerchant", "Return")]
-    [InlineData(typeof(GameOptionUIManager), "OpenUI", "Options")]
+    [InlineData(typeof(GameOptionUIManager), "OpenUI", "None")]
     [InlineData(typeof(StoreUIManager), "ToggleControlHintOverlay", "ControlHints")]
     public void ButtonActionsMatchExistingGameCallbacks(Type type, string method, string expected)
     {

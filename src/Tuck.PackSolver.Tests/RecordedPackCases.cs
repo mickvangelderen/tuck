@@ -54,8 +54,36 @@ internal static class RecordedPackCases
             {
                 State = ReducedToolboxState(), MinimumReturnedValue = 598
             },
-            ["electronics-glass-shard"] = shard
+            ["electronics-glass-shard"] = shard,
+            ["performance-module"] = new(PerformanceModuleState(), 103,
+            [
+                Place("item-0", "right", new Placement.Slot())
+            ])
         };
+    }
+
+    // Recording 52af054fabce46de9e43ca1b9ae169d1: keep electronics (33) and collect the module (70).
+    // GameBoundaryTests covers capture using the actual module removal callback.
+    private static PackState PerformanceModuleState()
+    {
+        ItemState[] items =
+        [
+            Loot("item-0", "system_module_performance", "ground", 70, 2, 2, new Placement.Grid(3, 0)),
+            Loot("item-1", "junk", "ground", 3, 3, 2, new Placement.Grid(5, 0)),
+            Loot("item-2", "junk", "ground", 3, 3, 2, new Placement.Grid(8, 0)),
+            Loot("item-3", "junk", "ground", 3, 3, 2, new Placement.Grid(0, 2)),
+            Loot("item-4", "junk", "ground", 3, 3, 2, new Placement.Grid(3, 2)),
+            Loot("item-5", "gun_part", "ground", 25, 3, 2, new Placement.Grid(3, 6), Facts(["CAN_USE_ON_NON_OWNED_TAG"])),
+            Loot("item-6", "common_electronic", "left", 33, 3, 2, new Placement.Slot())
+        ];
+        return new("performance-module", new("ground", "backpack", "left", "right"), items,
+        [
+            new("ground", new InventoryLayout.Grid(ShapeState.Rectangle(12, 9, 0, 1)),
+                new(AdmissionKind.Ground, allowsHazardousWaste: true)),
+            new("backpack", new InventoryLayout.Slot(), new(AdmissionKind.Backpack)),
+            new("left", new InventoryLayout.Slot(), new(AdmissionKind.Owned)),
+            new("right", new InventoryLayout.Slot(), new(AdmissionKind.Owned))
+        ], items.Select(i => i.Identifier).Distinct().Select(id => new ItemDefinition(id)));
     }
 
     private static PackState FannyPackState()

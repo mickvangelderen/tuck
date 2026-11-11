@@ -10,6 +10,19 @@ public class PackingPolicyTests
     [SolverData(false)]
     [SolverData(true)]
     [Trait("Category", "SolverContract")]
+    public void StuckItemsStayInPlaceRegardlessOfItemType(string solverName, bool stuck)
+    {
+        var state = State([Item("ordinary_item", "ground", 70, tags: stuck ? ["MODULE_STUCK_TAG"] : [])]);
+        var result = SolverUnderTest.Solve(solverName, new(state));
+        Assert.Equal(stuck ? 0 : 70, result.FinalValue);
+        if (stuck) Assert.Empty(result.Plan.Steps);
+        else Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), "ordinary_item"));
+    }
+
+    [Theory]
+    [SolverData(false)]
+    [SolverData(true)]
+    [Trait("Category", "SolverContract")]
     public void LeavesAnOversizedStackIntactEvenWhenAHandCouldBeCleared(string solverName, bool occupied)
     {
         var inventories = Inventories();

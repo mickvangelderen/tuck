@@ -142,36 +142,86 @@ public class GameBoundaryTests
         Assert.Same(ground, item.parentInventory);
     }
     [Fact]
-    public void AdditionalEffectsAreCapturedAsUnsupportedTransfers()
+    public void CaptureAllowsTransferEffectsWithoutExecutingThem()
     {
         var item = new FixtureItem("effect");
-        item.onSlotAddItemFunc += (_, _, _) => { };
-        var capture = Capture(Grid(item));
-        Assert.Contains("effects", capture.State.Definitions["effect"].Rules.UnsupportedTransfer!);
+        var ground = Grid(item);
+        item.onSlotAddItemFunc += (_, _, _) => throw new Exception("Must not execute during capture.");
+        item.onSlotRemoveItemFunc += (_, _, _) => throw new Exception("Must not execute during capture.");
+        item.onChangeAmountItemFunc += _ => throw new Exception("Must not execute during capture.");
+        ground.onSlotAddItemFunc += (_, _, _) => throw new Exception("Must not execute during capture.");
+        ground.onSlotRemoveItemFunc += (_, _, _) => throw new Exception("Must not execute during capture.");
+        var capture = Capture(ground);
+        var state = capture.State;
+        var final = PlanReplay.Replay(state, new(state.StateId,
+            [new(Assert.Single(state.Items).Id, new(state.Roots.Left, new Placement.Slot()))]));
+        Assert.Equal(state.Roots.Left, Assert.Single(final.Items).Location.InventoryId);
     }
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void CapturesVanillaRuinedModuleRemovalAndStuckState(bool stuck)
+    public void CanCollectPerformanceModuleUnlessStuck(bool stuck)
     {
-        var item = new FixtureItem("system_module_ruined", 30);
-        // Install the actual game helper's callback, rather than a test copy of that rule.
+        var item = new FixtureItem("system_module_performance", 70);
         ModuleHelper.InitModuleItem(item, "MODULE_TYPE_UNIVERSAL");
         if (stuck) item.EnableTag("MODULE_STUCK_TAG");
+        var state = Capture(Grid(item)).State;
+        var plan = new PackPlan(state.StateId,
+            [new(Assert.Single(state.Items).Id, new(state.Roots.Left, new Placement.Slot()))]);
+        if (stuck)
+            Assert.Throws<InvalidOperationException>(() => PlanReplay.Replay(state, plan));
+        else
+            Assert.Equal(state.Roots.Left, Assert.Single(PlanReplay.Replay(state, plan).Items).Location.InventoryId);
+    }
+    [Fact]
+    public void PlansWholeStacksWithoutProbingTransferCallbacks()
+    {
+        var item = new FixtureItem("mod_stack") { unitCount = 3 };
+        item.mayInventoryAddItemFunc = (_, _) => throw new Exception("Planning must not probe.");
+        item.mayInventoryRemoveItemFunc = (_, _) => throw new Exception("Planning must not probe.");
+        item.isItemStateValidFunc = (_, _, _, _, _) => throw new Exception("Planning must not probe.");
+        item.maxSlotAmountItemFunc = (_, _, _) => throw new Exception("Planning must not probe.");
+        item.maxSlotRemoveItemFunc = (_, _, _) => throw new Exception("Planning must not probe.");
+        var ground = Grid(item);
+        ground.mayInventoryRemoveItemFunc = (_, _) => throw new Exception("Planning must not probe.");
+        ground.minSlotAmountItemFunc = (_, _, _) => throw new Exception("Planning must not probe.");
+        var left = Raw<GameSlotInventory>();
+        left.mayInventoryAddItemFunc = (_, _) => throw new Exception("Planning must not probe.");
+        left.isItemStateValidFunc = (_, _, _, _, _) => throw new Exception("Planning must not probe.");
+        left.maxSlotAddItemFunc = (_, _, _) => throw new Exception("Planning must not probe.");
+        var state = PackCapture.Capture(ground, Raw<GameSlotInventory>(), left, Raw<GameSlotInventory>(), () => false).State;
+        var plan = new PackPlan(state.StateId, [new(Assert.Single(state.Items).Id, new(state.Roots.Left, new Placement.Slot()))]);
+        var moved = Assert.Single(PlanReplay.Replay(state, plan).Items);
+        Assert.Equal(state.Roots.Left, moved.Location.InventoryId);
+        Assert.Equal(3, moved.UnitCount);
+    }
+
+    [Fact]
+    public void ExecutorRechecksLivePermissionAndStopsWithoutRetrying()
+    {
+        var item = new FixtureItem("loot");
+        var capture = Capture(Grid(item));
+        var state = capture.State;
+        int attempts = 0;
+        item.mayInventoryRemoveItemFunc = (_, _) => { attempts++; return false; };
+        var result = PackExecutor.Execute(capture,
+            new(state.StateId, [new(Assert.Single(state.Items).Id, new(state.Roots.Left, new Placement.Slot()))]));
+        Assert.Equal(ExecutionStatus.TransferRefused, result.Status);
+        Assert.Equal(0, result.CompletedSteps);
+        Assert.Equal(1, attempts);
+    }
+    [Fact]
+    public void CapturesStuckStateOnNonModules()
+    {
+        var item = new FixtureItem("ordinary_item");
+        item.EnableTag("MODULE_STUCK_TAG");
         var captured = Capture(Grid(item));
-        Assert.Null(captured.State.Definitions[item.identifier].Rules.UnsupportedTransfer);
         var copied = Assert.Single(captured.State.Items);
-        Assert.Equal(stuck, copied.State.IsTag("MODULE_STUCK_TAG"));
-        Assert.Equal(30, copied.UnitValue);
-        Assert.Equal(30, item.unitValue);
-#if DEBUG
-        Assert.Equal(30, Assert.Single(captured.Observations).UnitValue);
-        Assert.Empty(Tuck.Mod.DebugRecording.ItemObservation.Differences(captured.State, captured.Observations));
-#endif
-        // A second removal condition must not be mistaken for the mapped vanilla rule.
-        item.mayInventoryRemoveItemFunc += (_, _) => false;
-        var restricted = Capture(item.parentInventory as GameGridInventory ?? throw new InvalidOperationException());
-        Assert.NotNull(restricted.State.Definitions[item.identifier].Rules.UnsupportedTransfer);
+        Assert.False(item.IsTag("MODULE_TAG"));
+        Assert.True(copied.State.IsTag("MODULE_STUCK_TAG"));
+        Assert.Null(captured.State.Definitions[item.identifier].Rules.UnsupportedTransfer);
+        Assert.Throws<InvalidOperationException>(() => PlanReplay.Replay(captured.State,
+            new(captured.State.StateId, [new(copied.Id, new(captured.State.Roots.Left, new Placement.Slot()))])));
     }
     [Fact]
     public void DetachedTransformsMatchTheActualGameInAllOrientations()

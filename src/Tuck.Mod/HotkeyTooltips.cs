@@ -57,7 +57,7 @@ internal static class HotkeyTooltips
             __instance.ShouldRequireHold() && options.BellHoldDuration.Value > 0f);
     }
 
-    internal enum ButtonAction { None, Scavenge, Return, Options, ControlHints }
+    internal enum ButtonAction { None, Scavenge, Return, ControlHints }
 
     // Match callbacks, never localized captions or scene object names.
     internal static ButtonAction IdentifyAction(Type type, string method) => (type, method) switch
@@ -67,7 +67,6 @@ internal static class HotkeyTooltips
         (_, nameof(MapUIManager.Return) or nameof(MapUIManager.LeaveScavenging)
             or nameof(MapUIManager.LeaveCommissary) or nameof(MapUIManager.LeaveUpgradeMerchant))
             when type == typeof(MapUIManager) => ButtonAction.Return,
-        (_, nameof(GameOptionUIManager.OpenUI)) when type == typeof(GameOptionUIManager) => ButtonAction.Options,
         (_, nameof(StoreUIManager.ToggleControlHintOverlay)) when type == typeof(StoreUIManager) => ButtonAction.ControlHints,
         _ => ButtonAction.None
     };
@@ -78,7 +77,6 @@ internal static class HotkeyTooltips
             AppendHint(options, options.Text("scavenge"), options.Scavenge.Key),
         ButtonAction.Return => options.Return.Key == KeyCode.None ? "" :
             AppendHint(options, options.Text("return"), options.Return.Key),
-        ButtonAction.Options => VanillaButtonHint(options, KeyBindHelper.OPEN_OPTIONS),
         ButtonAction.ControlHints => VanillaButtonHint(options, KeyBindHelper.CONTROL_HINTS),
         _ => ""
     };
