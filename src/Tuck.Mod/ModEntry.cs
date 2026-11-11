@@ -25,6 +25,7 @@ public sealed partial class ModEntry : IMod
         WorkspaceWarning.Register(_options);
         BellHold.Register(_options);
         StoreHotkeys.Register(_options);
+        HotkeyGlyphs.Register(_manifest.ID);
         HotkeyTooltips.Register(_options);
         BackpackSelection.Register(_options);
         DragAmounts.Register(_options);
@@ -45,6 +46,7 @@ public sealed partial class ModEntry : IMod
         DragAmounts.Unregister();
         BackpackSelection.Unregister();
         HotkeyTooltips.Unregister();
+        HotkeyGlyphs.Unregister();
         StoreHotkeys.Unregister();
         BellHold.Unregister();
         WorkspaceWarning.Unregister();

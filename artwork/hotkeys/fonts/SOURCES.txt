@@ -1,0 +1,28 @@
+Noto Sans Medium
+  noto-sans-medium/NotoSans-Medium.ttf
+  noto-sans-medium/OFL.txt
+
+Downloaded from the official Noto repository at the pinned revision:
+https://github.com/notofonts/noto-fonts/tree/ffebf8c1ee449e544955a7e813c54f9b73848eac
+hinted/ttf/NotoSans/NotoSans-Medium.ttf
+LICENSE (saved as OFL.txt)
+
+SHA-256: 7bbe267354704c6ad18bde24b1dbc756c8e4380ca1c3f3c25c45ec5c4471510b
+
+This is the same family and weight used by the game's NotoSans-Medium SDF
+asset. It is rendered directly from vector outlines using Pillow/FreeType;
+the original source font version used by the game has not been verified.
+
+Phosphor Icons 2.1.2
+  phosphor/Phosphor.ttf
+  phosphor/Phosphor-Fill.ttf
+  phosphor/LICENSE.txt
+
+Downloaded from the official repository at the pinned revision:
+https://github.com/phosphor-icons/web/tree/3d40a3eaa73b25d20d263f0e1e55c9fed3e66809
+src/regular/Phosphor.ttf
+src/fill/Phosphor-Fill.ttf
+LICENSE
+
+Regular SHA-256: 06b91e022b7ee899a63efced879392a74f0bacbda54e4467e9f663220d173a10
+Fill SHA-256: a53f5d2630cab5e3b7536ecb9d69d71519a2190298c22b1f8d770dd37bc2940a

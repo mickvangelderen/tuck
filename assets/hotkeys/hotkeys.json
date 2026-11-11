@@ -1,0 +1,1760 @@
+{
+  "atlas": "hotkeys.png",
+  "width": 1024,
+  "height": 512,
+  "origin": "bottom-left",
+  "keys": [
+    {
+      "keycode": 8,
+      "name": "Backspace",
+      "variants": {
+        "base": {
+          "x": 502,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 9,
+      "name": "Tab",
+      "variants": {
+        "base": {
+          "x": 388,
+          "y": 472,
+          "width": 58,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 12,
+      "name": "Clear",
+      "variants": {
+        "base": {
+          "x": 212,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 13,
+      "name": "Return",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 19,
+      "name": "Pause",
+      "variants": {
+        "base": {
+          "x": 296,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 27,
+      "name": "Escape",
+      "variants": {
+        "base": {
+          "x": 674,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 32,
+      "name": "Space",
+      "variants": {
+        "base": {
+          "x": 194,
+          "y": 472,
+          "width": 66,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 33,
+      "name": "Exclaim",
+      "variants": {
+        "base": {
+          "x": 716,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 34,
+      "name": "DoubleQuote",
+      "variants": {
+        "base": {
+          "x": 464,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 35,
+      "name": "Hash",
+      "variants": {
+        "base": {
+          "x": 548,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 36,
+      "name": "Dollar",
+      "variants": {
+        "base": {
+          "x": 422,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 37,
+      "name": "Percent",
+      "variants": {
+        "base": {
+          "x": 338,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 38,
+      "name": "Ampersand",
+      "variants": {
+        "base": {
+          "x": 880,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 39,
+      "name": "Quote",
+      "variants": {
+        "base": {
+          "x": 590,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 40,
+      "name": "LeftParen",
+      "variants": {
+        "base": {
+          "x": 590,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 41,
+      "name": "RightParen",
+      "variants": {
+        "base": {
+          "x": 800,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 42,
+      "name": "Asterisk",
+      "variants": {
+        "base": {
+          "x": 922,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 43,
+      "name": "Plus",
+      "variants": {
+        "base": {
+          "x": 422,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 44,
+      "name": "Comma",
+      "variants": {
+        "base": {
+          "x": 296,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 45,
+      "name": "Minus",
+      "variants": {
+        "base": {
+          "x": 716,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 46,
+      "name": "Period",
+      "variants": {
+        "base": {
+          "x": 380,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 47,
+      "name": "Slash",
+      "variants": {
+        "base": {
+          "x": 968,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 48,
+      "name": "Alpha0",
+      "variants": {
+        "base": {
+          "x": 460,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 49,
+      "name": "Alpha1",
+      "variants": {
+        "base": {
+          "x": 502,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 50,
+      "name": "Alpha2",
+      "variants": {
+        "base": {
+          "x": 544,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 51,
+      "name": "Alpha3",
+      "variants": {
+        "base": {
+          "x": 586,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 52,
+      "name": "Alpha4",
+      "variants": {
+        "base": {
+          "x": 628,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 53,
+      "name": "Alpha5",
+      "variants": {
+        "base": {
+          "x": 670,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 54,
+      "name": "Alpha6",
+      "variants": {
+        "base": {
+          "x": 712,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 55,
+      "name": "Alpha7",
+      "variants": {
+        "base": {
+          "x": 754,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 56,
+      "name": "Alpha8",
+      "variants": {
+        "base": {
+          "x": 796,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 57,
+      "name": "Alpha9",
+      "variants": {
+        "base": {
+          "x": 838,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 58,
+      "name": "Colon",
+      "variants": {
+        "base": {
+          "x": 254,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 59,
+      "name": "Semicolon",
+      "variants": {
+        "base": {
+          "x": 926,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 60,
+      "name": "Less",
+      "variants": {
+        "base": {
+          "x": 632,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 61,
+      "name": "Equals",
+      "variants": {
+        "base": {
+          "x": 632,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 62,
+      "name": "Greater",
+      "variants": {
+        "base": {
+          "x": 464,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 63,
+      "name": "Question",
+      "variants": {
+        "base": {
+          "x": 548,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 64,
+      "name": "At",
+      "variants": {
+        "base": {
+          "x": 964,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 91,
+      "name": "LeftBracket",
+      "variants": {
+        "base": {
+          "x": 506,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 92,
+      "name": "Backslash",
+      "variants": {
+        "base": {
+          "x": 264,
+          "y": 472,
+          "width": 58,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 93,
+      "name": "RightBracket",
+      "variants": {
+        "base": {
+          "x": 716,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 94,
+      "name": "Caret",
+      "variants": {
+        "base": {
+          "x": 170,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 95,
+      "name": "Underscore",
+      "variants": {
+        "base": {
+          "x": 170,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 96,
+      "name": "BackQuote",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 97,
+      "name": "A",
+      "variants": {
+        "base": {
+          "x": 418,
+          "y": 392,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 98,
+      "name": "B",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 99,
+      "name": "C",
+      "variants": {
+        "base": {
+          "x": 128,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 100,
+      "name": "D",
+      "variants": {
+        "base": {
+          "x": 338,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 101,
+      "name": "E",
+      "variants": {
+        "base": {
+          "x": 548,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 102,
+      "name": "F",
+      "variants": {
+        "base": {
+          "x": 758,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 103,
+      "name": "G",
+      "variants": {
+        "base": {
+          "x": 422,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 104,
+      "name": "H",
+      "variants": {
+        "base": {
+          "x": 506,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 105,
+      "name": "I",
+      "variants": {
+        "base": {
+          "x": 674,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 106,
+      "name": "J",
+      "variants": {
+        "base": {
+          "x": 758,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 107,
+      "name": "K",
+      "variants": {
+        "base": {
+          "x": 800,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 108,
+      "name": "L",
+      "variants": {
+        "base": {
+          "x": 422,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 109,
+      "name": "M",
+      "variants": {
+        "base": {
+          "x": 674,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 110,
+      "name": "N",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 111,
+      "name": "O",
+      "variants": {
+        "base": {
+          "x": 128,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 112,
+      "name": "P",
+      "variants": {
+        "base": {
+          "x": 170,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 113,
+      "name": "Q",
+      "variants": {
+        "base": {
+          "x": 506,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 114,
+      "name": "R",
+      "variants": {
+        "base": {
+          "x": 632,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 115,
+      "name": "S",
+      "variants": {
+        "base": {
+          "x": 842,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 116,
+      "name": "T",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 117,
+      "name": "U",
+      "variants": {
+        "base": {
+          "x": 128,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 118,
+      "name": "V",
+      "variants": {
+        "base": {
+          "x": 254,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 119,
+      "name": "W",
+      "variants": {
+        "base": {
+          "x": 296,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 120,
+      "name": "X",
+      "variants": {
+        "base": {
+          "x": 338,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 121,
+      "name": "Y",
+      "variants": {
+        "base": {
+          "x": 380,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 122,
+      "name": "Z",
+      "variants": {
+        "base": {
+          "x": 422,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 123,
+      "name": "LeftCurlyBracket",
+      "variants": {
+        "base": {
+          "x": 548,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 124,
+      "name": "Pipe",
+      "variants": {
+        "base": {
+          "x": 326,
+          "y": 472,
+          "width": 58,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 125,
+      "name": "RightCurlyBracket",
+      "variants": {
+        "base": {
+          "x": 758,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 126,
+      "name": "Tilde",
+      "variants": {
+        "base": {
+          "x": 86,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 127,
+      "name": "Delete",
+      "variants": {
+        "base": {
+          "x": 380,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 256,
+      "name": "Keypad0",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 472,
+          "width": 76,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 257,
+      "name": "Keypad1",
+      "variants": {
+        "base": {
+          "x": 842,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 258,
+      "name": "Keypad2",
+      "variants": {
+        "base": {
+          "x": 884,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 259,
+      "name": "Keypad3",
+      "variants": {
+        "base": {
+          "x": 926,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 260,
+      "name": "Keypad4",
+      "variants": {
+        "base": {
+          "x": 968,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 261,
+      "name": "Keypad5",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 262,
+      "name": "Keypad6",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 263,
+      "name": "Keypad7",
+      "variants": {
+        "base": {
+          "x": 86,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 264,
+      "name": "Keypad8",
+      "variants": {
+        "base": {
+          "x": 128,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 265,
+      "name": "Keypad9",
+      "variants": {
+        "base": {
+          "x": 170,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 266,
+      "name": "KeypadPeriod",
+      "variants": {
+        "base": {
+          "x": 380,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 267,
+      "name": "KeypadDivide",
+      "variants": {
+        "base": {
+          "x": 212,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 268,
+      "name": "KeypadMultiply",
+      "variants": {
+        "base": {
+          "x": 338,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 269,
+      "name": "KeypadMinus",
+      "variants": {
+        "base": {
+          "x": 296,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 270,
+      "name": "KeypadPlus",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 434,
+          "width": 38,
+          "height": 76
+        }
+      }
+    },
+    {
+      "keycode": 271,
+      "name": "KeypadEnter",
+      "variants": {
+        "base": {
+          "x": 554,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 272,
+      "name": "KeypadEquals",
+      "variants": {
+        "base": {
+          "x": 254,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 273,
+      "name": "UpArrow",
+      "variants": {
+        "base": {
+          "x": 212,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 274,
+      "name": "DownArrow",
+      "variants": {
+        "base": {
+          "x": 506,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 275,
+      "name": "RightArrow",
+      "variants": {
+        "base": {
+          "x": 674,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 276,
+      "name": "LeftArrow",
+      "variants": {
+        "base": {
+          "x": 464,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 277,
+      "name": "Insert",
+      "variants": {
+        "base": {
+          "x": 716,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 278,
+      "name": "Home",
+      "variants": {
+        "base": {
+          "x": 632,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 279,
+      "name": "End",
+      "variants": {
+        "base": {
+          "x": 590,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 280,
+      "name": "PageUp",
+      "variants": {
+        "base": {
+          "x": 254,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 281,
+      "name": "PageDown",
+      "variants": {
+        "base": {
+          "x": 212,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 282,
+      "name": "F1",
+      "variants": {
+        "base": {
+          "x": 800,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 283,
+      "name": "F2",
+      "variants": {
+        "base": {
+          "x": 86,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 284,
+      "name": "F3",
+      "variants": {
+        "base": {
+          "x": 128,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 285,
+      "name": "F4",
+      "variants": {
+        "base": {
+          "x": 170,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 286,
+      "name": "F5",
+      "variants": {
+        "base": {
+          "x": 212,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 287,
+      "name": "F6",
+      "variants": {
+        "base": {
+          "x": 254,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 288,
+      "name": "F7",
+      "variants": {
+        "base": {
+          "x": 296,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 289,
+      "name": "F8",
+      "variants": {
+        "base": {
+          "x": 338,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 290,
+      "name": "F9",
+      "variants": {
+        "base": {
+          "x": 380,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 291,
+      "name": "F10",
+      "variants": {
+        "base": {
+          "x": 842,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 292,
+      "name": "F11",
+      "variants": {
+        "base": {
+          "x": 884,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 293,
+      "name": "F12",
+      "variants": {
+        "base": {
+          "x": 926,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 294,
+      "name": "F13",
+      "variants": {
+        "base": {
+          "x": 968,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 295,
+      "name": "F14",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 296,
+      "name": "F15",
+      "variants": {
+        "base": {
+          "x": 44,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 300,
+      "name": "Numlock",
+      "variants": {
+        "base": {
+          "x": 86,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 301,
+      "name": "CapsLock",
+      "variants": {
+        "base": {
+          "x": 124,
+          "y": 472,
+          "width": 66,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 302,
+      "name": "ScrollLock",
+      "variants": {
+        "base": {
+          "x": 884,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 303,
+      "name": "RightShift",
+      "variants": {
+        "base": {
+          "x": 314,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 304,
+      "name": "LeftShift",
+      "variants": {
+        "base": {
+          "x": 866,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 305,
+      "name": "RightControl",
+      "variants": {
+        "base": {
+          "x": 210,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 262,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 306,
+      "name": "LeftControl",
+      "variants": {
+        "base": {
+          "x": 762,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 814,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 307,
+      "name": "RightAlt",
+      "variants": {
+        "base": {
+          "x": 54,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 106,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 308,
+      "name": "LeftAlt",
+      "variants": {
+        "base": {
+          "x": 606,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 658,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 309,
+      "name": "RightCommand",
+      "variants": {
+        "base": {
+          "x": 366,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 158,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 310,
+      "name": "LeftCommand",
+      "variants": {
+        "base": {
+          "x": 918,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        },
+        "mac": {
+          "x": 710,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 311,
+      "name": "LeftWindows",
+      "variants": {
+        "base": {
+          "x": 918,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 312,
+      "name": "RightWindows",
+      "variants": {
+        "base": {
+          "x": 366,
+          "y": 392,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 313,
+      "name": "AltGr",
+      "variants": {
+        "base": {
+          "x": 450,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 315,
+      "name": "Help",
+      "variants": {
+        "base": {
+          "x": 590,
+          "y": 308,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 316,
+      "name": "Print",
+      "variants": {
+        "base": {
+          "x": 464,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 317,
+      "name": "SysReq",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 182,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 318,
+      "name": "Break",
+      "variants": {
+        "base": {
+          "x": 86,
+          "y": 350,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 319,
+      "name": "Menu",
+      "variants": {
+        "base": {
+          "x": 970,
+          "y": 472,
+          "width": 48,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 323,
+      "name": "Mouse0",
+      "variants": {
+        "base": {
+          "x": 758,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 324,
+      "name": "Mouse1",
+      "variants": {
+        "base": {
+          "x": 800,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 325,
+      "name": "Mouse2",
+      "variants": {
+        "base": {
+          "x": 842,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 326,
+      "name": "Mouse3",
+      "variants": {
+        "base": {
+          "x": 884,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 327,
+      "name": "Mouse4",
+      "variants": {
+        "base": {
+          "x": 926,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 328,
+      "name": "Mouse5",
+      "variants": {
+        "base": {
+          "x": 968,
+          "y": 266,
+          "width": 38,
+          "height": 38
+        }
+      }
+    },
+    {
+      "keycode": 329,
+      "name": "Mouse6",
+      "variants": {
+        "base": {
+          "x": 2,
+          "y": 224,
+          "width": 38,
+          "height": 38
+        }
+      }
+    }
+  ]
+}

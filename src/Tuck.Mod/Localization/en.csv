@@ -41,4 +41,4 @@ text_with_key_hint,{0} {1}
 show_hotkeys_in_tooltips,Show hotkeys in tooltips
 show_current_hotkeys_in_action_tooltips,Show current key bindings in action tooltips.
 hold_and_release_key,(hold and release {0})
-return_from_night_activity,Return from night activity
+return,Return

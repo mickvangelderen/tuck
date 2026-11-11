@@ -18,10 +18,9 @@
     <Reference Include="UnityEngine.UI" HintPath="$(GameAssembliesDir)\UnityEngine.UI.dll" />
     <Reference Include="UnityEngine.UIModule" HintPath="$(GameAssembliesDir)\UnityEngine.UIModule.dll" />
     <Reference Include="Unity.TextMeshPro" HintPath="$(GameAssembliesDir)\Unity.TextMeshPro.dll" />
+    <Reference Include="UnityEngine.TextCoreFontEngineModule" HintPath="$(GameAssembliesDir)\UnityEngine.TextCoreFontEngineModule.dll" />
     <Reference Include="DseCecil" HintPath="$(GameAssembliesDir)\DseCecil.dll" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(GameAssembliesDir)\Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' != 'Debug'">
     <Compile Remove="PackRecordingTests.cs;RecordingFixtures.cs" />

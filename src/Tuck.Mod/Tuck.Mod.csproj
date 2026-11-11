@@ -59,6 +59,8 @@
     <Reference Include="UnityEngine.Physics2DModule" HintPath="$(GameAssembliesDir)\UnityEngine.Physics2DModule.dll" Private="false" />
     <TuckSprite Include="..\..\assets\tuck\rail-walk.png;..\..\assets\tuck\hang.png;..\..\assets\tuck\hang-mask.png;..\..\assets\tuck\hang-wire.png;..\..\assets\tuck\stand.png" />
     <None Include="@(TuckSprite)" Link="assets\tuck\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <HotkeyAsset Include="..\..\assets\hotkeys\hotkeys.png;..\..\assets\hotkeys\hotkeys.json" />
+    <None Include="@(HotkeyAsset)" Link="assets\hotkeys\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="manifest.xml" CopyToOutputDirectory="Always" />
     <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
     <TuckLocalization Include="Localization\*.csv" />
@@ -95,6 +97,8 @@
     <Copy SourceFiles="@(_ModFiles)" DestinationFolder="$(ModStagingDir)" />
     <Copy SourceFiles="@(TuckSprite->'$(TargetDir)assets\tuck\%(Filename)%(Extension)')"
           DestinationFolder="$(ModStagingDir)assets\tuck\" />
+    <Copy SourceFiles="@(HotkeyAsset->'$(TargetDir)assets\hotkeys\%(Filename)%(Extension)')"
+          DestinationFolder="$(ModStagingDir)assets\hotkeys\" />
     <Copy SourceFiles="@(TuckLocalization->'$(TargetDir)Localization\%(Filename)%(Extension)')"
           DestinationFolder="$(ModStagingDir)Localization\" />
   </Target>

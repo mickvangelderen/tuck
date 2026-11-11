@@ -52,13 +52,30 @@ public class HotkeyTooltipTests : IDisposable
     }
 
     [Fact]
-    public void ModHintsFollowRebindingsUnbindingAndHoldDuration()
+    public void GlyphHintsReplaceParenthesizedKeysAndPreserveHoldInstructionsAndTranslations()
     {
-        Assert.Equal("Return from night activity (hold and release R)",
+        string glyph = HotkeyGlyphs.Tag(KeyCode.H);
+        Assert.Equal("<sprite=\"Tuck.Hotkeys\" name=\"104\">", glyph);
+        Assert.Equal($"Shutters {glyph}", HotkeyTooltips.FormatHint(_options, "Shutters", KeyCode.H, false, glyph));
+        Assert.Equal($"Return (hold and release {glyph})",
+            HotkeyTooltips.FormatHint(_options, "Return", KeyCode.H, true, glyph));
+        _english["text_with_key_hint"] = "{1}: {0}";
+        _english["hold_and_release_key"] = "hold {0}, then release";
+        Assert.Equal($"hold {glyph}, then release: Return",
+            HotkeyTooltips.FormatHint(_options, "Return", KeyCode.H, true, glyph));
+        Assert.Equal("Return", HotkeyTooltips.FormatHint(_options, "Return", KeyCode.None, true, glyph));
+        Set("show_hotkeys_in_tooltips", false);
+        Assert.Equal("Shutters", HotkeyTooltips.FormatHint(_options, "Shutters", KeyCode.H, false, glyph));
+    }
+
+    [Fact]
+    public void ModHintsFollowRebindingsAndUnbindingWithoutHoldInstructions()
+    {
+        Assert.Equal("Return (R)",
             HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));
         Set("return_key", "Mouse4");
         Set("return_hold_duration", 0f);
-        Assert.Equal("Return from night activity (Mouse 5)",
+        Assert.Equal("Return (Mouse 5)",
             HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));
         Set("return_key", "None");
         Assert.Equal("", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));

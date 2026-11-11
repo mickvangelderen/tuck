@@ -27,10 +27,13 @@ internal static class HotkeyTooltips
     }
 
     internal static string AppendHint(Options options, string text, KeyCode key, bool hold = false)
+        => FormatHint(options, text, key, hold, HotkeyGlyphs.GetTag(key));
+
+    internal static string FormatHint(Options options, string text, KeyCode key, bool hold, string? glyph)
     {
         if (!options.ShowHotkeysInTooltips.Value || key == KeyCode.None) return text;
-        string hint = hold ? options.Text("hold_and_release_key", KeyBindHelper.KeyName(key))
-            : $"({KeyBindHelper.KeyName(key)})";
+        string hint = hold ? options.Text("hold_and_release_key", glyph ?? KeyBindHelper.KeyName(key))
+            : glyph ?? $"({KeyBindHelper.KeyName(key)})";
         return options.Text("text_with_key_hint", text, hint);
     }
 
@@ -74,8 +77,7 @@ internal static class HotkeyTooltips
         ButtonAction.Scavenge => options.Scavenge.Key == KeyCode.None ? "" :
             AppendHint(options, options.Text("scavenge"), options.Scavenge.Key),
         ButtonAction.Return => options.Return.Key == KeyCode.None ? "" :
-            AppendHint(options, options.Text("return_from_night_activity"), options.Return.Key,
-                options.ReturnHoldDuration.Value > 0f),
+            AppendHint(options, options.Text("return"), options.Return.Key),
         ButtonAction.Options => VanillaButtonHint(options, KeyBindHelper.OPEN_OPTIONS),
         ButtonAction.ControlHints => VanillaButtonHint(options, KeyBindHelper.CONTROL_HINTS),
         _ => ""
