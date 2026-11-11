@@ -16,9 +16,7 @@ Move all of kind (Shift + drag), move all (Ctrl + drag).
 
 ![Dragging items in bulk](./media/shift-drag.gif)
 
-### Water filter swap
-
-What you could do for batteries, but now also water filters.
+### Quick swap water filter
 
 ![Swap water filters like batteries](./media/water-filter.gif)
 
@@ -36,7 +34,7 @@ Adds +5 and +20 output buttons.
 
 ### More hotkeys
 
-Hotkeys for all common interactions!
+Hotkeys for vanilla and mod interactions! Hotkeys are shown in tooltips, and configurable.
 
 ![More hotkeys](./media/hotkeys.gif)
 

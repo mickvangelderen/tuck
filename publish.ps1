@@ -2,9 +2,11 @@
 .SYNOPSIS
 Builds and publishes Tuck through the logged-in Steam desktop client.
 .DESCRIPTION
-Edit workshop.json for the title, visibility (private/public/friendsOnly/unlisted),
-and change note. Keep Steam online as the Workshop item's owner.
-PrepareOnly validates inputs and writes an offline description preview.
+Edit workshop.json for the title and visibility (private/public/friendsOnly/unlisted).
+Keep Steam online as the Workshop item's owner.
+CHANGELOG.md must have an empty Unreleased section followed by a release section
+whose version matches the staged manifest. That section becomes Steam's change note.
+PrepareOnly validates inputs and writes offline description and change note previews.
 CheckOnly also queries Steam for ownership and existing images, without uploading.
 For a new item, set publishedFileId to 0. Publishing saves its new ID immediately;
 commit that change and keep the ID for subsequent releases.
@@ -39,6 +41,7 @@ $publisherArgs = @(
     $mode,
     (Join-Path $PSScriptRoot 'workshop.json'),
     (Join-Path $PSScriptRoot 'README.md'),
+    (Join-Path $PSScriptRoot 'CHANGELOG.md'),
     (Join-Path $targetDir 'mod'),
     (Join-Path $PSScriptRoot 'media/tuck.png'),
     (Join-Path $PSScriptRoot 'artifacts/workshop')

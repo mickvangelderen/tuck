@@ -21,6 +21,8 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-11
+
 - Interactions that have a tooltip and keybinding now display their associated hotkey in the tooltip.
   This feature can be toggled through the options.
 - Water filter swaps now try rotations and nearby positions to fit the removed filter back into your inventory.
@@ -38,6 +40,7 @@ Initial public release.
 - Add hotkeys for many interactions.
 - Improved appraisal and chem finisher UI.
 
-[unreleased]: https://github.com/mickvangelderen/tuck/compare/1.0.0...HEAD
+[unreleased]: https://github.com/mickvangelderen/tuck/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.1.0
 [1.0.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.0.0
 [@mickvangelderen]: https://github.com/mickvangelderen
