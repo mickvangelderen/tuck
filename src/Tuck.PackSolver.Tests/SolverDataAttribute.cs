@@ -24,23 +24,27 @@ public sealed class SolverDataAttribute(params object[] arguments) : DataAttribu
 
     public override IEnumerable<object[]> GetData(MethodInfo testMethod)
     {
+        foreach (var solver in SolverUnderTest.Discover().Where(t => (Only == null || t == Only) && t != Except))
+            yield return new object[] { solver.FullName! }.Concat(arguments).ToArray();
+    }
+}
+
+internal static class SolverUnderTest
+{
+    internal static Type[] Discover()
+    {
         string? selected = Environment.GetEnvironmentVariable("PACK_SOLVER");
         var solvers = typeof(IPackSolver).Assembly.GetTypes()
             .Where(t => t.IsPublic && !t.IsAbstract && !t.ContainsGenericParameters && typeof(IPackSolver).IsAssignableFrom(t))
             .Where(t => string.IsNullOrWhiteSpace(selected) || t.Name == selected || t.FullName == selected)
             .OrderBy(t => t.FullName, StringComparer.Ordinal).ToArray();
         if (solvers.Length == 0) throw new InvalidOperationException($"No IPackSolver matches PACK_SOLVER='{selected}'.");
-        foreach (var solver in solvers.Where(t => (Only == null || t == Only) && t != Except))
-        {
+        foreach (var solver in solvers)
             if (solver.GetConstructor(Type.EmptyTypes) == null)
                 throw new InvalidOperationException($"{solver.FullName} needs a public parameterless constructor for solver contract tests.");
-            yield return new object[] { solver.FullName! }.Concat(arguments).ToArray();
-        }
+        return solvers;
     }
-}
 
-internal static class SolverUnderTest
-{
     internal static IPackSolver Create(string solverName)
     {
         var type = typeof(IPackSolver).Assembly.GetType(solverName, throwOnError: true)!;

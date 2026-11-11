@@ -39,7 +39,8 @@ public class GameBoundaryTests
         // The test host has no ModLoader game-assembly registry; supply its shipped references explicitly.
         var scan = ModScanner.Scan([typeof(ModEntry).Assembly.Location, typeof(IPackSolver).Assembly.Location],
             ["netstandard", "Assembly-CSharp", "UnityEngine.CoreModule", "0Harmony", "Newtonsoft.Json", "UnityEngine.InputLegacyModule",
-                "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule", "Assembly-CSharp-firstpass"]);
+                "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule",
+                "Assembly-CSharp-firstpass"]);
         Assert.Null(scan.Error);
         Assert.DoesNotContain("reflection-external", scan.Capabilities);
         Assert.DoesNotContain(scan.Pending, f => f.Kind == "reflection-external");
