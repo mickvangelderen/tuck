@@ -15,6 +15,7 @@ internal sealed class Options
         $"{RenderHandler.ApplyRichTextColorTag($"[{manifest.Name}]", RenderHandler.ColorPalette.LightBlue)} {label}";
 
     public KeyBinding Pack { get; }
+    public PackingSolverSetting PackingSolver { get; }
     public KeyBinding Scavenge { get; }
     public KeyBinding Return { get; }
     public KeyBinding Shutters { get; }
@@ -47,6 +48,7 @@ internal sealed class Options
         // Localization loads after Init/OnEnable; only resolve inside display callbacks.
         _localize = localize;
         Pack = new KeyBinding(manifest, "pack_key", () => Text("pack"), KeyCode.G);
+        PackingSolver = new PackingSolverSetting(manifest, this);
         Scavenge = new KeyBinding(manifest, "scavenge_key", () => Text("scavenge"), KeyCode.Space);
         Return = new KeyBinding(manifest, "return_key", () => Text("return_from_night_activity_hold"), KeyCode.R);
         Shutters = new KeyBinding(manifest, "shutters_key", () => Text("open_close_shutters"), KeyCode.C);
@@ -104,6 +106,7 @@ internal sealed class Options
         // Without this, entries added before the options window first opens are placed above the vanilla ones.
         GameOptionRegistry.EnsureVanilla();
         Pack.Register();
+        PackingSolver.Register();
         Scavenge.Register();
         Return.Register();
         Shutters.Register();
@@ -146,6 +149,7 @@ internal sealed class Options
         Shutters.Unregister();
         Return.Unregister();
         Scavenge.Unregister();
+        PackingSolver.Unregister();
         Pack.Unregister();
     }
 }

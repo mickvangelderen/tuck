@@ -6,7 +6,10 @@ namespace Tuck.Mod.Packing;
 
 internal sealed partial class PackEngine
 {
+    private readonly Options _options;
     private bool _running;
+    internal PackEngine(Options options) => _options = options;
+    internal IPackSolver Solver => _options.PackingSolver.Value;
     internal PackResult Pack(GameInventory ground, GameSlotInventory backpack, GameSlotInventory left, GameSlotInventory right)
     {
         if (_running) return new PackResult(null, null);
@@ -19,7 +22,7 @@ internal sealed partial class PackEngine
             RecordState(captured, options);
             PlanningResult planned;
             using (var budget = new CancellationTokenSource(TimeSpan.FromMilliseconds(250)))
-                planned = global::Tuck.PackSolver.PackSolver.Solve(new PackProblem(captured.State), options, budget.Token);
+                planned = Solver.Solve(new PackProblem(captured.State), options, budget.Token);
             RecordPlan(captured, planned, options);
             if (planned.Status == PlanningStatus.Unsupported) return new PackResult(planned, null);
             var executed = PackExecutor.Execute(captured, planned.Plan);

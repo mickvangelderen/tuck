@@ -11,7 +11,7 @@ namespace Tuck.PackSolver.Benchmarks;
 
 internal static class Program
 {
-    private static IPackSolver[] Solvers = [new BaselinePackSolver(), new AnytimePackSolver(), new RelaxedAStarPackSolver()];
+    private static IPackSolver[] Solvers = [new BaselinePackSolver(), new AnytimePackSolver(), new RelaxedAStarPackSolver(), new ContainerFirstPackSolver()];
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
     private static readonly PlanningOptions Defaults = new();
     private sealed record Sample(string Scenario, string Solver, int Round, double Milliseconds, long AllocatedBytes,

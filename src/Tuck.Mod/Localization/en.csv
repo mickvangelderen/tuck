@@ -1,6 +1,12 @@
 # English fallback. Keep keys and numbered placeholders unchanged in translations.
 # Values use string.Format; no Smart String or plural syntax.
 pack,Pack
+packing_solver,Packing solver
+choose_the_solver_for_the_next_pack,Choose how Tuck packs your loot. Applies to the next Pack action without restarting. Default: Container first.
+relaxed_a_star,Relaxed A*
+container_first,Container first
+anytime,Anytime
+baseline,Baseline
 scavenge,Scavenge
 return_from_night_activity_hold,Return from night activity (hold)
 open_close_shutters,Open/close shutters

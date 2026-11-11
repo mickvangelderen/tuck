@@ -26,6 +26,8 @@ links at the bottom once the corresponding Git tags exist.
 - Water filter swaps now try rotations and nearby positions to fit the removed filter back into your inventory.
 - Hotkeys now have dedicated text glyphs representing keyboard keys in the style of Probably Stolen.
 - Travelling only requires one click. Enabled by default, can be disabled through the options.
+- Packing solver is not configurable. 
+- A new packing solver named "Container first" has been implemented and is now the default packing solver.
 
 ## [1.0.0] - 2026-11-09
 

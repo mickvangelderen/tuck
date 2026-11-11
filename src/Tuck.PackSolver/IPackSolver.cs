@@ -36,7 +36,7 @@ namespace Tuck.PackSolver;
 /// and plan replay enforce intact-item movement for every solver.
 /// </para>
 /// <para>
-/// Compare solutions by returned value first. Relaxed A* and Anytime then prefer fewer occupied hands,
+/// Compare solutions by returned value first. Relaxed A*, Anytime and ContainerFirst then prefer fewer occupied hands,
 /// larger equipped-backpack capacity, and fewer transfers; Baseline still uses
 /// transfer count alone at equal value. Compactness does not prescribe container nesting. An empty
 /// plan is a valid baseline; interruption or exhausted search budgets should preserve the best
