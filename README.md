@@ -6,67 +6,39 @@ Pack your loot, move items in bulk, appraise goods, and run the chem finisher wi
 
 Named after Tuck, the helpful rat who fits more loot into your bags. Small paws, big ambitions.
 
-https://www.youtube.com/watch?v=hEUUApJs9Zo
-
-## Feature overview
-
-| Activity | Improvements |
-| --- | --- |
-| [Item manipulation](#item-manipulation) | Drag matching items or an entire inventory, keep items in formation, and swap installed filters. |
-| [Night activities](#night-activities) | Pack with Tuck, configurable hotkeys, and adjustable return hold time and scavenging warnings. |
-| [Appraisal](#appraisal) | ±50 adjustment buttons and automatic disposal of appraisal slips. |
-| [Chem finisher](#chem-finisher) | Batch printing and protection against wasted ingredients when output cannot be placed. |
-| [Shopkeeping](#shopkeeping) | Configurable shutter and night activity menu hotkeys, centered backpack selection, adjustable bell hold time and workspace warnings, and automatic disposal of event receipts. |
-
 ## Features
 
-### Item manipulation
+The highlights:
 
-- Adds a configurable modifier to drag all matching items (default: Shift).
-  Holding it while dragging one item selects all items of that kind; while dragging multiple items, it selects all items of those kinds.
-- Adds a configurable modifier to drag all draggable items in the inventory (default: Ctrl), including when starting from empty space.
-- Releasing Shift or Ctrl restores the original drag or resumes box selection.
-- Makes the preserve-placement modifier configurable (default: Alt, replacing the vanilla Shift modifier).
-- Adds an option to swap filters by dragging a new filter onto the installed filter in an open filter slot, on by default.
-  The removed filter must fit in the replacement's original space.
+### Better item manipulation
+
+Move all of kind (Shift + drag), move all (Ctrl + drag). 
 
 ![Dragging items in bulk](./media/shift-drag.gif)
 
-### Night activities
+### Water filter swap
 
-- Adds a configurable hotkey to Pack (default: G). Tuck the rat helps you pack the most value into your bags before leaving. You can also click Tuck to Pack.
-- Adds a configurable hotkey to Scavenge (default: Space).
-- Adds a configurable hotkey to return from a night activity (default: R), activated by holding and releasing it.
-  The hold time defaults to 0.4 seconds, adjustable from 0.0 to 1.0 seconds. Set it to 0.0 to return on key press.
-- Adds an option to specify a minimum value of items left behind before the "Items left behind will be lost" dialog shows up when returning from scavenging.
-  The default is 50 credits. Set it to 0 credits for vanilla behavior, or 1000 credits to disable the warning entirely.
+What you could do for batteries, but now also water filters.
 
-![Tuck helping with packing](./media/tuck.png)
+![Swap water filters like batteries](./media/water-filter.gif)
 
-### Appraisal
+### Improved Appraisal UI
 
-- Adds optional ±50 buttons and arranges the ±5, ±10, ±50 and ±100 buttons in two rows above the estimate and send button, off by default.
-- Adds an option to automatically move newly received appraisal slips to the trash, off by default.
+Adds +50 and -50, rearranges for convenience.
 
 ![Appraisal UI](./media/appraisal.gif)
 
-### Chem finisher
+### Print multiple items with Chem finisher
 
-- Adds optional 1, 5 and 20 batch buttons, off by default.
-  Also avoids the vanilla bug where printing consumes ingredients even if it fails to place the output.
+Adds +5 and +20 output buttons.
 
 ![Chem finisher batch printing](./media/chem-finisher.gif)
 
-### Shopkeeping
+### More hotkeys
 
-- Adds a configurable hotkey to open/close the shutters (default: C).
-- Adds a configurable hotkey to open night activities (default: Q).
-  Adds an option to center the backpack selection menu, off by default.
-- Adds a configurable hold time for ringing the bell, defaulting to 0.4 seconds, adjustable from 0.0 to 1.0 seconds.
-  Set it to 0.0 for no hold. The bell still respects the vanilla instant next customer setting.
-- Adds an option to specify how much of the workspace can be occupied before the "keep your counter clear" warning shows up when going outside.
-  The default is 40%. Set it to 0% for vanilla behavior, or 100% to disable the warning entirely.
-- Adds an option to automatically move newly received event receipts to the trash, off by default.
+Hotkeys for all common interactions!
+
+![More hotkeys](./media/hotkeys.gif)
 
 ## Principles
 
