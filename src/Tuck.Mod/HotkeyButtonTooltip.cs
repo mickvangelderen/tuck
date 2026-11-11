@@ -7,9 +7,7 @@ namespace Tuck.Mod;
 internal sealed class HotkeyButtonTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     internal HotkeyTooltips.ButtonAction Action { get; private set; }
-    internal bool UsesLegacyTooltip { get; private set; }
-    private CustomUITooltipTrigger _trigger = null!;
-    private bool _ownsTrigger;
+    internal bool UsesExistingTooltip { get; private set; }
     private bool _hovered;
     private string? _shownText;
 
@@ -19,14 +17,10 @@ internal sealed class HotkeyButtonTooltip : MonoBehaviour, IPointerEnterHandler,
         if (hint != null) return;
         hint = host.AddComponent<HotkeyButtonTooltip>();
         hint.Action = action;
-        var legacy = host.GetComponent<TooltipContainer>();
+        var existing = host.GetComponent<TooltipContainer>();
         // Enrich existing scene tooltips through their normal display path, without a second popup.
-        hint.UsesLegacyTooltip = legacy != null &&
-            (!string.IsNullOrWhiteSpace(legacy.content) || host.GetComponent<TooltipInterface>() != null);
-        if (hint.UsesLegacyTooltip) return;
-        hint._trigger = host.GetComponent<CustomUITooltipTrigger>();
-        hint._ownsTrigger = hint._trigger == null;
-        if (hint._ownsTrigger) hint._trigger = host.AddComponent<CustomUITooltipTrigger>();
+        hint.UsesExistingTooltip = existing != null &&
+            (!string.IsNullOrWhiteSpace(existing.content) || host.GetComponent<TooltipInterface>() != null);
     }
 
     public void OnPointerEnter(PointerEventData eventData) => _hovered = true;
@@ -35,23 +29,19 @@ internal sealed class HotkeyButtonTooltip : MonoBehaviour, IPointerEnterHandler,
 
     private void Update()
     {
-        if (UsesLegacyTooltip || !_hovered || CustomUIManager.Instance == null || _trigger == null
+        if (UsesExistingTooltip || !_hovered || TooltipManager._instance == null
             || HotkeyTooltips.ActiveOptions is not { } options) return;
-        string hint = HotkeyTooltips.ButtonHint(options, Action);
-        // Read existing text each time; leave other mods' tooltip content intact.
-        string original = _trigger.tooltipText;
-        string text = string.IsNullOrEmpty(original) ? hint
-            : string.IsNullOrEmpty(hint) ? original : original + "\n" + hint;
+        string text = HotkeyTooltips.ButtonHint(options, Action);
         if (text == _shownText) return;
-        if (string.IsNullOrEmpty(text)) CustomUIManager.Instance.HideTooltip(_trigger);
-        else CustomUIManager.Instance.ShowTooltip(text, _trigger);
+        if (string.IsNullOrEmpty(text)) TooltipManager._instance.HideTooltip(this);
+        else TooltipManager._instance.SetAndShowTooltip(text, this);
         _shownText = text;
     }
 
     private void Hide()
     {
-        if (_hovered && CustomUIManager.Instance != null && _trigger != null)
-            CustomUIManager.Instance.HideTooltip(_trigger);
+        if (_hovered && TooltipManager._instance != null)
+            TooltipManager._instance.HideTooltip(this);
         _hovered = false;
         _shownText = null;
     }
@@ -62,7 +52,6 @@ internal sealed class HotkeyButtonTooltip : MonoBehaviour, IPointerEnterHandler,
     {
         enabled = false;
         Hide();
-        if (_ownsTrigger && _trigger != null) Destroy(_trigger);
         Destroy(this);
     }
 }

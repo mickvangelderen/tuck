@@ -146,6 +146,7 @@ public class FilterReplacementTests : IDisposable
     public void RemovedFilterRotatesToFitAndDropUsesTheProbedPlacement(int orientation)
     {
         var (source, target) = Pair();
+        source.shape = new GridShapeBuilder(orientation % 2 == 0 ? 1 : 2, orientation % 2 == 0 ? 2 : 1).SetDataFill(1);
         source.modifiedShape = new GridShapeBuilder(source.shape).SetTransform(1, 1, true, orientation);
         target.shape = new GridShapeBuilder(2, 1).SetDataFill(1);
         target.modifiedShape = target.shape.Clone();
@@ -169,12 +170,125 @@ public class FilterReplacementTests : IDisposable
         Assert.Same(target, Assert.Single(grid.childItems));
         Assert.Same(grid, target.parentInventory);
         Assert.Null(buffer.childItem);
-        Assert.Equal((1, 1, true, orientation % 2 == 0 ? orientation + 1 : orientation),
+        Assert.Equal((1, 1, false, 1),
             (target.modifiedShape.minX, target.modifiedShape.minY,
                 target.modifiedShape.flipped, target.modifiedShape.orientation));
         Assert.Equal((0, 0, false, 0), (source.modifiedShape.minX, source.modifiedShape.minY,
             source.modifiedShape.flipped, source.modifiedShape.orientation));
         Assert.True(grid.CheckShapePlacement(target, target.modifiedShape, []));
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, false)]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(0, true)]
+    [InlineData(1, true)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    public void RemovedFilterKeepsItsOwnTransformWhenItFits(int orientation, bool flipped)
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(source.shape).SetTransform(1, 1, !flipped, (orientation + 1) % 4);
+        target.modifiedShape = new GridShapeBuilder(2, 1).SetDataFill(1).SetTransform(0, 0, flipped, orientation);
+        var grid = Grid(3, source, 3);
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal((1, 1, flipped, orientation),
+            (target.modifiedShape.minX, target.modifiedShape.minY, target.modifiedShape.flipped, target.modifiedShape.orientation));
+        Assert.True(grid.CheckShapePlacement(target, target.modifiedShape, []));
+    }
+
+    [Theory]
+    [InlineData(0, 2, 3)]
+    [InlineData(1, 3, 4)]
+    [InlineData(2, 4, 1)]
+    [InlineData(3, 1, 2)]
+    public void ReturnedFilterUsesOccupiedCenterOfVacatedShape(int orientation, int x, int y)
+    {
+        var (source, target) = Pair();
+        source.shape = new GridShapeBuilder().SetData("100001000011111", 5);
+        source.modifiedShape = new GridShapeBuilder(source.shape).SetTransform(1, 1, false, orientation);
+        Grid(8, source, 8);
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal((x, y), (target.modifiedShape.minX, target.modifiedShape.minY));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void RepeatedSwapsBetweenEvenAndOddLengthsDoNotDrift(int orientation)
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(1, 2).SetDataFill(1).SetTransform(4, 4, false, orientation);
+        target.modifiedShape = new GridShapeBuilder(1, 3).SetDataFill(1).SetOrientation(orientation);
+        Grid(10, source, 10);
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        for (int swap = 0; swap < 6; swap++)
+        {
+            Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+            Assert.Equal((4, 4), (target.modifiedShape.minX, target.modifiedShape.minY));
+            (source, target) = (target, source);
+        }
+    }
+
+    [Fact]
+    public void ReturnedFilterUsesItsOccupiedCenterAndPreferredTransformOnEqualDistances()
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(source.shape).SetPosition(4, 3);
+        target.modifiedShape = new GridShapeBuilder().SetData("100001000011111", 5);
+        Grid(8, source, 8);
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        // Rotations/reflections tie at this fractional centroid distance; preserve the original transform.
+        Assert.Equal((3, 1, false, 0), (target.modifiedShape.minX, target.modifiedShape.minY,
+            target.modifiedShape.flipped, target.modifiedShape.orientation));
+    }
+
+    [Fact]
+    public void SurroundedFilterSwapChoosesClosestOccupiedCentersAcrossRotations()
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(1, 2).SetDataFill(1).SetPosition(3, 3);
+        target.modifiedShape = new GridShapeBuilder(3, 1).SetDataFill(1);
+        var grid = Grid(7, source, 7);
+        var items = new List<GameItem> { source };
+        foreach (var (x, y) in new[] { (3, 2), (2, 3), (4, 3), (2, 4), (4, 4), (3, 5) })
+            items.Add(new Item("blocker")
+            {
+                parentInventory = grid,
+                modifiedShape = new GridShapeBuilder(1, 1).SetDataFill(1).SetPosition(x, y)
+            });
+        Field(grid, typeof(GameGridInventory), "items", items);
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        // A vertical fit beside the enclosure is closer by center than the horizontal fit above it.
+        Assert.Equal((1, 3, false, 1), (target.modifiedShape.minX, target.modifiedShape.minY,
+            target.modifiedShape.flipped, target.modifiedShape.orientation));
+        Assert.True(grid.CheckShapePlacement(target, target.modifiedShape, []));
+    }
+
+    [Fact]
+    public void RejectedClosestPlacementDoesNotDiscardTheBestValidPlacement()
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(source.shape).SetPosition(2, 2);
+        var grid = Grid(5, source, 5);
+        grid.isItemStateValidFunc = (_, _, _, shape, _) => shape.minX != 2 || shape.minY != 2;
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal((2, 1), (target.modifiedShape.minX, target.modifiedShape.minY));
     }
 
     [Fact]
@@ -274,7 +388,7 @@ public class FilterReplacementTests : IDisposable
     }
 
     [Fact]
-    public void NearbySearchDoesNotMoveFilterToUnrelatedFreeSpace()
+    public void RemovedFilterCanUseFreeSpaceElsewhereInTheInventory()
     {
         var (source, target) = Pair();
         target.modifiedShape = new GridShapeBuilder(2, 1).SetDataFill(1);
@@ -282,54 +396,43 @@ public class FilterReplacementTests : IDisposable
         var blocker = new Item("bolt") { parentInventory = grid };
         blocker.modifiedShape = new GridShapeBuilder(blocker.shape).SetPosition(1, 0);
         Field(grid, typeof(GameGridInventory), "items", new List<GameItem> { source, blocker });
-        Assert.False(FilterReplacement.CanReplace(source, target));
+        Assert.True(FilterReplacement.CanReplace(source, target));
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal((2, 0), (target.modifiedShape.minX, target.modifiedShape.minY));
+        Assert.True(grid.CheckShapePlacement(target, target.modifiedShape, []));
     }
 
     [Fact]
-    public void CandidateCacheUsesShapeContentsAndRelativePositions()
+    public void DistinctShapesKeepThePreferredFlipAndNearestRotation()
     {
-        GridShape incoming = new GridShapeBuilder(1, 3).SetDataFill(1);
-        GridShape outgoing = new GridShapeBuilder().SetData("010111", 3);
-        var candidates = FilterSwapCandidates.Get(incoming, outgoing);
-        Assert.Same(candidates, FilterSwapCandidates.Get(
-            new GridShapeBuilder(incoming).SetPosition(10, 20).SetOrientation(2),
-            new GridShapeBuilder(outgoing).SetPosition(5, 6)));
-        Assert.NotSame(candidates, FilterSwapCandidates.Get(incoming,
-            new GridShapeBuilder().SetData("111010", 3)));
-        Assert.NotSame(candidates, FilterSwapCandidates.Get(
-            new GridShapeBuilder().SetData("101", 1), outgoing));
-        Assert.NotSame(candidates, FilterSwapCandidates.Get(incoming,
-            new GridShapeBuilder(outgoing).SetOrientation(1)));
-        Assert.NotSame(candidates, FilterSwapCandidates.Get(incoming,
-            new GridShapeBuilder(outgoing).SetFlipped(true)));
+        GridShape line = new GridShapeBuilder(1, 3).SetDataFill(1).SetTransform(10, 20, true, 2);
+        var shapes = FilterSwapCandidates.Shapes(line);
+        Assert.Equal(new[] { (true, 2), (true, 3) },
+            shapes.Select(candidate => (candidate.Shape.flipped, candidate.Shape.orientation)));
 
-        // Mutating a live shape must not mutate a key already stored in the dictionary.
-        ((GridShapeBuilder)incoming).SetData("101", 1);
-        Assert.NotSame(candidates, FilterSwapCandidates.Get(incoming, outgoing));
-        ((GridShapeBuilder)incoming).SetData("111", 1);
-        Assert.Same(candidates, FilterSwapCandidates.Get(incoming, outgoing));
+        GridShape asymmetric = new GridShapeBuilder().SetData("101011", 2).SetTransform(10, 20, true, 2);
+        shapes = FilterSwapCandidates.Shapes(asymmetric);
+        Assert.Equal(new[] { (true, 2), (true, 3), (true, 1), (true, 0),
+            (false, 2), (false, 3), (false, 1), (false, 0) },
+            shapes.Select(candidate => (candidate.Shape.flipped, candidate.Shape.orientation)));
     }
 
     [Fact]
-    public void EquivalentRotationsShareFootprintsButStillRespectOrientationRules()
+    public void EquivalentTransformsAreEvaluatedOnlyOnce()
     {
         var (source, target) = Pair();
-        Assert.Equal(4, Assert.Single(FilterSwapCandidates.Get(target.modifiedShape, source.modifiedShape)).Length);
-        GridShape line = new GridShapeBuilder(1, 3).SetDataFill(1);
-        var lineCandidates = FilterSwapCandidates.Get(line, source.modifiedShape);
-        Assert.Equal(6, lineCandidates.Length); // Three offsets for each of two distinct orientations.
-        Assert.All(lineCandidates, variants => Assert.Equal(2, variants.Length));
+        Assert.Single(FilterSwapCandidates.Shapes(target.modifiedShape));
 
         var grid = (GridInventory)source.parentInventory;
         grid.isItemStateValidFunc = (_, _, _, shape, _) => shape.orientation == 2;
         var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
-        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
-        Assert.Equal(2, target.modifiedShape.orientation);
-        Assert.Equal(3, grid.PlacementChecks);
+        Assert.False(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal(1, grid.PlacementChecks);
     }
 
     [Fact]
-    public void CachedCandidatesDoNotCacheAdmissionOrMutableShapes()
+    public void ProbesUseCurrentAdmissionAndShapes()
     {
         var (source, target) = Pair();
         Assert.True(FilterReplacement.CanReplace(source, target));
@@ -346,9 +449,26 @@ public class FilterReplacementTests : IDisposable
     [Fact]
     public void DeduplicationPreservesOtherCellValuesUsedByGameCollisionChecks()
     {
-        GridShape incoming = new GridShapeBuilder().SetData("12", 2);
-        GridShape outgoing = new GridShapeBuilder(1, 1).SetDataFill(1);
-        Assert.All(FilterSwapCandidates.Get(incoming, outgoing), variants => Assert.Single(variants));
+        // Four binary footprints, but eight distinct shapes once the cell marked 2 is included.
+        GridShape incoming = new GridShapeBuilder().SetData("1200", 2);
+        Assert.Equal(8, FilterSwapCandidates.Shapes(incoming).Count);
+    }
+
+    [Fact]
+    public void RemovedFilterFlipsToFitAnIrregularInventory()
+    {
+        var (source, target) = Pair();
+        source.modifiedShape = new GridShapeBuilder(source.shape).SetPosition(1, 0);
+        target.modifiedShape = new GridShapeBuilder().SetData("101011", 2);
+        var grid = (GridInventory)Grid(2, source, 3);
+        Field(grid, typeof(GameGridInventory), "<inventoryShape>k__BackingField",
+            new GridShapeBuilder { outside = 1 }.SetData("101000", 2));
+        var buffer = (Slot)RuntimeHelpers.GetUninitializedObject(typeof(Slot));
+
+        Assert.True(FilterReplacement.TryReplace(source, target, buffer));
+        Assert.Equal((0, 0, true, 0), (target.modifiedShape.minX, target.modifiedShape.minY,
+            target.modifiedShape.flipped, target.modifiedShape.orientation));
+        Assert.Equal(1, grid.PlacementChecks); // Bitboards reject the other placements before game checks.
     }
 
     [Fact]

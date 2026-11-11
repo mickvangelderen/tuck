@@ -74,7 +74,7 @@ internal static class HotkeyTooltips
     internal static string ButtonHint(Options options, ButtonAction action) => action switch
     {
         ButtonAction.Scavenge => options.Scavenge.Key == KeyCode.None ? "" :
-            AppendHint(options, options.Text("scavenge"), options.Scavenge.Key),
+            AppendHint(options, options.Text("search_for_valuables"), options.Scavenge.Key),
         ButtonAction.Return => options.Return.Key == KeyCode.None ? "" :
             AppendHint(options, options.Text("return"), options.Return.Key),
         ButtonAction.ControlHints => VanillaButtonHint(options, KeyBindHelper.CONTROL_HINTS),
@@ -93,7 +93,7 @@ internal static class HotkeyTooltips
     {
         if (ActiveOptions is not { } options || owner is not TooltipContainer container) return;
         var hint = container.GetComponent<HotkeyButtonTooltip>();
-        if (hint == null || !hint.isActiveAndEnabled || !hint.UsesLegacyTooltip) return;
+        if (hint == null || !hint.isActiveAndEnabled || !hint.UsesExistingTooltip) return;
         string shortcut = ButtonHint(options, hint.Action);
         if (shortcut.Length > 0) message += "\n" + shortcut;
     }

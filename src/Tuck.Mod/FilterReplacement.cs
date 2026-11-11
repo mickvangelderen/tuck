@@ -9,11 +9,7 @@ internal static class FilterReplacement
 {
     private static Options? _options;
     public static void Register(Options options) => _options = options;
-    public static void Unregister()
-    {
-        _options = null;
-        FilterSwapCandidates.Clear();
-    }
+    public static void Unregister() => _options = null;
 
     private static bool IsFilterReplacement(GameItem source, GameItem target) =>
         _options?.ReplaceFilters.Value == true && source != null && target != null && source != target &&
@@ -118,35 +114,48 @@ internal static class FilterReplacement
             return TryPlacement(incoming, inventory,
                 new GridShapeBuilder(incoming.modifiedShape).SetTransform(outgoing.modifiedShape), out placement);
 
-        // Cache relative geometry only. Occupancy and game rules are evaluated afresh, including on drop.
+        // Rebuild free space on every probe, including on drop, excluding the departing filter.
         var ignored = new List<GameItem> { outgoing };
-        var neighbors = grid.childItems;
-        foreach (var variants in FilterSwapCandidates.Get(incoming.modifiedShape, outgoing.modifiedShape))
-        {
-            var footprint = AtOutgoingPosition(variants[0], outgoing.modifiedShape);
-            if (!footprint.FullyIntersects(grid.inventoryShape, (a, b) => a != 1 || b == 0)) continue;
-            bool blocked = false;
-            foreach (var neighbor in neighbors)
-                if (neighbor != incoming && neighbor != outgoing && footprint.Intersects(neighbor.modifiedShape))
-                {
-                    blocked = true;
-                    break;
-                }
-            if (blocked) continue;
-
-            foreach (var variant in variants)
+        var bounds = grid.inventoryShape;
+        var free = FilterSwapCandidates.Mask(bounds, 0);
+        foreach (var neighbor in grid.childItems)
+            if (neighbor != incoming && neighbor != outgoing)
             {
-                var shape = AtOutgoingPosition(variant, outgoing.modifiedShape);
-                // Keep the game's check even after the cheap geometry prefilter, including custom rules.
-                if (!grid.CheckShapePlacement(incoming, shape, ignored)) continue;
-                if (TryPlacement(incoming, inventory, shape, out placement)) return true;
+                var shape = neighbor.modifiedShape;
+                free.Subtract(FilterSwapCandidates.Mask(shape, 1), shape.minX - bounds.minX, shape.minY - bounds.minY);
             }
+        var shapes = FilterSwapCandidates.Shapes(incoming.modifiedShape);
+        var original = outgoing.modifiedShape;
+        var originalCenter = FilterSwapCandidates.OccupiedCellSums(FilterSwapCandidates.Mask(original, 1));
+        var bestRank = (long.MaxValue, int.MaxValue, long.MaxValue, int.MaxValue, int.MaxValue);
+        for (int preference = 0; preference < shapes.Count; preference++)
+        {
+            var candidate = shapes[preference];
+            var center = FilterSwapCandidates.OccupiedCellSums(candidate.Footprint);
+            // All variants have equal mass. Scale both centers by the common denominator to keep ties exact.
+            long scale = center.Count * originalCenter.Count;
+            long offsetX = center.X * originalCenter.Count - originalCenter.X * center.Count;
+            long offsetY = center.Y * originalCenter.Count - originalCenter.Y * center.Count;
+            for (int y = bounds.minY; y <= bounds.maxY; y++)
+                for (int x = bounds.minX; x <= bounds.maxX; x++)
+                {
+                    long moveX = x - (long)original.minX, moveY = y - (long)original.minY;
+                    long dx = moveX * scale + offsetX;
+                    long dy = moveY * scale + offsetY;
+                    // Prefer less movement on center-distance ties so repeated even/odd swaps do not drift.
+                    var rank = (dx * dx + dy * dy, preference, moveX * moveX + moveY * moveY, y, x);
+                    if (rank.CompareTo(bestRank) >= 0 || !free.Contains(candidate.Footprint, x - bounds.minX, y - bounds.minY)) continue;
+                    GridShape shape = new GridShapeBuilder(candidate.Shape).SetPosition(x, y);
+                    // Retain game checks for special cell values and custom admission rules.
+                    if (!grid.CheckShapePlacement(incoming, shape, ignored) ||
+                        !TryPlacement(incoming, inventory, shape, out var valid)) continue;
+                    placement = valid;
+                    bestRank = rank;
+                    if (rank.Item1 == 0 && preference == 0) return true;
+                }
         }
-        return false;
+        return placement != null;
     }
-
-    private static GridShape AtOutgoingPosition(GridShape relative, GridShape outgoing) =>
-        new GridShapeBuilder(relative).SetPosition(outgoing.minX + relative.minX, outgoing.minY + relative.minY);
 
     private static bool TryPlacement(GameItem incoming, GameInventory inventory, GridShape shape,
         out SlotMarker placement)

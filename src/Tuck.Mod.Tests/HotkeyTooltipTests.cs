@@ -71,11 +71,13 @@ public class HotkeyTooltipTests : IDisposable
     [Fact]
     public void ModHintsFollowRebindingsAndUnbindingWithoutHoldInstructions()
     {
-        Assert.Equal("Return (R)",
+        Assert.Equal("Search for valuables (Space)",
+            HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Scavenge));
+        Assert.Equal("Return to store (R)",
             HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));
         Set("return_key", "Mouse4");
         Set("return_hold_duration", 0f);
-        Assert.Equal("Return (Mouse 5)",
+        Assert.Equal("Return to store (Mouse 5)",
             HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));
         Set("return_key", "None");
         Assert.Equal("", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.Return));
