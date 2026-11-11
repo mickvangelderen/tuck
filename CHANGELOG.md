@@ -25,6 +25,7 @@ links at the bottom once the corresponding Git tags exist.
   This feature can be toggled through the options.
 - Water filter swaps now try rotations and nearby positions to fit the removed filter back into your inventory.
 - Hotkeys now have dedicated text glyphs representing keyboard keys in the style of Probably Stolen.
+- Travelling only requires one click. Enabled by default, can be disabled through the options.
 
 ## [1.0.0] - 2026-11-09
 

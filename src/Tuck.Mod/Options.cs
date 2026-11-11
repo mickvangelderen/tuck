@@ -25,6 +25,7 @@ internal sealed class Options
     public ToggleSetting ShowHotkeysInTooltips { get; }
     public ScalarSetting ScavengingLeaveWarningMinimumValue { get; }
     public ToggleSetting CenterBackpackSelection { get; }
+    public ToggleSetting OneClickNightActivities { get; }
     public ToggleSetting AppraisalFiftyButtons { get; }
     public ToggleSetting ChemFinisherBatches { get; }
     public ToggleSetting ReplaceFilters { get; }
@@ -64,6 +65,9 @@ internal sealed class Options
         CenterBackpackSelection = new ToggleSetting(manifest,
             "center_backpack_selection", () => Text("center_backpack_selection_menu"),
             () => Text("center_the_backpack_selection_menu_when_opening_night_activities"), defaultValue: false);
+        OneClickNightActivities = new ToggleSetting(manifest,
+            "one_click_night_activities", () => Text("one_click_night_activities"),
+            () => Text("travel_immediately_when_selecting_a_night_activity"), defaultValue: true);
         AppraisalFiftyButtons = new ToggleSetting(manifest,
             "appraisal_fifty_buttons", () => Text("appraisal_plus_minus_50_buttons"),
             () => Text("arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button"), defaultValue: false);
@@ -110,6 +114,7 @@ internal sealed class Options
         ShowHotkeysInTooltips.Register();
         ScavengingLeaveWarningMinimumValue.Register();
         CenterBackpackSelection.Register();
+        OneClickNightActivities.Register();
         AppraisalFiftyButtons.Register();
         ChemFinisherBatches.Register();
         ReplaceFilters.Register();
@@ -130,6 +135,7 @@ internal sealed class Options
         ReplaceFilters.Unregister();
         ChemFinisherBatches.Unregister();
         AppraisalFiftyButtons.Unregister();
+        OneClickNightActivities.Unregister();
         CenterBackpackSelection.Unregister();
         ScavengingLeaveWarningMinimumValue.Unregister();
         ShowHotkeysInTooltips.Unregister();

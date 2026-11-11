@@ -12,6 +12,8 @@ scavenging_warning_threshold,Scavenging warning threshold
 warn_before_returning_when_items_left_behind_are_worth,Warn before returning from scavenging when items left behind are worth at least this many credits. Vanilla: 0. Disable: 1000.
 center_backpack_selection_menu,Center backpack selection menu
 center_the_backpack_selection_menu_when_opening_night_activities,Center the backpack selection menu when opening night activities.
+one_click_night_activities,One-click night activities
+travel_immediately_when_selecting_a_night_activity,Travel immediately when selecting a night activity. Turn off to select an activity and then click Travel.
 appraisal_plus_minus_50_buttons,Appraisal ±50 buttons
 arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button,"Arrange +/-5, 10, 50 and 100 appraisal buttons in two rows above the estimate and send button."
 chem_finisher_batch_buttons,Chem finisher batch buttons

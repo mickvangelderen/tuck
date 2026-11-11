@@ -5,6 +5,7 @@ public sealed partial class ModEntry : IMod
     // Assigned in Init. The loader calls Init and OnEnable once at launch, and only calls OnDisable if both succeeded.
     private Options _options = null!;
     private AfterhourGround _ground = null!;
+    private NightActivitySelection _nightActivitySelection = null!;
     private ModManifest _manifest = null!;
 
     public void Init(ModManifest manifest)
@@ -13,6 +14,7 @@ public sealed partial class ModEntry : IMod
         Log.Init(manifest);
         _options = new Options(manifest);
         _ground = new AfterhourGround(_options, manifest.ID);
+        _nightActivitySelection = new NightActivitySelection(_options);
         Log.Info($"Initialized v{manifest.ModVersion}.");
     }
 
@@ -28,6 +30,7 @@ public sealed partial class ModEntry : IMod
         HotkeyGlyphs.Register(_manifest.ID);
         HotkeyTooltips.Register(_options);
         BackpackSelection.Register(_options);
+        _nightActivitySelection.Register();
         DragAmounts.Register(_options);
         AppraisalSteps.Register(_options);
         DocumentDiscard.Register(_options);
@@ -44,6 +47,7 @@ public sealed partial class ModEntry : IMod
         DocumentDiscard.Unregister();
         AppraisalSteps.Unregister();
         DragAmounts.Unregister();
+        _nightActivitySelection.Unregister();
         BackpackSelection.Unregister();
         HotkeyTooltips.Unregister();
         HotkeyGlyphs.Unregister();
