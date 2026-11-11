@@ -6,6 +6,40 @@ namespace Tuck.PackSolver.Tests;
 
 public class ContainerFirstPackSolverTests
 {
+    [Theory]
+    [InlineData(16, 0, false)]
+    [InlineData(17, 0, true)]
+    [InlineData(17, 2, false)]
+    public void ContainerWitnessRespectsPartialTilesBoundsAndBlockedLabels(int width, byte edge, bool fits)
+    {
+        var cells = new byte[width * 2];
+        cells[cells.Length - 1] = edge;
+        var grid = new ShapeState(width, 2, cells); // Zero outside still cannot extend a legal placement.
+        var state = State([
+            Item("bag", "back", 1, tags: ["BACKPACK_TAG", "CONTAINER_TAG"]),
+            Item("pin", "inside", 2, tags: ["PINNED_TAG"], shape: ShapeState.Rectangle(7, 2)),
+            Item("box", "ground", 10, tags: ["CONTAINER_TAG", "NESTABLE_DEVICE_TAG"], shape: ShapeState.Rectangle(10, 2)),
+            Item("left-pin", "left", 0, tags: ["PINNED_TAG"]), Item("right-pin", "right", 0, tags: ["PINNED_TAG"])
+        ], Inventories(10).Concat([
+            new InventoryState("inside", new InventoryLayout.Grid(grid), new(AdmissionKind.Container), "bag"),
+            Grid("box-grid", "box", 1, 1)
+        ]).ToArray());
+
+        var assignments = Assignments(state).Where(a => a.Parents["box"] == "inside").ToArray();
+        Assert.Equal(fits, assignments.Length != 0);
+        foreach (var assignment in assignments)
+        {
+            var placement = Assert.IsType<Placement.Grid>(assignment.ContainerLocations["box"].Placement);
+            var footprint = new PlacedShape(state.Items.Single(i => i.Id == "box").Shape, placement);
+            Assert.All(footprint.Positions(1), cell =>
+            {
+                Assert.InRange(cell.X, 7, width - 1);
+                Assert.InRange(cell.Y, 0, 1);
+                Assert.Equal(0, grid.GetLocal(cell.X, cell.Y));
+            });
+        }
+    }
+
     [Fact]
     public void RejectsContainerParentsWhoseFreeCellsAreFragmentedByPinnedContents()
     {

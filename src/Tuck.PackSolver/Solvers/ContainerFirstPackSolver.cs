@@ -50,7 +50,7 @@ public sealed class ContainerFirstPackSolver : IPackSolver
             this.capture = capture; this.limits = limits; this.cancel = cancel;
             capacities = capture.Inventories.Where(i => i.OwnerItemId != null && TransferSimulation.IsPackingStorage(i))
                 .GroupBy(i => i.OwnerItemId!).ToDictionary(g => g.Key,
-                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.Cells.Count(c => c == 0) : 1));
+                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.UsableArea : 1));
         }
 
         internal PlanningResult Run()
@@ -59,7 +59,7 @@ public sealed class ContainerFirstPackSolver : IPackSolver
             try
             {
                 foreach (var item in initial.Items.Values)
-                    if (!item.Shape.Cells.Contains((byte)1) || !initial.View.Effective(item.Id).Shape.Cells.Contains((byte)1))
+                    if (item.Shape.Area == 0 || initial.View.Effective(item.Id).Shape.Area == 0)
                         throw new UnsupportedRuleException($"{item.Id}: finite grid search requires an occupied shape cell.");
                 data = new(initial);
                 best = new(initial, null, null, serial++, data.Key(initial), capacities);
@@ -254,7 +254,7 @@ public sealed class ContainerFirstPackSolver : IPackSolver
             if (inventory.Layout is InventoryLayout.Grid grid)
             {
                 footprint = state.View.Effective(item.Id).Place(item.Shape, position, inventory.Layout);
-                if (footprint.Positions(1).Any(c => grid.Cells.GetLocal(c.X, c.Y) != 0)) return -1;
+                if (!footprint.Fits(grid.Cells, checkBounds: false)) return -1;
             }
             int blockers = 0;
             foreach (var occupant in state.View.Contents(inventory.Id))

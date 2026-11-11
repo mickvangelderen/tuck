@@ -72,7 +72,7 @@ public sealed class AnytimePackSolver : IPackSolver
                 foreach (var item in initial.Items.Values)
                 {
                     var effective = initial.View.Effective(item.Id);
-                    if (!item.Shape.Cells.Contains((byte)1) || !effective.Shape.Cells.Contains((byte)1))
+                    if (item.Shape.Area == 0 || effective.Shape.Area == 0)
                         throw new UnsupportedRuleException($"{item.Id}: finite grid search requires an occupied shape cell.");
                 }
                 initialValue = initial.ReturnedValue;
@@ -83,7 +83,7 @@ public sealed class AnytimePackSolver : IPackSolver
             _upperValue = _data.PositiveValueBound;
             _capacities = _capture.Inventories.Where(i => i.OwnerItemId != null && TransferSimulation.IsPackingStorage(i))
                 .GroupBy(i => i.OwnerItemId!).ToDictionary(g => g.Key,
-                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.Cells.Count(c => c == 0) : 1));
+                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.UsableArea : 1));
             _best = new(initial, null, null, _data.Key(initial), _capacities);
             var baseline = _best;
             _movePenalty = Math.Max(1d, Math.Abs((double)initialValue)) / 1000d;

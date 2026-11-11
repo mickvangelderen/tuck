@@ -31,7 +31,7 @@ internal static class RelaxedPackingBound
         {
             cancel.ThrowIfCancellationRequested();
             if (inventory.Id == state.Roots.Ground || inventory.OwnerItemId == null || !TransferSimulation.IsPackingStorage(inventory)) continue;
-            capacity += inventory.Layout is InventoryLayout.Grid grid ? grid.Cells.Cells.Count(c => c == 0) : 1;
+            capacity += inventory.Layout is InventoryLayout.Grid grid ? grid.Cells.UsableArea : 1;
         }
         decimal total = 0;
         for (int i = 0; i < count; i++)
@@ -39,8 +39,8 @@ internal static class RelaxedPackingBound
             cancel.ThrowIfCancellationRequested();
             var item = state.Items[ids[i]];
             var shape = state.View.Effective(item.Id).Shape;
-            if (shape.OutsideBounds != 0 || shape.Cells.Any(c => c > 1)) return false;
-            int area = shape.Cells.Count(c => c == 1);
+            if (shape.OutsideBounds != 0 || !shape.IsBinary) return false;
+            int area = shape.Area;
             if (area == 0) return false;
             decimal positive = (decimal)Math.Max(0, state.View.PackUnitValue(item.Id)) * item.UnitCount;
             total += positive;

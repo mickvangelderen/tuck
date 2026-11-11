@@ -12,8 +12,8 @@ internal sealed class AlgorithmView
     private readonly Dictionary<string, (int X, int Y)> _origins = new();
     internal AlgorithmView(TransferSimulation state)
     {
-        var movable = state.Items.Values.Where(i => state.Removable(i) == i.UnitCount && state.View.Effective(i.Id).Shape.Cells.Contains((byte)1)
-                && state.View.Effective(i.Id).Shape.Cells.All(b => b <= 1) && state.View.Effective(i.Id).Shape.OutsideBounds == 0)
+        var movable = state.Items.Values.Where(i => state.Removable(i) == i.UnitCount && state.View.Effective(i.Id).Shape.Area > 0
+                && state.View.Effective(i.Id).Shape.IsBinary && state.View.Effective(i.Id).Shape.OutsideBounds == 0)
             .OrderByDescending(i => state.IsReturned(i.Id)).ThenBy(i => i.Id, StringComparer.Ordinal).ToDictionary(i => i.Id);
         string? MovableOwner(string inventoryId)
         {
@@ -42,7 +42,7 @@ internal sealed class AlgorithmView
             var occupants = state.Items.Values.Where(i => i.Location.InventoryId == inventory.Id && !movable.ContainsKey(i.Id)).ToArray();
             if (inventory.Layout is InventoryLayout.Slot)
             { containers.Add(A.PackingContainer.Slot(inventory.Id, owner, occupants.Length != 0)); continue; }
-            var cells = new PlacedShape(((InventoryLayout.Grid)inventory.Layout).Cells, new()).Positions(0).ToArray();
+            var cells = ((InventoryLayout.Grid)inventory.Layout).Cells.Usable.Cells.ToArray();
             if (cells.Length == 0) continue;
             int x = cells.Min(c => c.X), y = cells.Min(c => c.Y);
             _origins[inventory.Id] = (x, y);
@@ -53,9 +53,7 @@ internal sealed class AlgorithmView
             containers.Add(new A.PackingContainer(inventory.Id, usable, occupied, owner));
         }
         var items = movable.Values.Select(i => new A.PackingItem(i.Id, values[i.Id],
-            A.PackingOrientation.FromShape(new A.CellMask(state.View.Effective(i.Id).Shape.Width, state.View.Effective(i.Id).Shape.Height,
-                state.View.Effective(i.Id).Shape.Cells.Select((b, n) => (b, n)).Where(c => c.b == 1)
-                    .Select(c => new A.GridCell(c.n % state.View.Effective(i.Id).Shape.Width, c.n / state.View.Effective(i.Id).Shape.Width))), allowReflection: true),
+            A.PackingOrientation.FromShape(new A.CellMask(state.View.Effective(i.Id).Shape.Occupied()), allowReflection: true),
             canUseHand: false, allowedContainerIds: containers.Where(c => state.Admits(i, state.Inventories[c.Id], ignoreCurrentContainment: true)
                 && state.Addable(i, state.Inventories[c.Id]) >= i.UnitCount).Select(c => c.Id)));
         Problem = new A.PackProblem(items, containers, availableHands: 0, fixedValue);

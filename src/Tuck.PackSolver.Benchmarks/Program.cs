@@ -101,9 +101,12 @@ internal static class Program
                                 // per-call allocation traffic, not peak live memory or process RSS.
                                 GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
                                 var background = IdleGate.Capture();
-                                var before = Copy(scenario);
+                                // A live capture supplies fresh facts. Warm the runtime, but charge each
+                                // solve for derived geometry rather than reusing a previous round's caches.
+                                var input = PackJson.Deserialize(PackJson.Serialize(scenario, limits)).State;
+                                var before = Copy(input);
                                 using var cancel = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
-                                var problem = new PackProblem(scenario);
+                                var problem = new PackProblem(input);
                                 long allocated = GC.GetAllocatedBytesForCurrentThread();
                                 long start = Stopwatch.GetTimestamp();
                                 var result = solver.Solve(problem, limits, cancel.Token);
@@ -114,7 +117,7 @@ internal static class Program
                                 // This wait is outside both solver timing and allocation measurement.
                                 if (elapsed < 500) Thread.Sleep((int)Math.Ceiling(500 - elapsed));
                                 string? busy = IdleGate.Busy(background, IdleGate.Capture());
-                                Validate(before, scenario, result);
+                                Validate(before, input, result);
                                 if (busy != null)
                                 {
                                     Console.WriteLine($"Discarding noisy sample ({busy}): {scenario.StateId}/{solver.GetType().Name}");

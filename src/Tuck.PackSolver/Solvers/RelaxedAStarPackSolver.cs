@@ -48,7 +48,7 @@ public sealed class RelaxedAStarPackSolver : IPackSolver
             itemIds = initial.Items.Select(i => i.Id).OrderBy(id => id, StringComparer.Ordinal).ToArray();
             capacities = initial.Inventories.Where(i => i.OwnerItemId != null && TransferSimulation.IsPackingStorage(i))
                 .GroupBy(i => i.OwnerItemId!).ToDictionary(g => g.Key,
-                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.Cells.Count(c => c == 0) : 1));
+                    g => g.Sum(i => i.Layout is InventoryLayout.Grid grid ? (long)grid.Cells.UsableArea : 1));
         }
 
         internal PlanningResult Run()
@@ -250,7 +250,7 @@ public sealed class RelaxedAStarPackSolver : IPackSolver
             if (inventory.Layout is InventoryLayout.Grid grid)
             {
                 footprint = state.View.Effective(item.Id).Place(item.Shape, position, inventory.Layout);
-                if (footprint.Positions(1).Any(c => grid.Cells.GetLocal(c.X, c.Y) != 0)) return -1;
+                if (!footprint.Fits(grid.Cells, checkBounds: false)) return -1;
             }
             int blockers = 0;
             foreach (var occupant in state.View.Contents(inventory.Id))

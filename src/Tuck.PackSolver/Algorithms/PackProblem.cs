@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using global::Tuck.BitBoard;
+using Board = global::Tuck.BitBoard.BitBoard;
 
 namespace Tuck.PackSolver.Algorithms;
 
@@ -19,9 +21,9 @@ internal readonly struct GridCell : IEquatable<GridCell>
 /// <summary>An immutable cell mask. False cells, including holes, are not part of the shape.</summary>
 internal sealed class CellMask
 {
-    private readonly ulong[] _words;
-    public int Width { get; }
-    public int Height { get; }
+    internal Board Board { get; }
+    public int Width => Board.Width;
+    public int Height => Board.Height;
     public ReadOnlyCollection<GridCell> Cells { get; }
     public int Area => Cells.Count;
 
@@ -30,61 +32,39 @@ internal sealed class CellMask
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (cells == null) throw new ArgumentNullException(nameof(cells));
-        Width = width;
-        Height = height;
-        _words = CellBits.Create(width, height);
+        _ = checked(width * height);
+        var board = new BitBoardMut(width, height);
         var copy = new List<GridCell>();
         foreach (var cell in cells)
         {
             if (cell.X < 0 || cell.X >= width || cell.Y < 0 || cell.Y >= height)
                 throw new ArgumentException("A cell lies outside the mask.", nameof(cells));
-            int index = cell.Y * width + cell.X;
-            if (CellBits.Contains(_words, index))
+            if (board[cell.X, cell.Y])
                 throw new ArgumentException("Duplicate cell.", nameof(cells));
-            CellBits.Set(_words, index);
+            board[cell.X, cell.Y] = true;
             copy.Add(cell);
         }
         copy.Sort((a, b) => a.Y != b.Y ? a.Y.CompareTo(b.Y) : a.X.CompareTo(b.X));
         Cells = copy.AsReadOnly();
+        Board = board.ToImmutable();
     }
 
-    public bool Contains(int x, int y)
+    internal CellMask(Board board)
     {
-        if (x < 0 || x >= Width || y < 0 || y >= Height) return false;
-        int index = y * Width + x;
-        return CellBits.Contains(_words, index);
+        Board = board;
+        var cells = new List<GridCell>();
+        foreach (var (x, y) in board.Cells) cells.Add(new GridCell(x, y));
+        Cells = cells.AsReadOnly();
     }
 
-    internal ulong[] CopyWords() => (ulong[])_words.Clone();
+    public bool Contains(int x, int y) => (uint)x < (uint)Width && (uint)y < (uint)Height && Board[x, y];
 
     public static CellMask Rectangle(int width, int height)
     {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        var cells = new GridCell[checked(width * height)];
-        for (int y = 0; y < height; y++)
-            for (int x = 0; x < width; x++) cells[y * width + x] = new GridCell(x, y);
-        return new CellMask(width, height, cells);
-    }
-
-    // Matches GridShape.ForwardTransform: mirror the original X axis, then rotate.
-    internal CellMask Transform(int quarterTurns, bool flipped)
-    {
-        var cells = new List<GridCell>(Area);
-        foreach (var cell in Cells)
-        {
-            int x = flipped ? Width - 1 - cell.X : cell.X;
-            int y = cell.Y;
-            cells.Add(quarterTurns switch
-            {
-                0 => new GridCell(x, y),
-                1 => new GridCell(y, Width - 1 - x),
-                2 => new GridCell(Width - 1 - x, Height - 1 - y),
-                _ => new GridCell(Height - 1 - y, x)
-            });
-        }
-        return new CellMask(quarterTurns % 2 == 0 ? Width : Height,
-            quarterTurns % 2 == 0 ? Height : Width, cells);
+        _ = checked(width * height);
+        return new CellMask(new Board(width, height, filled: true));
     }
 }
 
@@ -110,13 +90,16 @@ internal sealed class PackingOrientation
         if (shape == null) throw new ArgumentNullException(nameof(shape));
         var result = new List<PackingOrientation>();
         for (int mirror = 0; mirror < (allowReflection ? 2 : 1); mirror++)
+        {
+            // Matches GridShape.ForwardTransform: mirror the original X axis, then rotate.
+            var source = mirror == 0 ? shape.Board : shape.Board.FlippedH();
             for (int rotation = 0; rotation < (allowRotation ? 4 : 1); rotation++)
             {
-                var variant = shape.Transform(rotation, mirror != 0);
-                if (result.Any(o => o.Shape.Width == variant.Width && o.Shape.Height == variant.Height
-                    && o.Shape.Cells.SequenceEqual(variant.Cells))) continue;
-                result.Add(new PackingOrientation(variant, rotation, mirror != 0));
+                var variant = source.Rotated(rotation);
+                if (result.Any(o => o.Shape.Board.Equals(variant))) continue;
+                result.Add(new PackingOrientation(new CellMask(variant), rotation, mirror != 0));
             }
+        }
         return result.AsReadOnly();
     }
 }
@@ -188,8 +171,16 @@ internal sealed class PackingContainer
         IsSlot = isSlot;
         UsableCells = usableCells ?? throw new ArgumentNullException(nameof(usableCells));
         OccupiedCells = new CellMask(usableCells.Width, usableCells.Height, occupiedCells ?? Array.Empty<GridCell>());
-        if (OccupiedCells.Cells.Any(c => !usableCells.Contains(c.X, c.Y)))
+        if (!UsableCells.Board.Contains(OccupiedCells.Board))
             throw new ArgumentException("Occupied cells must be usable cells.", nameof(occupiedCells));
+    }
+
+    internal BitBoardMut BlockedCells()
+    {
+        var blocked = UsableCells.Board.ToMutable();
+        blocked.Invert();
+        blocked.Union(OccupiedCells.Board);
+        return blocked;
     }
 
     /// <summary>Use for toolbox sockets and named carry slots. Capture admission rules on PackingItem.</summary>

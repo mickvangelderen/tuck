@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using global::Tuck.BitBoard;
+using Board = global::Tuck.BitBoard.BitBoard;
 
 namespace Tuck.PackSolver.Algorithms;
 
 internal sealed class ItemPlacement
 {
+    private static readonly Board SlotCell = new(1, 1, filled: true);
     public PackingItem Item { get; }
     public PackingContainer Container { get; }
     public PackingOrientation Orientation { get; }
@@ -14,10 +17,10 @@ internal sealed class ItemPlacement
     public int CellCost => Container.IsSlot ? 1 : Item.Area;
     internal int ItemIndex { get; }
     internal int ContainerIndex { get; }
-    internal ulong[] Words { get; }
+    internal Board Footprint => Container.IsSlot ? SlotCell : Orientation.Shape.Board;
 
     internal ItemPlacement(PackProblem problem, int item, int container, PackingOrientation orientation,
-        int x, int y, ulong[] words)
+        int x, int y)
     {
         Item = problem.Items[item];
         Container = problem.Containers[container];
@@ -26,7 +29,6 @@ internal sealed class ItemPlacement
         Orientation = orientation;
         X = x;
         Y = y;
-        Words = words;
     }
 }
 
@@ -45,8 +47,8 @@ internal sealed class PlacementCatalog
         ByItem = new List<ItemPlacement>[problem.Items.Count];
         SlotsByItem = new List<ItemPlacement>[problem.Items.Count];
         MinimumCellCosts = new int[problem.Items.Count];
-        var blocked = new ulong[problem.Containers.Count][];
-        for (int c = 0; c < blocked.Length; c++) blocked[c] = CellBits.BlockedCells(problem.Containers[c]);
+        var blocked = new BitBoardMut[problem.Containers.Count];
+        for (int c = 0; c < blocked.Length; c++) blocked[c] = problem.Containers[c].BlockedCells();
         for (int i = 0; i < problem.Items.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -63,7 +65,7 @@ internal sealed class PlacementCatalog
                     if (container.FreeCellCount > 0)
                     {
                         // The caller supplies legal orientations; a flexible slot imposes no geometric size bound.
-                        var placement = new ItemPlacement(problem, i, c, item.Orientations[0], 0, 0, new[] { 1UL });
+                        var placement = new ItemPlacement(problem, i, c, item.Orientations[0], 0, 0);
                         placements.Add(placement);
                         slots.Add(placement);
                         MinimumCellCosts[i] = 1;
@@ -73,21 +75,14 @@ internal sealed class PlacementCatalog
                 if (item.Area > container.FreeCellCount) continue;
                 int width = container.UsableCells.Width;
                 int height = container.UsableCells.Height;
-                var words = CellBits.Create(width, height);
                 foreach (var orientation in item.Orientations)
                     for (int y = 0; y <= height - orientation.Shape.Height; y++)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         for (int x = 0; x <= width - orientation.Shape.Width; x++)
                         {
-                            Array.Clear(words, 0, words.Length);
-                            foreach (var cell in orientation.Shape.Cells)
-                            {
-                                int index = (y + cell.Y) * width + x + cell.X;
-                                CellBits.Set(words, index);
-                            }
-                            if (CellBits.Overlap(words, blocked[c])) continue;
-                            placements.Add(new ItemPlacement(problem, i, c, orientation, x, y, (ulong[])words.Clone()));
+                            if (blocked[c].Overlaps(orientation.Shape.Board, x, y)) continue;
+                            placements.Add(new ItemPlacement(problem, i, c, orientation, x, y));
                         }
                     }
             }
@@ -108,25 +103,25 @@ internal sealed class PlacementCatalog
 
 internal sealed class PackingLayout
 {
-    private readonly ulong[][] _occupied;
+    private readonly BitBoardMut[] _occupied;
     private readonly Dictionary<string, string> _parents = new(StringComparer.Ordinal);
     public int[] FreeCells { get; }
 
     public PackingLayout(PackProblem problem)
     {
-        _occupied = new ulong[problem.Containers.Count][];
+        _occupied = new BitBoardMut[problem.Containers.Count];
         FreeCells = new int[problem.Containers.Count];
         for (int c = 0; c < problem.Containers.Count; c++)
         {
             var container = problem.Containers[c];
-            _occupied[c] = CellBits.BlockedCells(container);
+            _occupied[c] = container.BlockedCells();
             FreeCells[c] = container.FreeCellCount;
         }
     }
 
     public bool Fits(ItemPlacement placement)
     {
-        if (CellBits.Overlap(_occupied[placement.ContainerIndex], placement.Words)) return false;
+        if (_occupied[placement.ContainerIndex].Overlaps(placement.Footprint, placement.X, placement.Y)) return false;
         string? owner = placement.Container.OwnerItemId;
         while (owner != null)
         {
@@ -138,8 +133,7 @@ internal sealed class PackingLayout
 
     public void Add(ItemPlacement placement)
     {
-        var occupied = _occupied[placement.ContainerIndex];
-        for (int w = 0; w < occupied.Length; w++) occupied[w] |= placement.Words[w];
+        _occupied[placement.ContainerIndex].Union(placement.Footprint, placement.X, placement.Y);
         FreeCells[placement.ContainerIndex] -= placement.CellCost;
         if (placement.Container.OwnerItemId != null)
             _parents.Add(placement.Item.Id, placement.Container.OwnerItemId);
@@ -147,8 +141,7 @@ internal sealed class PackingLayout
 
     public void Remove(ItemPlacement placement)
     {
-        var occupied = _occupied[placement.ContainerIndex];
-        for (int w = 0; w < occupied.Length; w++) occupied[w] &= ~placement.Words[w];
+        _occupied[placement.ContainerIndex].Subtract(placement.Footprint, placement.X, placement.Y);
         FreeCells[placement.ContainerIndex] += placement.CellCost;
         _parents.Remove(placement.Item.Id);
     }
@@ -173,7 +166,6 @@ internal sealed class PackingLayout
     {
         var mask = placement.Container.UsableCells;
         if (x < 0 || x >= mask.Width || y < 0 || y >= mask.Height) return true;
-        int index = y * mask.Width + x;
-        return CellBits.Contains(_occupied[placement.ContainerIndex], index);
+        return _occupied[placement.ContainerIndex][x, y];
     }
 }

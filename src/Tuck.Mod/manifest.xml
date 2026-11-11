@@ -14,6 +14,7 @@ Named after Tuck, the helpful rat who fits more loot into your bags. Small paws,
   </GameVersions>
   <Prerequisites />
   <Assemblies>
+    <Assembly>Tuck.BitBoard.dll</Assembly>
     <Assembly>Tuck.PackSolver.dll</Assembly>
     <Assembly>Tuck.Mod.dll</Assembly>
   </Assemblies>

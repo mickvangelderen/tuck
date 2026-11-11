@@ -26,6 +26,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Tuck.Mod.Tests" />
     <ProjectReference Include="..\Tuck.PackSolver\Tuck.PackSolver.csproj" />
+    <ProjectReference Include="..\Tuck.BitBoard\Tuck.BitBoard.csproj" />
     <Reference Include="0Harmony">
       <HintPath>$(GameAssembliesDir)\0Harmony.dll</HintPath>
       <Private>false</Private>
@@ -92,7 +93,7 @@
     </PropertyGroup>
     <RemoveDir Directories="$(ModStagingDir)" />
     <ItemGroup>
-      <_ModFiles Include="$(TargetPath);$(TargetDir)Tuck.PackSolver.dll;$(TargetDir)manifest.xml;$(TargetDir)preview.png;$(TargetDir)LICENSE;$(TargetDir)THIRD-PARTY-NOTICES.txt" />
+      <_ModFiles Include="$(TargetPath);$(TargetDir)Tuck.PackSolver.dll;$(TargetDir)Tuck.BitBoard.dll;$(TargetDir)manifest.xml;$(TargetDir)preview.png;$(TargetDir)LICENSE;$(TargetDir)THIRD-PARTY-NOTICES.txt" />
     </ItemGroup>
     <Copy SourceFiles="@(_ModFiles)" DestinationFolder="$(ModStagingDir)" />
     <Copy SourceFiles="@(TuckSprite->'$(TargetDir)assets\tuck\%(Filename)%(Extension)')"

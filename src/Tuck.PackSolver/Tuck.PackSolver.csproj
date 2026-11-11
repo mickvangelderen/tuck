@@ -11,6 +11,7 @@
   <Import Project="..\ModVersion.targets" />
 
   <ItemGroup>
+    <ProjectReference Include="..\Tuck.BitBoard\Tuck.BitBoard.csproj" />
     <!-- Solver tests also exercise internal search and replay components. -->
     <InternalsVisibleTo Include="Tuck.PackSolver.Tests" />
   </ItemGroup>

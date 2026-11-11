@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using global::Tuck.PackSolver.Algorithms;
+using global::Tuck.BitBoard;
+using Board = global::Tuck.BitBoard.BitBoard;
 
 namespace Tuck.PackSolver;
 
@@ -19,7 +20,8 @@ internal sealed class DependencyScheduler
     private readonly ItemState[] _items;
     private readonly SequenceBudget _budget;
     private readonly int _nodeLimit, _checkLimit;
-    private readonly Dictionary<string, ulong[]> _finalOccupancy = new();
+    private readonly Dictionary<string, BitBoardMut> _finalOccupancy = new();
+    private static readonly Board SlotCell = new(1, 1, filled: true);
     private readonly List<Footprint>[] _positions;
     private readonly bool[] _buffersGenerated;
     private readonly IEnumerator<Footprint>?[] _bufferCandidates;
@@ -46,7 +48,7 @@ internal sealed class DependencyScheduler
             || state.Inventories.Values.Any(i => i.UnsupportedParentEffects)
             || state.Items.Values.Any(i => state.Definition(i).Rules.ParentShape != ParentShapeRule.None
                 || state.Definition(i).Rules.UnsupportedParentState || i.Shape.OutsideBounds != 0
-                || i.Shape.Cells.Any(b => b > 1))) return null;
+                || !i.Shape.IsBinary)) return null;
         var moving = new List<TransferStep>();
         foreach (var target in targets.Values)
         {
@@ -105,9 +107,13 @@ internal sealed class DependencyScheduler
             var goal = FootprintAt(item, location);
             if (goal == null) return false;
             if (!_finalOccupancy.TryGetValue(location.InventoryId, out var occupied))
-                _finalOccupancy.Add(location.InventoryId, occupied = new ulong[goal.Cells.Length]);
-            if (CellBits.Overlap(occupied, goal.Cells)) return false;
-            for (int w = 0; w < occupied.Length; w++) occupied[w] |= goal.Cells[w];
+            {
+                var layout = _initial.Inventories[location.InventoryId].Layout;
+                occupied = layout is InventoryLayout.Grid grid ? new(grid.Cells.Width, grid.Cells.Height) : new(1, 1);
+                _finalOccupancy.Add(location.InventoryId, occupied);
+            }
+            if (occupied.Overlaps(goal.Cells, goal.X, goal.Y)) return false;
+            occupied.Union(goal.Cells, goal.X, goal.Y);
             if (!moving) continue;
             var start = FootprintAt(item, item.Location);
             if (start == null) return false;
@@ -218,7 +224,7 @@ internal sealed class DependencyScheduler
                 if (location.Equals(item.Location)) continue;
                 var footprint = FootprintAt(item, location);
                 if (footprint == null || _finalOccupancy.TryGetValue(inventory.Id, out var goals)
-                    && CellBits.Overlap(footprint.Cells, goals)) continue;
+                    && goals.Overlaps(footprint.Cells, footprint.X, footprint.Y)) continue;
                 yield return footprint;
             }
         }
@@ -228,25 +234,22 @@ internal sealed class DependencyScheduler
     {
         var inventory = _initial.Inventories[location.InventoryId];
         if (inventory.Layout is InventoryLayout.Slot)
-            return location.Placement is Placement.Slot ? new(location, new ulong[] { 1 }) : null;
+            return location.Placement is Placement.Slot ? new(location, SlotCell, 0, 0) : null;
         if (location.Placement is not Placement.Grid) return null;
         var grid = ((InventoryLayout.Grid)inventory.Layout).Cells;
-        var cells = CellBits.Create(grid.Width, grid.Height);
         var placed = _initial.View.Effective(item.Id).Place(item.Shape, location.Placement, inventory.Layout);
-        foreach (var (x, y) in placed.Positions(1))
-        {
-            if (x < 0 || x >= grid.Width || y < 0 || y >= grid.Height || grid.GetLocal(x, y) != 0) return null;
-            CellBits.Set(cells, y * grid.Width + x);
-        }
-        return new(location, cells);
+        return placed.Fits(grid) ? new(location, placed.Occupied, placed.Transform.X, placed.Transform.Y) : null;
     }
     private static bool Overlap(Footprint a, Footprint b) =>
-        a.Location.InventoryId == b.Location.InventoryId && CellBits.Overlap(a.Cells, b.Cells);
+        a.Location.InventoryId == b.Location.InventoryId && a.Cells.Overlaps(b.Cells, b.X - a.X, b.Y - a.Y);
     private sealed class Footprint
     {
         internal ItemLocation Location { get; }
-        internal ulong[] Cells { get; }
-        internal Footprint(ItemLocation location, ulong[] cells) { Location = location; Cells = cells; }
+        internal Board Cells { get; }
+        internal int X { get; }
+        internal int Y { get; }
+        internal Footprint(ItemLocation location, Board cells, int x, int y)
+        { Location = location; Cells = cells; X = x; Y = y; }
     }
     private sealed class PositionKey : IEquatable<PositionKey>
     {

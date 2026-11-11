@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Tuck.BitBoard/Tuck.BitBoard.csproj" />
+    <Project Path="src/Tuck.BitBoard.Tests/Tuck.BitBoard.Tests.csproj" />
+    <Project Path="src/Tuck.BitBoard.Bench/Tuck.BitBoard.Bench.csproj" />
     <Project Path="src/Tuck.Mod/Tuck.Mod.csproj" />
     <Project Path="src/Tuck.Mod.Tests/Tuck.Mod.Tests.csproj" />
     <Project Path="src/Tuck.PackSolver/Tuck.PackSolver.csproj" />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Board = global::Tuck.BitBoard.BitBoard;
 
 namespace Tuck.PackSolver;
 
@@ -149,14 +150,7 @@ internal sealed class TransferSimulation
         placed = View.Effective(item.Id).Place(item.Shape, placement, inventory.Layout);
         var grid = ((InventoryLayout.Grid)inventory.Layout).Cells;
         if ((placed.Width > grid.Width || placed.Height > grid.Height) && (placed.Width > grid.Height || placed.Height > grid.Width)) return false;
-        for (int y = 0; y < placed.Height; y++)
-            for (int x = 0; x < placed.Width; x++)
-                if (placed.Shape.GetLocal(x, y) == 1)
-                {
-                    var cell = placed.Forward(x, y);
-                    if ((uint)cell.X >= (uint)grid.Width || (uint)cell.Y >= (uint)grid.Height || grid.GetLocal(cell.X, cell.Y) != 0) return false;
-                }
-        return true;
+        return placed.Fits(grid);
     }
     internal IEnumerable<Placement> Positions(ItemState item, InventoryState inventory)
     {
@@ -171,30 +165,50 @@ internal sealed class TransferSimulation
     private IEnumerable<Placement> EnumeratePositions(ItemState item, InventoryState inventory)
     {
         if (inventory.Layout is InventoryLayout.Slot) { yield return new Placement.Slot(); yield break; }
-        var usable = new PlacedShape(((InventoryLayout.Grid)inventory.Layout).Cells, new()).Positions(0).ToArray();
-        if (usable.Length == 0) yield break;
-        int minX = usable.Min(c => c.X), minY = usable.Min(c => c.Y), maxX = usable.Max(c => c.X), maxY = usable.Max(c => c.Y);
+        var grid = ((InventoryLayout.Grid)inventory.Layout).Cells;
+        if (grid.UsableArea == 0) yield break;
+        var (minX, minY, maxX, maxY) = Bounds(grid.Usable);
         var effective = View.Effective(item.Id);
+        if (effective.Shape.Area == 0) yield break;
+        var binaryShapes = new HashSet<Board>();
         var shapes = new HashSet<string>();
         for (int flip = 0; flip < 2; flip++)
             for (int rotation = 0; rotation < 4; rotation++)
             {
-                var transformed = new PlacedShape(effective.Shape, new(orientation: rotation, flipped: flip != 0));
-                var cells = transformed.Positions(1).ToArray();
-                if (cells.Length == 0) continue;
+                var occupied = effective.Shape.Occupied(rotation, flip != 0);
                 // Non-1 labels also collide. Occupied-cell symmetry alone is not equivalence.
                 // With mutable parent shapes, an apparently equivalent orientation can diverge later.
                 if (_fixedGeometry)
                 {
-                    var signature = new System.Text.StringBuilder().Append(transformed.GlobalWidth).Append(':').Append(transformed.GlobalHeight).Append(':');
-                    for (int row = 0; row < transformed.GlobalHeight; row++)
-                        for (int column = 0; column < transformed.GlobalWidth; column++) signature.Append(transformed.Get(column, row)).Append(',');
-                    if (!shapes.Add(signature.ToString())) continue;
+                    if (effective.Shape.IsBinary)
+                    {
+                        if (!binaryShapes.Add(occupied)) continue;
+                    }
+                    else
+                    {
+                        var transformed = new PlacedShape(effective.Shape, new(orientation: rotation, flipped: flip != 0));
+                        var signature = new System.Text.StringBuilder().Append(transformed.GlobalWidth).Append(':').Append(transformed.GlobalHeight).Append(':');
+                        for (int row = 0; row < transformed.GlobalHeight; row++)
+                            for (int column = 0; column < transformed.GlobalWidth; column++) signature.Append(transformed.Get(column, row)).Append(',');
+                        if (!shapes.Add(signature.ToString())) continue;
+                    }
                 }
-                for (int y = minY - cells.Min(c => c.Y); y <= maxY - cells.Max(c => c.Y); y++)
-                    for (int x = minX - cells.Min(c => c.X); x <= maxX - cells.Max(c => c.X); x++)
+                var bounds = Bounds(occupied);
+                for (int y = minY - bounds.MinY; y <= maxY - bounds.MaxY; y++)
+                    for (int x = minX - bounds.MinX; x <= maxX - bounds.MaxX; x++)
                         yield return effective.FromEffective(item.Shape, new(x, y, rotation, flip != 0));
             }
+    }
+
+    private static (int MinX, int MinY, int MaxX, int MaxY) Bounds(Board board)
+    {
+        int minX = board.Width, minY = board.Height, maxX = -1, maxY = -1;
+        foreach (var (x, y) in board.Cells)
+        {
+            minX = Math.Min(minX, x); minY = Math.Min(minY, y);
+            maxX = Math.Max(maxX, x); maxY = Math.Max(maxY, y);
+        }
+        return (minX, minY, maxX, maxY);
     }
     internal bool TryApply(TransferStep step, out string reason)
     {

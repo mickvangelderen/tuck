@@ -64,7 +64,7 @@ internal sealed class ContainerAssignments
                 unit = state.Items[state.Inventories[unit.Location.InventoryId].OwnerItemId!];
             values.TryGetValue(unit.Id, out decimal value);
             values[unit.Id] = value + (decimal)state.View.PackUnitValue(item.Id) * item.UnitCount;
-            areas[item.Id] = state.View.Effective(item.Id).Shape.Cells.Count(c => c == 1);
+            areas[item.Id] = state.View.Effective(item.Id).Shape.Area;
         }
         owners = capacities.Keys.OrderByDescending(id => capacities[id]).ThenBy(id => id, StringComparer.Ordinal).ToArray();
         choices = owners.ToDictionary(id => id, id => !movable.Contains(id) ? new[] { state.Items[id].Location.InventoryId }
@@ -118,7 +118,7 @@ internal sealed class ContainerAssignments
     }
 
     private int Cost(string id, InventoryState inventory) => inventory.Layout is InventoryLayout.Slot ? 1 : areas[id];
-    private static int Cells(InventoryState inventory) => inventory.Layout is InventoryLayout.Grid grid ? grid.Cells.Cells.Count(c => c == 0) : 1;
+    private static int Cells(InventoryState inventory) => inventory.Layout is InventoryLayout.Grid grid ? grid.Cells.UsableArea : 1;
 
     private bool FitsArea(Dictionary<string, string> parents)
     {
@@ -251,10 +251,7 @@ internal sealed class ContainerAssignments
                     PlacementChecks++;
                     var shape = state.View.Effective(item.Id).Place(item.Shape, position, inventory.Layout);
                     if (inventory.Layout is InventoryLayout.Slot ? occupied.Count != 0
-                        : shape.Positions(1).Any(c => c.X < 0 || c.Y < 0
-                            || c.X >= ((InventoryLayout.Grid)inventory.Layout).Cells.Width
-                            || c.Y >= ((InventoryLayout.Grid)inventory.Layout).Cells.Height
-                            || ((InventoryLayout.Grid)inventory.Layout).Cells.GetLocal(c.X, c.Y) != 0)
+                        : !shape.Fits(((InventoryLayout.Grid)inventory.Layout).Cells)
                             || occupied.Any(shape.Intersects)) continue;
                     occupied.Add(shape); locations[item.Id] = new(inventory.Id, position);
                     if (Place(index + 1)) return true;

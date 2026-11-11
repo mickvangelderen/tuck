@@ -10,7 +10,7 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
 {
     private PixelWindow _window = null!;
     private Options _options = null!;
-    private readonly PackEngine _pack = new();
+    private PackEngine _pack = null!;
 
     // The host stays inactive until all of Tuck's components have been initialized.
     public static AfterhourGroundControls Install(GameObject host, PixelWindow window, Options options)
@@ -18,6 +18,7 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
         var controls = host.AddComponent<AfterhourGroundControls>();
         controls._window = window;
         controls._options = options;
+        controls._pack = new PackEngine(options);
         return controls;
     }
 

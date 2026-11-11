@@ -55,7 +55,7 @@ internal sealed class PackPlan
         var containers = original.Containers.Select((container, index) => (container.Id, index))
             .ToDictionary(p => p.Id, p => p.index);
         return new PackPlan(original, Placements.Select(p => new ItemPlacement(original, items[p.Item.Id],
-            containers[p.Container.Id], p.Orientation, p.X, p.Y, p.Words)), HandItems.Select(i => items[i.Id]));
+            containers[p.Container.Id], p.Orientation, p.X, p.Y)), HandItems.Select(i => items[i.Id]));
     }
 }
 
@@ -363,8 +363,7 @@ internal sealed class PackingSearch
             var left = a.Orientations[o];
             var right = b.Orientations[o];
             if (left.QuarterTurns != right.QuarterTurns || left.Flipped != right.Flipped
-                || left.Shape.Width != right.Shape.Width || left.Shape.Height != right.Shape.Height
-                || !left.Shape.Cells.SequenceEqual(right.Shape.Cells)) return false;
+                || !left.Shape.Board.Equals(right.Shape.Board)) return false;
         }
         return true;
     }

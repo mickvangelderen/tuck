@@ -112,4 +112,33 @@ public class WorkspaceWarningTests
             new GridShapeBuilder(2, 1).SetDataFill(1));
         Assert.False(WorkspaceWarning.RequiresWarning(workspace, 40f));
     }
+
+    [Fact]
+    public void TiledOccupancyMatchesGameCellsForLabelsTransformsAndOutsideValues()
+    {
+        var random = new Random(31579);
+        for (int example = 0; example < 100; example++)
+        {
+            GridShape Shape(int width, int height, int labels, int outside) => new GridShapeBuilder(width, height)
+                .SetData(Enumerable.Range(0, width * height).Select(_ => (byte)random.Next(labels)).ToArray(), width)
+                .SetDataOutside((byte)outside).SetTransform(random.Next(-5, 6), random.Next(-5, 6), random.Next(2) != 0, random.Next(4));
+            var grid = Shape(9, 13, 3, 1);
+            var footprints = Enumerable.Range(0, 5).Select(i => Shape(3 + i, 2 + i, 3, example % 5 == 0 ? i % 3 : 0)).ToArray();
+            var workspace = Workspace(grid, footprints);
+            int usable = 0, occupied = 0;
+            for (int y = grid.minY; y <= grid.maxY; y++)
+                for (int x = grid.minX; x <= grid.maxX; x++)
+                    if (grid.Get(x, y) == 0)
+                    {
+                        usable++;
+                        if (footprints.Any(p => p.Intersects(x, y))) occupied++;
+                    }
+            foreach (float threshold in new[] { 0f, 20f, 40f, 99f, 100f })
+            {
+                bool expected = threshold >= 100 ? false : threshold <= 0 ? footprints.Length > 0
+                    : usable == 0 || occupied * 100d > usable * (double)threshold;
+                Assert.Equal(expected, WorkspaceWarning.RequiresWarning(workspace, threshold));
+            }
+        }
+    }
 }

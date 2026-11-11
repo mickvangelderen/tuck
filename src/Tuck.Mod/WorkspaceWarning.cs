@@ -1,4 +1,5 @@
 using HarmonyLib;
+using global::Tuck.BitBoard;
 
 namespace Tuck.Mod;
 
@@ -34,23 +35,32 @@ internal static class WorkspaceWarning
         if (occupiedThreshold <= 0f) return items.Count > 0;
 
         var shape = workspace.inventoryShape;
-        int total = 0, occupiedCells = 0;
-        for (int y = shape.minY; y <= shape.maxY; y++)
-            for (int x = shape.minX; x <= shape.maxX; x++)
+        var free = Mask(shape, 0);
+        long total = free.Count;
+        foreach (var item in items)
+        {
+            var footprint = item.modifiedShape;
+            if (footprint.GetLocal(-1, -1) == 1)
             {
-                if (shape.Get(x, y) != 0) continue;
-                total++;
-                bool occupied = false;
-                foreach (var item in items)
-                {
-                    // Includes rotation and holes; only the container's footprint occupies the workspace.
-                    if (!item.modifiedShape.Intersects(x, y)) continue;
-                    occupied = true;
-                    break;
-                }
-                if (occupied) occupiedCells++;
+                // Unusual shapes can occupy space outside their rectangle. Sample only this workspace.
+                for (int y = 0; y < free.Height; y++)
+                    for (int x = 0; x < free.Width; x++)
+                        if (footprint.Intersects(x + shape.minX, y + shape.minY)) free[x, y] = false;
             }
+            else free.Subtract(Mask(footprint, 1), footprint.minX - shape.minX, footprint.minY - shape.minY);
+        }
+        long occupiedCells = total - free.Count;
 
         return total == 0 || occupiedCells * 100d > total * (double)occupiedThreshold;
+    }
+
+    private static BitBoardMut Mask(GridShape shape, byte included)
+    {
+        var board = new BitBoardMut(shape.width, shape.height);
+        for (int y = 0; y < shape.height; y++)
+            for (int x = 0; x < shape.width; x++) board[x, y] = shape.GetLocal(x, y) == included;
+        if (shape.flipped) board.FlipH();
+        board.Rotate(shape.orientation);
+        return board;
     }
 }

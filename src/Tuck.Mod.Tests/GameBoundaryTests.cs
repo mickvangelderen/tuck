@@ -37,7 +37,8 @@ public class GameBoundaryTests
     public void ShippedAssembliesPassTheGamesReflectionCapabilityCheck()
     {
         // The test host has no ModLoader game-assembly registry; supply its shipped references explicitly.
-        var scan = ModScanner.Scan([typeof(ModEntry).Assembly.Location, typeof(IPackSolver).Assembly.Location],
+        var scan = ModScanner.Scan([typeof(ModEntry).Assembly.Location, typeof(IPackSolver).Assembly.Location,
+                typeof(global::Tuck.BitBoard.BitTile).Assembly.Location],
             ["netstandard", "Assembly-CSharp", "UnityEngine.CoreModule", "0Harmony", "Newtonsoft.Json", "UnityEngine.InputLegacyModule",
                 "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule",
                 "Assembly-CSharp-firstpass"]);
