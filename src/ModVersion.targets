@@ -4,5 +4,8 @@
       <Output TaskParameter="Result" PropertyName="Version" />
     </XmlPeek>
     <Error Condition="'$(Version)' == ''" Text="The mod manifest must specify a ModVersion." />
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+      <Version>$(Version)-dev</Version>
+    </PropertyGroup>
   </Target>
 </Project>

@@ -83,6 +83,7 @@
   </Target>
 
   <Target Name="UpdateModManifest" AfterTargets="Build" DependsOnTargets="ValidateGameReferences">
+    <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/ModVersion" Value="$(Version)" />
     <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/GameVersions/Version" Value="$(GameVersion)" />
   </Target>
 
