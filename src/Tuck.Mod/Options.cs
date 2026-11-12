@@ -28,6 +28,7 @@ internal sealed class Options
     public ToggleSetting CenterBackpackSelection { get; }
     public ToggleSetting OneClickNightActivities { get; }
     public ToggleSetting AppraisalFiftyButtons { get; }
+    public ToggleSetting AutoOpenAppraisalGuides { get; }
     public ToggleSetting ChemFinisherBatches { get; }
     public ToggleSetting ReplaceFilters { get; }
     public ToggleSetting DiscardAppraisalSlips { get; }
@@ -73,6 +74,9 @@ internal sealed class Options
         AppraisalFiftyButtons = new ToggleSetting(manifest,
             "appraisal_fifty_buttons", () => Text("appraisal_plus_minus_50_buttons"),
             () => Text("arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button"), defaultValue: false);
+        AutoOpenAppraisalGuides = new ToggleSetting(manifest,
+            "auto_open_appraisal_guides", () => Text("auto_open_appraisal_guides"),
+            () => Text("open_owned_reference_documents_when_inspecting_an_item"), defaultValue: false);
         ChemFinisherBatches = new ToggleSetting(manifest,
             "chem_finisher_batches", () => Text("chem_finisher_batch_buttons"),
             () => Text("add_1_5_and_20_batch_buttons_to_the_chem_finisher"), defaultValue: false);
@@ -119,6 +123,7 @@ internal sealed class Options
         CenterBackpackSelection.Register();
         OneClickNightActivities.Register();
         AppraisalFiftyButtons.Register();
+        AutoOpenAppraisalGuides.Register();
         ChemFinisherBatches.Register();
         ReplaceFilters.Register();
         DiscardAppraisalSlips.Register();
@@ -137,6 +142,7 @@ internal sealed class Options
         DiscardAppraisalSlips.Unregister();
         ReplaceFilters.Unregister();
         ChemFinisherBatches.Unregister();
+        AutoOpenAppraisalGuides.Unregister();
         AppraisalFiftyButtons.Unregister();
         OneClickNightActivities.Unregister();
         CenterBackpackSelection.Unregister();

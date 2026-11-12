@@ -21,6 +21,8 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+- Automatically open and close guides when appraising.
+
 ## [1.1.0] - 2026-11-11
 
 - Interactions that have a tooltip and keybinding now display their associated hotkey in the tooltip.

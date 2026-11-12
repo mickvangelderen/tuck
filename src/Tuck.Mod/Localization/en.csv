@@ -22,6 +22,8 @@ one_click_night_activities,One-click night activities
 travel_immediately_when_selecting_a_night_activity,Travel immediately when selecting a night activity. Turn off to select an activity and then click Travel.
 appraisal_plus_minus_50_buttons,Appraisal ±50 buttons
 arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button,"Arrange +/-5, 10, 50 and 100 appraisal buttons in two rows above the estimate and send button."
+auto_open_appraisal_guides,Auto-open appraisal guides
+open_owned_reference_documents_when_inspecting_an_item,Automatically open reference documents you own when inspecting an item with the magnifying glass. Close those guides when the inspection window closes.
 chem_finisher_batch_buttons,Chem finisher batch buttons
 add_1_5_and_20_batch_buttons_to_the_chem_finisher,"Add 1, 5 and 20 batch buttons to the chem finisher. Turn off to restore its original controls."
 quick_swap_filters,Quick swap filters

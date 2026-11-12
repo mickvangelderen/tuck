@@ -33,6 +33,7 @@ public sealed partial class ModEntry : IMod
         _nightActivitySelection.Register();
         DragAmounts.Register(_options);
         AppraisalSteps.Register(_options);
+        AppraisalGuides.Register(_options);
         DocumentDiscard.Register(_options);
         ChemFinisherBatch.Register(_options);
         FilterReplacement.Register(_options);
@@ -45,6 +46,7 @@ public sealed partial class ModEntry : IMod
         FilterReplacement.Unregister();
         ChemFinisherBatch.Unregister();
         DocumentDiscard.Unregister();
+        AppraisalGuides.Unregister();
         AppraisalSteps.Unregister();
         DragAmounts.Unregister();
         _nightActivitySelection.Unregister();
