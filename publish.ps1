@@ -6,12 +6,22 @@ Edit workshop.json for the title. Manage visibility on Steam's Workshop page.
 Keep Steam online as the Workshop item's owner.
 CHANGELOG.md must have an empty Unreleased section followed by a release section
 whose version matches the staged manifest. That section becomes Steam's change note.
-PrepareOnly validates inputs and writes offline description and change note previews.
-CheckOnly also queries Steam for ownership and existing images, without uploading.
+Description media must be committed in HEAD with no staged or working-tree changes.
+The GitHub origin and HEAD SHA determine raw.githubusercontent.com URLs.
+PrepareOnly validates inputs and writes complete offline description and change note previews.
+CheckOnly also verifies public media URLs and Steam ownership, and reports slideshow changes without uploading.
+Push the commit to the public GitHub origin before checking or publishing.
 For a new item, set publishedFileId to 0. Publishing saves its new ID immediately;
 commit that change and keep the ID for subsequent releases.
-Images and content are published in one invocation. Generated descriptions and
-the recovery ID live under artifacts/workshop/. Use package.ps1 for ZIP releases.
+Description media is hosted on GitHub; the cover image is uploaded to Steam.
+Slideshow images come only from media/slideshow/, ordered by leading filename number
+(01-demo.gif, 02-hotkeys.png), then filename. Each must be PNG, JPG or GIF under 1 MB.
+Uploads use content hashes as filenames. Publishing replaces changed slots and removes
+surplus images, while preserving manually attached videos and the separate cover image.
+A missing slideshow folder leaves existing images alone; an empty folder clears them.
+Use .gitkeep to retain an intentionally empty folder in Git.
+Generated descriptions and the recovery ID live under artifacts/workshop/.
+Use package.ps1 for ZIP releases.
 .EXAMPLE
 .\publish.ps1 -PrepareOnly
 .EXAMPLE

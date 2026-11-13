@@ -1,30 +1,12 @@
-using System.Security.Cryptography;
-
-internal sealed record WorkshopImage(string Path, string Name, byte[] Bytes)
-{
-    public static WorkshopImage Load(string path)
-    {
-        var file = new FileInfo(path);
-        if (!file.Exists || file.Length < 16 || file.Length >= 1_000_000)
-            throw new ArgumentException($"Image must exist and be between 16 bytes and 1 MB (exclusive): {path}");
-        string extension = file.Extension.ToLowerInvariant();
-        if (extension is not (".png" or ".jpg" or ".jpeg" or ".gif"))
-            throw new ArgumentException($"Use a PNG, JPG or GIF image: {path}");
-        if (extension == ".jpeg") extension = ".jpg";
-        byte[] bytes = File.ReadAllBytes(path);
-        return new(path, Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant() + extension, bytes);
-    }
-}
-
-internal sealed record WorkshopItem(uint AppId, ulong OwnerId, IReadOnlyDictionary<string, string> ImageUrls);
+internal sealed record WorkshopItem(uint AppId, ulong OwnerId, IReadOnlyList<WorkshopPreview> Images);
 
 internal interface IWorkshopClient : IDisposable
 {
     ulong UserId { get; }
     ulong CreateItem();
     WorkshopItem Query(ulong id);
-    void UploadImages(ulong id, IReadOnlyList<WorkshopImage> images);
-    void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote);
+    void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote,
+        WorkshopSlideshow slideshow);
 }
 
 internal static class WorkshopPublisher
@@ -32,7 +14,7 @@ internal static class WorkshopPublisher
     public const uint AppId = 4348910;
 
     public static void Run(string mode, string settingsPath, string readmePath, string changelogPath, string contentFolder,
-        string previewFile, string outputFolder, Func<IWorkshopClient> connect)
+        string previewFile, string outputFolder, Func<IWorkshopClient> connect, HttpClient? mediaClient = null)
     {
         // Resolve upload paths and validate inputs before connecting to Steam.
         settingsPath = Path.GetFullPath(settingsPath);
@@ -43,26 +25,25 @@ internal static class WorkshopPublisher
         if (!File.Exists(Path.Combine(contentFolder, "manifest.xml")))
             throw new InvalidDataException("The staged mod is missing manifest.xml.");
         string changeNote = WorkshopReleaseNotes.Load(changelogPath, Path.Combine(contentFolder, "manifest.xml"));
-        _ = WorkshopImage.Load(previewFile);
+        WorkshopImage.ValidatePreview(previewFile);
+        var slides = WorkshopSlideshow.Load(Path.Combine(Path.GetDirectoryName(settingsPath)!, "media", "slideshow"));
         var description = new WorkshopDescription(readmePath);
-        string textOnly = description.Render();
-        var images = description.Images.Select(WorkshopImage.Load).ToArray();
-        // Render placeholders so repeated images, BBCode tags, and spacing all count.
-        string estimatedUrl = new('x', WorkshopLimits.EstimatedImageUrlBytes);
-        var estimatedUrls = images.ToDictionary(image => image.Path, _ => estimatedUrl, StringComparer.OrdinalIgnoreCase);
-        int estimatedBytes = WorkshopLimits.Validate("Estimated description", description.Render(estimatedUrls),
-            WorkshopLimits.DescriptionMaxBytes);
-        Console.WriteLine($"Estimated description: {estimatedBytes:N0}/{WorkshopLimits.DescriptionMaxBytes:N0} UTF-8 bytes "
-            + $"(allowing {WorkshopLimits.EstimatedImageUrlBytes} bytes per image URL).");
+        var urls = GitHubMedia.Resolve(Path.GetDirectoryName(Path.GetFullPath(readmePath))!, description.Images);
+        string rendered = description.Render(urls);
+        int actualBytes = WorkshopLimits.Validate("Rendered description", rendered, WorkshopLimits.DescriptionMaxBytes);
+        Console.WriteLine($"Rendered description: {actualBytes:N0}/{WorkshopLimits.DescriptionMaxBytes:N0} UTF-8 bytes.");
         Directory.CreateDirectory(outputFolder);
         string descriptionPath = Path.Combine(outputFolder, "description.txt");
-        File.WriteAllText(descriptionPath, textOnly);
+        File.WriteAllText(descriptionPath, rendered);
         string changeNotePath = Path.Combine(outputFolder, "change-note.txt");
         File.WriteAllText(changeNotePath, changeNote);
         Console.WriteLine($"{settings.Title}; content: {contentFolder}");
         Console.WriteLine($"Description preview: {descriptionPath}");
         Console.WriteLine($"Change note preview: {changeNotePath}");
         if (mode == "prepare") return;
+
+        using var defaultClient = mediaClient == null ? new HttpClient { Timeout = TimeSpan.FromSeconds(30) } : null;
+        GitHubMedia.VerifyAvailable(urls.Values, mediaClient ?? defaultClient!);
 
         string receiptPath = Path.Combine(outputFolder, "publishedfileid.txt");
         ulong id = settings.PublishedFileId;
@@ -100,39 +81,13 @@ internal static class WorkshopPublisher
         var item = steam.Query(id);
         if (item.AppId != AppId) throw new InvalidOperationException("Workshop item belongs to a different game.");
         if (item.OwnerId != steam.UserId) throw new InvalidOperationException("The active Steam account does not own this Workshop item.");
-        var urls = item.ImageUrls;
-        var missing = images.DistinctBy(image => image.Name).Where(image => !urls.ContainsKey(image.Name)).ToArray();
-        foreach (var image in images)
-            Console.WriteLine($"{(urls.ContainsKey(image.Name) ? "Reusing" : "Missing")}: {Path.GetFileName(image.Path)}");
-        if (mode == "check" && missing.Length > 0)
-        {
-            Console.WriteLine($"Check complete: {missing.Length} new image(s) needed. No changes submitted.");
-            return;
-        }
-        if (missing.Length > 0)
-        {
-            steam.UploadImages(id, missing);
-            urls = steam.Query(id).ImageUrls;
-        }
-        var resolved = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var image in images)
-        {
-            if (!urls.TryGetValue(image.Name, out string? url))
-                throw new InvalidOperationException($"Steam has not returned a URL for {image.Name}. Run -CheckOnly before retrying.");
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != "https")
-                throw new InvalidOperationException($"Steam returned an invalid image URL: {url}");
-            resolved.Add(image.Path, url);
-        }
-        string rendered = description.Render(resolved);
-        int actualBytes = WorkshopLimits.Validate("Rendered description", rendered, WorkshopLimits.DescriptionMaxBytes);
-        Console.WriteLine($"Rendered description: {actualBytes:N0}/{WorkshopLimits.DescriptionMaxBytes:N0} UTF-8 bytes.");
-        File.WriteAllText(descriptionPath, rendered);
+        var slideshow = WorkshopSlideshow.Plan(item.Images, slides);
         if (mode == "check")
         {
             Console.WriteLine("Check complete. No changes submitted.");
             return;
         }
-        steam.Publish(id, settings, contentFolder, previewFile, rendered, changeNote);
+        steam.Publish(id, settings, contentFolder, previewFile, rendered, changeNote, slideshow);
         Console.WriteLine($"Workshop upload confirmed: https://steamcommunity.com/sharedfiles/filedetails/?id={id}");
     }
 

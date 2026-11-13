@@ -1,9 +1,13 @@
+using System.Diagnostics;
+using System.Net;
 using System.Text.Json;
 
 public sealed class PublishingTests : IDisposable
 {
     private readonly string _root = Directory.CreateTempSubdirectory("tuck-publish-test-").FullName;
     private readonly FakeWorkshop _steam = new();
+    private readonly FakeMediaHost _media = new();
+    private readonly HttpClient _http;
     private string SettingsPath => Path.Combine(_root, "workshop.json");
     private string Output => Path.Combine(_root, "output");
     private string Receipt => Path.Combine(Output, "publishedfileid.txt");
@@ -14,12 +18,20 @@ public sealed class PublishingTests : IDisposable
 
     public PublishingTests()
     {
+        _http = new HttpClient(_media);
         File.WriteAllBytes(ImagePath, Enumerable.Range(0, 32).Select(i => (byte)i).ToArray());
         File.WriteAllText(Readme, "# Tuck\n\nDescription.\n\n![demo](image.png)\n");
         Directory.CreateDirectory(Path.Combine(_root, "mod"));
         File.WriteAllText(Manifest, "<Manifest><ModVersion>1.0.0</ModVersion></Manifest>");
         File.WriteAllText(Changelog, "# Changelog\n\n## [Unreleased]\n\n## [1.0.0] - 2026-11-09\n\nTest release\n");
         WriteSettings(42);
+        Git("init");
+        Git("config", "user.name", "Publisher Test");
+        Git("config", "user.email", "publisher@example.invalid");
+        Git("config", "commit.gpgsign", "false");
+        Git("config", "core.hooksPath", Path.Combine(_root, "no-hooks"));
+        Git("remote", "add", "origin", "git@github.com:example/tuck.git");
+        CommitImage("image.png");
     }
 
     [Fact]
@@ -31,30 +43,29 @@ public sealed class PublishingTests : IDisposable
         Assert.False(File.Exists(Receipt));
         string text = File.ReadAllText(Path.Combine(Output, "description.txt"));
         Assert.Contains("Description.", text);
-        Assert.DoesNotContain("[img]", text);
+        Assert.Contains($"[img]https://raw.githubusercontent.com/example/tuck/{Git("rev-parse", "HEAD")}/image.png[/img]", text);
+        Assert.Empty(_media.Requests);
         Assert.Equal("[h2][1.0.0] - 2026-11-09[/h2]\n\nTest release\n",
             File.ReadAllText(Path.Combine(Output, "change-note.txt")));
     }
 
     [Fact]
-    public void CheckDoesNotUploadMissingImagesOrPublish()
+    public void CheckVerifiesPublicMediaAndOwnershipWithoutPublishing()
     {
         Run("check");
         Assert.Equal(["query"], _steam.Calls);
+        Assert.Single(_media.Requests);
     }
 
     [Fact]
-    public void NewItemIsSavedBeforeImagesAndPublishedWithTheirUrlsInOneRun()
+    public void NewItemIsSavedAndPublishedWithCommitPinnedUrlsInOneRun()
     {
         WriteSettings(0);
-        _steam.BeforeUpload = () =>
-        {
-            Assert.Equal(42UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
-            Assert.False(File.Exists(Receipt));
-        };
         Run("publish");
-        Assert.Equal(["create", "query", "images", "query", "publish"], _steam.Calls);
-        Assert.Contains("[img]https://example.com/", _steam.Description);
+        Assert.Equal(42UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
+        Assert.False(File.Exists(Receipt));
+        Assert.Equal(["create", "query", "publish"], _steam.Calls);
+        Assert.Contains($"[img]https://raw.githubusercontent.com/example/tuck/{Git("rev-parse", "HEAD")}/image.png[/img]", _steam.Description);
         Assert.Equal(_steam.Description, File.ReadAllText(Path.Combine(Output, "description.txt")));
         Assert.Equal(File.ReadAllText(Path.Combine(Output, "change-note.txt")), _steam.ChangeNote);
     }
@@ -67,7 +78,7 @@ public sealed class PublishingTests : IDisposable
         Run("publish");
         Assert.Equal(42UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
         Assert.False(File.Exists(Receipt));
-        Assert.Equal(["create", "query", "images", "query", "publish"], _steam.Calls);
+        Assert.Equal(["create", "query", "publish"], _steam.Calls);
         Assert.NotNull(_steam.Description);
     }
 
@@ -94,7 +105,7 @@ public sealed class PublishingTests : IDisposable
     }
 
     [Fact]
-    public void RetryAfterContentFailureReusesTheItemAndUploadedImages()
+    public void RetryAfterContentFailureReusesTheItem()
     {
         WriteSettings(0);
         _steam.FailPublish = true;
@@ -125,7 +136,6 @@ public sealed class PublishingTests : IDisposable
         WriteSettings(0);
         _steam.ItemId = 43;
         _steam.Calls.Clear();
-        _steam.Urls.Clear();
         Run("publish");
         Assert.Equal("create", _steam.Calls[0]);
         Assert.Equal(43UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
@@ -175,25 +185,15 @@ public sealed class PublishingTests : IDisposable
     [Theory]
     [InlineData("prepare")]
     [InlineData("publish")]
-    public void DescriptionEstimateCountsEveryImageOccurrenceBeforeConnecting(string mode)
+    public void DescriptionLimitCountsEveryImageOccurrenceBeforeConnecting(string mode)
     {
         WriteSettings(0);
         File.WriteAllText(Readme, new string('x', 7000) + "\n\n"
-            + string.Concat(Enumerable.Repeat("![image](image.png)\n\n", 4)));
+            + string.Concat(Enumerable.Repeat("![image](image.png)\n\n", 10)));
         var error = Assert.Throws<InvalidDataException>(() => Run(mode, () => throw new Exception("Must not connect.")));
-        Assert.Contains("Estimated description", error.Message);
+        Assert.Contains("Rendered description", error.Message);
         Assert.Equal(0UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
         Assert.False(File.Exists(Receipt));
-    }
-
-    [Fact]
-    public void LongerThanEstimatedSteamUrlsStillPreventOversizedPublication()
-    {
-        File.WriteAllText(Readme, new string('x', 7400) + "\n\n![image](image.png)\n");
-        _steam.ImageUrlOverride = "https://example.com/" + new string('x', 1000);
-        var error = Assert.Throws<InvalidDataException>(() => Run("publish"));
-        Assert.Contains("Rendered description", error.Message);
-        Assert.Equal(["query", "images", "query"], _steam.Calls);
     }
 
     [Fact]
@@ -316,21 +316,28 @@ public sealed class PublishingTests : IDisposable
     }
 
     [Fact]
-    public void IdenticalImageBytesAreUploadedOnceButResolveBothPaths()
+    public void DistinctPathsResolveIndependentlyAndRepeatedUrlsAreCheckedOnce()
     {
         File.Copy(ImagePath, Path.Combine(_root, "copy.png"));
-        File.AppendAllText(Readme, "\n![copy](copy.png)\n");
+        CommitImage("copy.png");
+        File.AppendAllText(Readme, "\n![copy](copy.png)\n\n![repeat](image.png)\n");
         Run("publish");
-        Assert.Equal(1, _steam.UploadedImageCount);
-        Assert.Equal(2, _steam.Description!.Split("[img]").Length - 1);
+        Assert.Equal(2, _media.Requests.Count);
+        Assert.Contains("/copy.png[/img]", _steam.Description);
+        Assert.Equal(3, _steam.Description!.Split("[img]").Length - 1);
     }
 
-    [Fact]
-    public void MissingImageUrlAfterUploadPreventsPublishingIncompleteDescription()
+    [Theory]
+    [InlineData("check")]
+    [InlineData("publish")]
+    public void UnavailablePublicMediaStopsBeforeCreatingAnItem(string mode)
     {
-        _steam.ReturnUploadedUrls = false;
-        Assert.Contains("not returned a URL", Assert.Throws<InvalidOperationException>(() => Run("publish")).Message);
-        Assert.DoesNotContain("publish", _steam.Calls);
+        WriteSettings(0);
+        _media.Status = HttpStatusCode.NotFound;
+        Assert.Contains("Push the commit", Assert.Throws<InvalidOperationException>(() => Run(mode)).Message);
+        Assert.Empty(_steam.Calls);
+        Assert.Equal(0UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
+        Assert.False(File.Exists(Receipt));
     }
 
     [Fact]
@@ -353,30 +360,228 @@ public sealed class PublishingTests : IDisposable
         Assert.Equal(0UL, WorkshopSettings.Load(SettingsPath).PublishedFileId);
     }
 
+    [Theory]
+    [InlineData("modified")]
+    [InlineData("staged")]
+    [InlineData("staged-only")]
+    [InlineData("untracked")]
+    [InlineData("added")]
+    [InlineData("assume-unchanged")]
+    public void UncommittedMediaStopsBeforeAnyNetworkRequest(string state)
+    {
+        string path = Path.Combine(_root, "demo.gif");
+        byte[] original = File.ReadAllBytes(ImagePath);
+        File.WriteAllBytes(path, original);
+        if (state is not ("untracked" or "added")) CommitImage("demo.gif");
+        if (state == "assume-unchanged") Git("update-index", "--assume-unchanged", "demo.gif");
+        File.AppendAllText(path, "changed");
+        if (state is "staged" or "staged-only" or "added") Git("add", "demo.gif");
+        if (state == "staged-only") File.WriteAllBytes(path, original);
+        File.WriteAllText(Readme, "![demo](demo.gif)");
+
+        Assert.Throws<InvalidOperationException>(() => Run("publish"));
+        Assert.Empty(_media.Requests);
+        Assert.Empty(_steam.Calls);
+    }
+
+    [Fact]
+    public void PreparationAlsoRejectsDirtyMedia()
+    {
+        File.WriteAllBytes(Path.Combine(_root, "demo.gif"), File.ReadAllBytes(ImagePath));
+        CommitImage("demo.gif");
+        File.AppendAllText(Path.Combine(_root, "demo.gif"), "changed");
+        File.WriteAllText(Readme, "![demo](demo.gif)");
+        Assert.Contains("uncommitted", Assert.Throws<InvalidOperationException>(() => Run("prepare")).Message);
+    }
+
+    [Theory]
+    [InlineData("https://github.com/example/tuck.git")]
+    [InlineData("https://github.com/example/tuck")]
+    [InlineData("git@github.com:example/tuck.git")]
+    [InlineData("ssh://git@github.com/example/tuck.git")]
+    public void OriginUrlsAndEscapedMediaPathsProduceCommitPinnedRawUrls(string remote)
+    {
+        Git("remote", "set-url", "origin", remote);
+        string directory = Directory.CreateDirectory(Path.Combine(_root, "media")).FullName;
+        string path = Path.Combine(directory, "demo [1] #é.gif");
+        File.Copy(ImagePath, path);
+        CommitImage("media/demo [1] #é.gif");
+
+        var urls = GitHubMedia.Resolve(directory, [path]);
+        Assert.Equal($"https://raw.githubusercontent.com/example/tuck/{Git("rev-parse", "HEAD")}/media/demo%20%5B1%5D%20%23%C3%A9.gif", urls[path]);
+    }
+
+    [Theory]
+    [InlineData("https://gitlab.com/example/tuck.git")]
+    [InlineData("https://github.com.evil.invalid/example/tuck.git")]
+    public void NonGitHubOriginsAreRejected(string remote)
+    {
+        Git("remote", "set-url", "origin", remote);
+        Assert.Contains("GitHub repository", Assert.Throws<InvalidOperationException>(() => Run("prepare")).Message);
+    }
+
+    [Fact]
+    public void MediaOutsideTheRepositoryIsRejected()
+    {
+        string path = Path.GetFullPath(Path.Combine(_root, "..", "outside.gif"));
+        Assert.Contains("inside the Git repository", Assert.Throws<InvalidOperationException>(() =>
+            GitHubMedia.Resolve(_root, [path])).Message);
+    }
+
+    [Fact]
+    public void DescriptionImagesCanExceedSteamPreviewLimit()
+    {
+        File.WriteAllBytes(Path.Combine(_root, "large.gif"), new byte[1_000_001]);
+        CommitImage("large.gif");
+        File.WriteAllText(Readme, "![large](large.gif)");
+        Run("publish");
+        Assert.Contains("/large.gif[/img]", _steam.Description);
+    }
+
+    [Fact]
+    public void CoverImageStillHasSteamPreviewLimit()
+    {
+        File.WriteAllBytes(ImagePath, new byte[1_000_000]);
+        Assert.Contains("1 MB", Assert.Throws<ArgumentException>(() => Run("prepare")).Message);
+    }
+
+    [Fact]
+    public void UnrelatedUntrackedFilesDoNotBlockPublishing()
+    {
+        File.WriteAllText(Path.Combine(_root, "unused.gif"), "work in progress");
+        Run("publish");
+        Assert.Equal(["query", "publish"], _steam.Calls);
+    }
+
+    [Fact]
+    public void SlideshowIsSeparateFromDescriptionMediaAndPublishedInTheSameSubmission()
+    {
+        string directory = Directory.CreateDirectory(Path.Combine(_root, "media", "slideshow")).FullName;
+        string slide = Path.Combine(directory, "01-slide.gif");
+        File.WriteAllBytes(slide, Enumerable.Repeat((byte)42, 32).ToArray());
+        _steam.Images.Add(new(1, "old-description-image.gif")); // A video occupies index 0.
+        _steam.Images.Add(new(2, "extra.gif"));
+
+        Run("publish");
+
+        Assert.Equal(["query", "publish"], _steam.Calls);
+        Assert.Equal(new uint[] { 2 }, _steam.Slideshow!.Removals);
+        var upload = Assert.Single(_steam.Slideshow.Uploads);
+        Assert.Equal(1U, upload.Index);
+        Assert.Equal(WorkshopImage.Load(slide).Name, upload.Image.Name);
+        Assert.DoesNotContain(upload.Image.Name, _steam.Description);
+        Assert.Single(_media.Requests);
+    }
+
+    [Fact]
+    public void MissingSlideshowFolderLeavesExistingImagesAlone()
+    {
+        _steam.Images.Add(new(0, "keep.gif"));
+        Run("publish");
+        Assert.Empty(_steam.Slideshow!.Uploads);
+        Assert.Empty(_steam.Slideshow.Removals);
+    }
+
+    [Fact]
+    public void EmptySlideshowFolderRemovesImagesButNotTheVideoBetweenThem()
+    {
+        Directory.CreateDirectory(Path.Combine(_root, "media", "slideshow"));
+        _steam.Images.Add(new(0, "first.gif"));
+        _steam.Images.Add(new(2, "last.gif"));
+        Run("publish");
+        Assert.Equal(new uint[] { 2, 0 }, _steam.Slideshow!.Removals);
+        Assert.Empty(_steam.Slideshow.Uploads);
+    }
+
+    [Theory]
+    [InlineData("prepare")]
+    [InlineData("check")]
+    [InlineData("publish")]
+    public void InvalidSlideshowFileStopsBeforeNetworkAccess(string mode)
+    {
+        string directory = Directory.CreateDirectory(Path.Combine(_root, "media", "slideshow")).FullName;
+        File.WriteAllBytes(Path.Combine(directory, "01-large.gif"), new byte[1_000_000]);
+        Assert.Contains("1 MB", Assert.Throws<ArgumentException>(() => Run(mode)).Message);
+        Assert.Empty(_steam.Calls);
+        Assert.Empty(_media.Requests);
+    }
+
+    [Fact]
+    public void CheckDoesNotApplySlideshowChanges()
+    {
+        Directory.CreateDirectory(Path.Combine(_root, "media", "slideshow"));
+        _steam.Images.Add(new(0, "remove.gif"));
+        Run("check");
+        Assert.Equal(["query"], _steam.Calls);
+        Assert.Null(_steam.Slideshow);
+        Assert.Single(_steam.Images);
+    }
+
     private void WriteSettings(ulong id) => File.WriteAllText(SettingsPath, JsonSerializer.Serialize(
         new WorkshopSettings { PublishedFileId = id, Title = "Tuck" },
         WorkshopSettings.JsonOptions));
 
     private void Run(string mode, Func<IWorkshopClient>? connect = null) => WorkshopPublisher.Run(mode,
-        SettingsPath, Readme, Changelog, Path.Combine(_root, "mod"), ImagePath, Output, connect ?? (() => _steam));
+        SettingsPath, Readme, Changelog, Path.Combine(_root, "mod"), ImagePath, Output, connect ?? (() => _steam), _http);
 
-    public void Dispose() => Directory.Delete(_root, recursive: true);
+    private void CommitImage(string path)
+    {
+        Git("add", "--", path);
+        Git("commit", "-m", "Add media");
+    }
+
+    private string Git(params string[] arguments)
+    {
+        var start = new ProcessStartInfo("git")
+        {
+            WorkingDirectory = _root, UseShellExecute = false, CreateNoWindow = true,
+            RedirectStandardOutput = true, RedirectStandardError = true
+        };
+        foreach (string argument in arguments) start.ArgumentList.Add(argument);
+        using var process = Process.Start(start)!;
+        var output = process.StandardOutput.ReadToEndAsync();
+        var error = process.StandardError.ReadToEndAsync();
+        process.WaitForExit();
+        Assert.True(process.ExitCode == 0, error.GetAwaiter().GetResult());
+        return output.GetAwaiter().GetResult().Trim();
+    }
+
+    public void Dispose()
+    {
+        _http.Dispose();
+        // Git objects are read-only on Windows. Only clean up this test's temporary directory.
+        Assert.StartsWith(Path.GetFullPath(Path.GetTempPath()), Path.GetFullPath(_root));
+        foreach (string path in Directory.EnumerateFiles(_root, "*", SearchOption.AllDirectories))
+            File.SetAttributes(path, FileAttributes.Normal);
+        Directory.Delete(_root, recursive: true);
+    }
+
+    private sealed class FakeMediaHost : HttpMessageHandler
+    {
+        public List<string> Requests { get; } = [];
+        public HttpStatusCode Status = HttpStatusCode.OK;
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Assert.Equal(HttpMethod.Head, request.Method);
+            Requests.Add(request.RequestUri!.AbsoluteUri);
+            return Task.FromResult(new HttpResponseMessage(Status));
+        }
+    }
 
     private sealed class FakeWorkshop : IWorkshopClient
     {
         public List<string> Calls { get; } = [];
-        public Dictionary<string, string> Urls { get; } = new(StringComparer.OrdinalIgnoreCase);
+        public List<WorkshopPreview> Images { get; } = [];
+        public WorkshopSlideshow? Slideshow;
         public uint AppId = WorkshopPublisher.AppId;
         public ulong OwnerId = 7;
         public ulong ItemId = 42;
         public ulong UserId => 7;
         public bool NeedsAgreement, FailPublish;
-        public bool ReturnUploadedUrls = true;
-        public int UploadedImageCount;
         public string? Description;
         public string? ChangeNote;
-        public string? ImageUrlOverride;
-        public Action? BeforeCreate, BeforeUpload;
+        public Action? BeforeCreate;
 
         public ulong CreateItem()
         {
@@ -390,20 +595,11 @@ public sealed class PublishingTests : IDisposable
         {
             Assert.Equal(ItemId, id);
             Calls.Add("query");
-            return new(AppId, OwnerId, new Dictionary<string, string>(Urls));
+            return new(AppId, OwnerId, Images);
         }
 
-        public void UploadImages(ulong id, IReadOnlyList<WorkshopImage> images)
-        {
-            Assert.Equal(ItemId, id);
-            BeforeUpload?.Invoke();
-            Calls.Add("images");
-            UploadedImageCount += images.Count;
-            if (ReturnUploadedUrls)
-                foreach (var image in images) Urls.Add(image.Name, ImageUrlOverride ?? "https://example.com/" + image.Name);
-        }
-
-        public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote)
+        public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote,
+            WorkshopSlideshow slideshow)
         {
             Assert.Equal(ItemId, id);
             Assert.True(File.Exists(Path.Combine(contentFolder, "manifest.xml")));
@@ -412,6 +608,7 @@ public sealed class PublishingTests : IDisposable
             if (FailPublish) throw new IOException("Simulated upload failure.");
             Description = description;
             ChangeNote = changeNote;
+            Slideshow = slideshow;
         }
 
         public void Dispose() { }

@@ -90,7 +90,7 @@ internal sealed class WorkshopDescription
                 // Steam has no inline monospace tag. Preserve code as literal inline text.
                 CodeInline code => Wrap("noparse", code.Content),
                 LineBreakInline lineBreak => lineBreak.IsHard ? "\n" : " ",
-                // An offline preparation has no URLs; publishing resolves every image first.
+                // Release notes omit images; the description supplies commit-pinned URLs.
                 LinkInline { IsImage: true } link => _imageUrls.Count == 0 ? ""
                     : Wrap("img", _imageUrls[ImagePath(link.Url)]),
                 LinkInline link => RenderLink(link.Url, RenderInlines(link)),

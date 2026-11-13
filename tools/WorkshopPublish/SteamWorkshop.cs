@@ -49,47 +49,51 @@ internal sealed class SteamWorkshop : IWorkshopClient
                     + (SteamUser.BLoggedOn() ? "" : " Reconnect the Steam desktop client."));
             if (!SteamUGC.GetQueryUGCResult(query, 0, out var details) || details.m_eResult != EResult.k_EResultOK)
                 throw new InvalidOperationException("Could not read the Workshop item; check account access and item ID.");
-            var urls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var images = new List<WorkshopPreview>();
             for (uint i = 0; i < SteamUGC.GetQueryUGCNumAdditionalPreviews(query, 0); i++)
             {
-                if (!SteamUGC.GetQueryUGCAdditionalPreview(query, 0, i, out string url, 4096,
-                    out string fileName, 1024, out var type))
+                if (!SteamUGC.GetQueryUGCAdditionalPreview(query, 0, i, out _, 4096,
+                    out string name, 1024, out var type))
                     throw new InvalidOperationException($"Could not read additional preview {i}.");
-                if (type == EItemPreviewType.k_EItemPreviewType_Image) urls.TryAdd(fileName, url);
+                if (type == EItemPreviewType.k_EItemPreviewType_Image) images.Add(new(i, name));
             }
-            Console.WriteLine($"Workshop item: {details.m_rgchTitle} ({id}); {urls.Count} image previews.");
-            return new(details.m_nConsumerAppID.m_AppId, details.m_ulSteamIDOwner, urls);
+            Console.WriteLine($"Workshop item: {details.m_rgchTitle} ({id}); {images.Count} slideshow images.");
+            return new(details.m_nConsumerAppID.m_AppId, details.m_ulSteamIDOwner, images);
         }
         finally { SteamUGC.ReleaseQueryUGCRequest(query); }
     }
 
-    public void UploadImages(ulong id, IReadOnlyList<WorkshopImage> images)
-    {
-        string staging = Directory.CreateTempSubdirectory("tuck-workshop-images-").FullName;
-        try
-        {
-            var update = StartUpdate(id);
-            foreach (var image in images)
-            {
-                string path = Path.Combine(staging, image.Name);
-                File.WriteAllBytes(path, image.Bytes);
-                Require(SteamUGC.AddItemPreviewFile(update, path, EItemPreviewType.k_EItemPreviewType_Image), $"add image {image.Path}");
-            }
-            Console.WriteLine($"Uploading {images.Count} new image(s)...");
-            Submit(update, id, null);
-        }
-        finally { Directory.Delete(staging, recursive: true); }
-    }
-
-    public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote)
+    public void Publish(ulong id, WorkshopSettings settings, string contentFolder, string previewFile, string description, string changeNote,
+        WorkshopSlideshow slideshow)
     {
         var update = StartUpdate(id);
         Require(SteamUGC.SetItemTitle(update, settings.Title), "set the title");
         Require(SteamUGC.SetItemDescription(update, description), "set the description");
         Require(SteamUGC.SetItemContent(update, contentFolder), "set the content folder");
         Require(SteamUGC.SetItemPreview(update, previewFile), "set the preview image");
-        Console.WriteLine("Publishing mod content and metadata...");
-        Submit(update, id, changeNote);
+        string? staging = null;
+        try
+        {
+            if (slideshow.Uploads.Length > 0)
+                staging = Directory.CreateTempSubdirectory("tuck-workshop-slideshow-").FullName;
+            foreach (var upload in slideshow.Uploads)
+            {
+                string path = Path.Combine(staging!, upload.Image.Name);
+                File.WriteAllBytes(path, upload.Image.Bytes);
+                bool accepted = upload.Index is uint index
+                    ? SteamUGC.UpdateItemPreviewFile(update, index, path)
+                    : SteamUGC.AddItemPreviewFile(update, path, EItemPreviewType.k_EItemPreviewType_Image);
+                Require(accepted, $"upload slideshow image {upload.Image.Path}");
+            }
+            foreach (uint index in slideshow.Removals)
+                Require(SteamUGC.RemoveItemPreview(update, index), $"remove slideshow image at index {index}");
+            Console.WriteLine("Publishing mod content, metadata and slideshow...");
+            Submit(update, id, changeNote);
+        }
+        finally
+        {
+            if (staging != null) Directory.Delete(staging, recursive: true);
+        }
     }
 
     private static UGCUpdateHandle_t StartUpdate(ulong id)
