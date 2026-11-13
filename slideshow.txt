@@ -1,6 +1,0 @@
-shift-drag.gif
-chem-finisher.gif
-appraisal-ui.gif
-appraisal-auto-open-guides.mp4
-hotkeys.gif
-water-filter.gif
