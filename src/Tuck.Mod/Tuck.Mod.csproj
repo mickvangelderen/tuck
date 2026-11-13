@@ -6,10 +6,6 @@
     <Copyright>Copyright (c) 2026 Mick van Gelderen</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
-    <GameAssembliesDir>$(MSBuildProjectDirectory)\..\..\dependencies\probably-stolen\assemblies</GameAssembliesDir>
-    <GameVersionFile>$(GameAssembliesDir)\..\game-version.txt</GameVersionFile>
-    <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
-    <GameDir Condition="'$(GameDir)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 4348910@InstallLocation)</GameDir>
   </PropertyGroup>
 
   <Import Project="..\ModVersion.targets" />
@@ -72,19 +68,14 @@
 
   <Target Name="ValidateGameReferences" BeforeTargets="ResolveAssemblyReferences">
     <Error Condition="!Exists('$(GameAssembliesDir)\Assembly-CSharp.dll')"
-           Text="Game dependency is missing. Run fetch.ps1 with your game installation folder first." />
-    <Error Condition="!Exists('$(GameVersionFile)')"
-           Text="Fetched game version is missing. Rerun fetch.ps1 to capture it alongside the game assemblies." />
-    <ReadLinesFromFile File="$(GameVersionFile)">
-      <Output TaskParameter="Lines" PropertyName="GameVersion" />
-    </ReadLinesFromFile>
-    <Error Condition="'$(GameVersion)' == ''"
-           Text="Fetched game version is empty. Rerun fetch.ps1 to capture it alongside the game assemblies." />
+           Text="Game dependency is missing. Configure a repository and run fetch.ps1 (see CONTRIBUTING.md)." />
+    <Error Condition="'$(GameUnityVersion)' == ''"
+           Text="GameUnityVersion is missing. Run fetch.ps1 to select a game snapshot." />
   </Target>
 
   <Target Name="UpdateModManifest" AfterTargets="Build" DependsOnTargets="ValidateGameReferences">
     <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/ModVersion" Value="$(Version)" />
-    <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/GameVersions/Version" Value="$(GameVersion)" />
+    <XmlPoke XmlInputPath="$(TargetDir)manifest.xml" Query="/Manifest/GameVersions/Version" Value="$(GameUnityVersion)" />
   </Target>
 
   <Target Name="StageMod" DependsOnTargets="Build">

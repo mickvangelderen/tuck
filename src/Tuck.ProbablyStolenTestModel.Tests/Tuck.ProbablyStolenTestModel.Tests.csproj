@@ -25,7 +25,6 @@
 
   <!-- Optional differential checks against locally fetched originals; the model itself has no game dependency. -->
   <PropertyGroup>
-    <GameAssembliesDir Condition="'$(GameAssembliesDir)' == ''">$(MSBuildThisFileDirectory)..\..\dependencies\probably-stolen\assemblies</GameAssembliesDir>
     <HasGameGeometry Condition="Exists('$(GameAssembliesDir)\Assembly-CSharp.dll') And Exists('$(GameAssembliesDir)\UnityEngine.CoreModule.dll')">true</HasGameGeometry>
     <DefineConstants Condition="'$(HasGameGeometry)' == 'true'">$(DefineConstants);HAS_GAME_GEOMETRY</DefineConstants>
   </PropertyGroup>

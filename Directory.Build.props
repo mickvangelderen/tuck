@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <GameReferenceProps Condition="'$(GameReferenceProps)' == ''">$(MSBuildThisFileDirectory)GameReferences.local.props</GameReferenceProps>
+  </PropertyGroup>
+  <Import Project="$(GameReferenceProps)" Condition="Exists('$(GameReferenceProps)')" />
+  <PropertyGroup Condition="'$(GameSnapshotCommit)' != '' And ('$(MSBuildProjectName)' == 'Tuck.Mod' Or '$(MSBuildProjectName)' == 'Tuck.Mod.Tests' Or '$(MSBuildProjectName)' == 'Tuck.ProbablyStolenTestModel.Tests')">
+    <BaseOutputPath>bin\$(GameSnapshotCommit)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>obj\$(GameSnapshotCommit)\</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>
