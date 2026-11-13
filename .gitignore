@@ -1,7 +1,6 @@
 **/bin/
 **/obj/
 /artifacts/
-/dependencies/
 /probably-stolen-assemblies/
 /game-cache.local.json
 /GameReferences.local.props

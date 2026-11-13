@@ -20,11 +20,17 @@ Move all of kind (Shift + drag), move all (Ctrl + drag).
 
 ![Swap water filters like batteries](./media/water-filter.gif)
 
-### Improved Appraisal UI
+### Better appraisal UI
 
 Adds +50 and -50, rearranges for convenience.
 
-![Appraisal UI](./media/appraisal.gif)
+![Improved appraisal UI](./media/appraisal-ui.gif)
+
+### Auto open appraisal guides
+
+Opens relevant guides and color swatches when appraising an item. Closes them together too.
+
+![Auto open appraisal guides](./media/description/appraisal-auto-open-guides-wide.webp)
 
 ### Print multiple items with Chem finisher
 
