@@ -13,7 +13,5 @@
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/ReadGameVersion/ReadGameVersion.csproj" />
-    <Project Path="tools/WorkshopPublish/WorkshopPublish.csproj" />
-    <Project Path="tools/WorkshopPublish.Tests/WorkshopPublish.Tests.csproj" />
   </Folder>
 </Solution>

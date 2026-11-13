@@ -10,9 +10,3 @@ the packaged mod.
 Files in src/Tuck.ProbablyStolenTestModel/ marked "Ported from" contain code
 derived from Probably Stolen. That game-derived code is not relicensed under
 MIT. The test model is not included in the packaged mod.
-
-Mascot reference images
-----------------------
-Images in mascot/references/ are reference material, are not covered by Tuck's
-MIT license, and are not included in the packaged mod. Rights remain with their
-respective owners.
