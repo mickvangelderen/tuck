@@ -12,9 +12,9 @@ The highlights:
 
 ### Better item manipulation
 
-Move all of kind (Shift + drag), move all (Ctrl + drag). 
+Move all of kind (Alt + drag), move all of inventory (Ctrl + drag). 
 
-![Dragging items in bulk](./media/shift-drag.gif)
+![Dragging items in bulk](./media/move-all.gif)
 
 ### Quick swap water filter
 
