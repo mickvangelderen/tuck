@@ -118,7 +118,7 @@ public class AppraisalGuidesTests
     }
 
     [Fact]
-    public void DisabledByDefaultAndStopsImmediatelyWhenDisabledOrUnregistered()
+    public void EnabledByDefaultAndStopsImmediatelyWhenDisabledOrUnregistered()
     {
         string modId = "tuck-guides-test-" + Guid.NewGuid().ToString("N");
         var configs = (Dictionary<string, ModConfig>)typeof(ModConfig)
@@ -133,7 +133,8 @@ public class AppraisalGuidesTests
             var options = new Options(new ModManifest { ID = modId, Name = "Tuck" });
             var entry = (ConfigEntry<bool>)config.Get("auto_open_appraisal_guides");
             typeof(ConfigEntry).GetProperty(nameof(ConfigEntry.Config))!.SetValue(entry, null);
-            Assert.False(options.AutoOpenAppraisalGuides.Value);
+            Assert.True(options.AutoOpenAppraisalGuides.Value);
+            entry.Set(false);
             AppraisalGuides.Register(options);
             AppraisalGuides.Postfix(null!, null!);
             AppraisalGuides.OnPanelDisabled(null!);

@@ -21,7 +21,11 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
-- Automatically open and close guides when appraising.
+## [1.2.0] - 2026-11-12
+
+- Dragging all matching items now binds to Alt+drag instead of Shift+drag, so Shift+drag preserves vanilla formation placement.
+- The relevant appraisal guides and color swatches now open automatically when appraising an item.
+- All features are now opt-out instead of opt-in.
 
 ## [1.1.0] - 2026-11-11
 
@@ -42,7 +46,8 @@ Initial public release.
 - Add hotkeys for many interactions.
 - Improved appraisal and chem finisher UI.
 
-[unreleased]: https://github.com/mickvangelderen/tuck/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/mickvangelderen/tuck/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.2.0
 [1.1.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.1.0
 [1.0.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.0.0
 [@mickvangelderen]: https://github.com/mickvangelderen

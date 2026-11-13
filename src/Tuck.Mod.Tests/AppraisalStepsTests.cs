@@ -24,7 +24,8 @@ public class AppraisalStepsTests
             var entry = (ConfigEntry<bool>)config.Get("appraisal_fifty_buttons");
             // Exercise real setting change notifications without writing a config file through Unity.
             typeof(ConfigEntry).GetProperty(nameof(ConfigEntry.Config))!.SetValue(entry, null);
-            Assert.False(entry.Value);
+            Assert.True(entry.Value);
+            entry.Set(false);
             AppraisalSteps.Register(options);
             AppraisalSteps.Postfix(null!);
 

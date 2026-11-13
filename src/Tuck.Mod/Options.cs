@@ -54,9 +54,9 @@ internal sealed class Options
         Return = new KeyBinding(manifest, "return_key", () => Text("return_from_night_activity_hold"), KeyCode.R);
         Shutters = new KeyBinding(manifest, "shutters_key", () => Text("open_close_shutters"), KeyCode.C);
         NightActivities = new KeyBinding(manifest, "night_activities_key", () => Text("open_night_activities"), KeyCode.Q);
-        DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftShift);
+        DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftAlt);
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
-        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftAlt);
+        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift);
         ShowHotkeysInTooltips = new ToggleSetting(manifest,
             "show_hotkeys_in_tooltips", () => Text("show_hotkeys_in_tooltips"),
             () => Text("show_current_hotkeys_in_action_tooltips"), defaultValue: true);
@@ -67,28 +67,28 @@ internal sealed class Options
             valueText: value => value >= 1000f ? Text("disabled") : Text("x_credits", value, GeneralHelper.CreditIcon(spaced: true)));
         CenterBackpackSelection = new ToggleSetting(manifest,
             "center_backpack_selection", () => Text("center_backpack_selection_menu"),
-            () => Text("center_the_backpack_selection_menu_when_opening_night_activities"), defaultValue: false);
+            () => Text("center_the_backpack_selection_menu_when_opening_night_activities"), defaultValue: true);
         OneClickNightActivities = new ToggleSetting(manifest,
             "one_click_night_activities", () => Text("one_click_night_activities"),
             () => Text("travel_immediately_when_selecting_a_night_activity"), defaultValue: true);
         AppraisalFiftyButtons = new ToggleSetting(manifest,
             "appraisal_fifty_buttons", () => Text("appraisal_plus_minus_50_buttons"),
-            () => Text("arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button"), defaultValue: false);
+            () => Text("arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button"), defaultValue: true);
         AutoOpenAppraisalGuides = new ToggleSetting(manifest,
             "auto_open_appraisal_guides", () => Text("auto_open_appraisal_guides"),
-            () => Text("open_owned_reference_documents_when_inspecting_an_item"), defaultValue: false);
+            () => Text("open_owned_reference_documents_when_inspecting_an_item"), defaultValue: true);
         ChemFinisherBatches = new ToggleSetting(manifest,
             "chem_finisher_batches", () => Text("chem_finisher_batch_buttons"),
-            () => Text("add_1_5_and_20_batch_buttons_to_the_chem_finisher"), defaultValue: false);
+            () => Text("add_1_5_and_20_batch_buttons_to_the_chem_finisher"), defaultValue: true);
         ReplaceFilters = new ToggleSetting(manifest,
             "replace_filters", () => Text("quick_swap_filters"),
             () => Text("quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter"), defaultValue: true);
         DiscardAppraisalSlips = new ToggleSetting(manifest,
             "discard_appraisal_slips", () => Text("auto_discard_appraisal_slips"),
-            () => Text("move_newly_received_appraisal_slips_to_the_trash"), defaultValue: false);
+            () => Text("move_newly_received_appraisal_slips_to_the_trash"), defaultValue: true);
         DiscardEventReceipts = new ToggleSetting(manifest,
             "discard_event_receipts", () => Text("auto_discard_event_receipts"),
-            () => Text("move_newly_received_event_receipts_to_the_trash"), defaultValue: false);
+            () => Text("move_newly_received_event_receipts_to_the_trash"), defaultValue: true);
         // Keep the existing config key; its value now represents occupied space rather than clear space.
         WorkspaceOccupiedPercent = new ScalarSetting(manifest,
             "workspace_clear_percent", () => Text("workspace_warning_threshold"),

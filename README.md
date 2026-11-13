@@ -30,7 +30,7 @@ Adds +50 and -50, rearranges for convenience.
 
 Opens relevant guides and color swatches when appraising an item. Closes them together too.
 
-![Auto open appraisal guides](./media/description/appraisal-auto-open-guides-wide.webp)
+![Auto open appraisal guides](./media/appraisal-auto-open-guides-wide.webp)
 
 ### Print multiple items with Chem finisher
 

@@ -26,6 +26,7 @@ public class ChemFinisherSettingsTests : IDisposable
     [Fact]
     public void DisabledAtStartupDoesNotTouchTheMachineOrInstallControls()
     {
+        Set(false);
         Assert.False(_options.ChemFinisherBatches.Value);
         ChemFinisherBatch.Register(_options);
         Assert.False(ChemFinisherBatch.IsEnabled);
@@ -36,22 +37,24 @@ public class ChemFinisherSettingsTests : IDisposable
     [Fact]
     public void GameplayAndModsSettingsUseTheSameLiveToggle()
     {
-        Assert.False(_entry.Default);
+        Assert.True(_entry.Default);
         Assert.False(_entry.RequiresRestart);
         ChemFinisherBatch.Register(_options);
-        Assert.False(ChemFinisherBatch.IsEnabled);
+        Assert.True(ChemFinisherBatch.IsEnabled);
         var row = GameOptionRegistry.Find(ModHelper.GameOptionId(_modId, _entry.Key));
         Assert.Equal(GameOptionRegistry.Kind.Toggle, row.kind);
-        Assert.False(row.getBool());
-
-        WithoutSaving(() => row.setBool(true));
+        Assert.True(row.getBool());
         Assert.True(_options.ChemFinisherBatches.Value);
-        Assert.True(ChemFinisherBatch.IsEnabled);
 
         WithoutSaving(() => row.setBool(false));
         Assert.False(_options.ChemFinisherBatches.Value);
         Assert.False(ChemFinisherBatch.IsEnabled);
         ChemFinisherBatch.Postfix(null!);
+
+        WithoutSaving(() => row.setBool(true));
+        Assert.True(_options.ChemFinisherBatches.Value);
+        Assert.True(ChemFinisherBatch.IsEnabled);
+        WithoutSaving(() => row.setBool(false));
 
         Set(true); // The Mods settings UI writes the config entry directly.
         Assert.True(row.getBool());

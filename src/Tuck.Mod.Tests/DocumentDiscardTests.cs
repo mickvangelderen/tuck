@@ -25,15 +25,10 @@ public class DocumentDiscardTests : IDisposable
     }
 
     [Fact]
-    public void DefaultsKeepBothDocumentsAndDisablingModStopsDiscarding()
+    public void DefaultsDiscardBothDocumentsAndDisablingModStopsDiscarding()
     {
-        Assert.False(_options.DiscardAppraisalSlips.Value);
-        Assert.False(_options.DiscardEventReceipts.Value);
-        Assert.False(Selected("Appraisal Slip"));
-        Assert.False(Selected("Event Receipt"));
-
-        Set("discard_appraisal_slips", true);
-        Set("discard_event_receipts", true);
+        Assert.True(_options.DiscardAppraisalSlips.Value);
+        Assert.True(_options.DiscardEventReceipts.Value);
         Assert.True(Selected("Appraisal Slip"));
         Assert.True(Selected("Event Receipt"));
         DocumentDiscard.Unregister();

@@ -44,6 +44,8 @@ internal static class DragAmounts
     private static void PreciseModifier(ref bool __result)
     {
         if (_options == null) return;
+        // The default keeps vanilla's handling of both Shift keys.
+        if (_options.DragPrecisePlacement.Key == KeyCode.LeftShift) return;
         // Leave vanilla and other mods' result alone unless a binding needs to override it.
         if (Held(_options.DragPrecisePlacement)) __result = true;
         else if (_options.DragAllMatching.Key != KeyCode.None) __result = false;

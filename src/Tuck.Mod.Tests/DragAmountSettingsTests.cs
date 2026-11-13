@@ -21,12 +21,22 @@ public class DragAmountSettingsTests
         options.DragPrecisePlacement.Register();
         try
         {
-            Check(options.DragAllMatching, "drag_all_matching_key", KeyCode.LeftShift);
+            DragAmounts.Register(options);
+            // Preserve vanilla's result for either Shift key, including when neither is held.
+            foreach (bool vanillaResult in new[] { false, true })
+            {
+                object[] args = [vanillaResult];
+                typeof(DragAmounts).GetMethod("PreciseModifier", BindingFlags.Static | BindingFlags.NonPublic)!
+                    .Invoke(null, args);
+                Assert.Equal(vanillaResult, (bool)args[0]);
+            }
+            Check(options.DragAllMatching, "drag_all_matching_key", KeyCode.LeftAlt);
             Check(options.DragEntireInventory, "drag_entire_inventory_key", KeyCode.LeftControl);
-            Check(options.DragPrecisePlacement, "drag_precise_placement_key", KeyCode.LeftAlt);
+            Check(options.DragPrecisePlacement, "drag_precise_placement_key", KeyCode.LeftShift);
         }
         finally
         {
+            DragAmounts.Unregister();
             options.DragPrecisePlacement.Unregister();
             options.DragEntireInventory.Unregister();
             options.DragAllMatching.Unregister();
