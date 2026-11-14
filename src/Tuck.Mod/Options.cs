@@ -31,6 +31,7 @@ internal sealed class Options
     public ToggleSetting AutoOpenAppraisalGuides { get; }
     public ToggleSetting ChemFinisherBatches { get; }
     public ToggleSetting ReplaceFilters { get; }
+    public ToggleSetting YeastBioreactorTool { get; }
     public ToggleSetting DiscardAppraisalSlips { get; }
     public ToggleSetting DiscardEventReceipts { get; }
     public ScalarSetting WorkspaceOccupiedPercent { get; }
@@ -83,6 +84,9 @@ internal sealed class Options
         ReplaceFilters = new ToggleSetting(manifest,
             "replace_filters", () => Text("quick_swap_filters"),
             () => Text("quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter"), defaultValue: true);
+        YeastBioreactorTool = new ToggleSetting(manifest,
+            "yeast_bioreactor_tool", () => Text("yeast_bioreactor_tool"),
+            () => Text("use_the_equipped_yeast_bioreactor_to_start_fermentation"), defaultValue: true);
         DiscardAppraisalSlips = new ToggleSetting(manifest,
             "discard_appraisal_slips", () => Text("auto_discard_appraisal_slips"),
             () => Text("move_newly_received_appraisal_slips_to_the_trash"), defaultValue: true);
@@ -126,6 +130,7 @@ internal sealed class Options
         AutoOpenAppraisalGuides.Register();
         ChemFinisherBatches.Register();
         ReplaceFilters.Register();
+        YeastBioreactorTool.Register();
         DiscardAppraisalSlips.Register();
         DiscardEventReceipts.Register();
         WorkspaceOccupiedPercent.Register();
@@ -140,6 +145,7 @@ internal sealed class Options
         WorkspaceOccupiedPercent.Unregister();
         DiscardEventReceipts.Unregister();
         DiscardAppraisalSlips.Unregister();
+        YeastBioreactorTool.Unregister();
         ReplaceFilters.Unregister();
         ChemFinisherBatches.Unregister();
         AutoOpenAppraisalGuides.Unregister();

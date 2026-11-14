@@ -37,12 +37,14 @@ public sealed partial class ModEntry : IMod
         DocumentDiscard.Register(_options);
         ChemFinisherBatch.Register(_options);
         FilterReplacement.Register(_options);
+        YeastBioreactor.Register(_options);
         Log.Info("Enabled.");
     }
 
     // In reverse order of registration.
     public void OnDisable()
     {
+        YeastBioreactor.Unregister();
         FilterReplacement.Unregister();
         ChemFinisherBatch.Unregister();
         DocumentDiscard.Unregister();

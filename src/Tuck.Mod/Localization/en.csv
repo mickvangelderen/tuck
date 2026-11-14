@@ -27,6 +27,8 @@ open_owned_reference_documents_when_inspecting_an_item,Automatically open refere
 chem_finisher_batch_buttons,Chem finisher batch buttons
 add_1_5_and_20_batch_buttons_to_the_chem_finisher,"Add 1, 5 and 20 batch buttons to the chem finisher. Turn off to restore its original controls."
 quick_swap_filters,Quick swap filters
+yeast_bioreactor_tool,Yeast bioreactor tool
+use_the_equipped_yeast_bioreactor_to_start_fermentation,Use the equipped yeast bioreactor on a wine bottle with water and fruit to start fermentation without inserting the bioreactor. The bioreactor must fit alongside the ingredients.
 quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter,Quickly swap filters by dragging a new filter onto the installed filter in an open filter slot. The removed filter must fit in the dragged filter's original space.
 auto_discard_appraisal_slips,Auto-discard appraisal slips
 move_newly_received_appraisal_slips_to_the_trash,Move newly received appraisal slips to the trash.
