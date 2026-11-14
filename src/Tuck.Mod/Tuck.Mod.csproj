@@ -52,6 +52,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(GameAssembliesDir)\UnityEngine.ImageConversionModule.dll" Private="false" />
+    <Reference Include="UnityEngine.AudioModule" HintPath="$(GameAssembliesDir)\UnityEngine.AudioModule.dll" Private="false" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(GameAssembliesDir)\Assembly-CSharp-firstpass.dll" Private="false" />
     <Reference Include="UnityEngine.Physics2DModule" HintPath="$(GameAssembliesDir)\UnityEngine.Physics2DModule.dll" Private="false" />
     <TuckSprite Include="..\..\assets\tuck\rail-walk.png;..\..\assets\tuck\hang.png;..\..\assets\tuck\hang-mask.png;..\..\assets\tuck\hang-wire.png;..\..\assets\tuck\stand.png" />

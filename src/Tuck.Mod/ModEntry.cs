@@ -37,6 +37,7 @@ public sealed partial class ModEntry : IMod
         DocumentDiscard.Register(_options);
         ChemFinisherBatch.Register(_options);
         FilterReplacement.Register(_options);
+        LabelMemory.Register(_options);
         YeastBioreactor.Register(_options);
         Log.Info("Enabled.");
     }
@@ -45,6 +46,7 @@ public sealed partial class ModEntry : IMod
     public void OnDisable()
     {
         YeastBioreactor.Unregister();
+        LabelMemory.Unregister();
         FilterReplacement.Unregister();
         ChemFinisherBatch.Unregister();
         DocumentDiscard.Unregister();

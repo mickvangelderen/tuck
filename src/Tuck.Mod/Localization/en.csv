@@ -55,3 +55,11 @@ show_current_hotkeys_in_action_tooltips,Show current key bindings in action tool
 hold_and_release_key,(hold and release {0})
 return,Return to store
 search_for_valuables,Search for valuables
+remember_labeler_edits,Remember labeler settings
+remember_last_label_for_reuse,Remember red-labeler labels per category and blue-labeler names per item type. Right-click to re-apply the last setting.
+label_category_and_condition,{0}: {1}
+right_click,Right click
+secondary_click_to_apply_label,{0} to apply {1}
+secondary_click_to_choose_label,{0} to choose a label
+secondary_click_to_apply_name,"{0} to name ""{1}"""
+secondary_click_to_choose_name,{0} to choose a name

@@ -31,6 +31,7 @@ internal sealed class Options
     public ToggleSetting AutoOpenAppraisalGuides { get; }
     public ToggleSetting ChemFinisherBatches { get; }
     public ToggleSetting ReplaceFilters { get; }
+    public ToggleSetting RememberLabels { get; }
     public ToggleSetting YeastBioreactorTool { get; }
     public ToggleSetting DiscardAppraisalSlips { get; }
     public ToggleSetting DiscardEventReceipts { get; }
@@ -84,6 +85,9 @@ internal sealed class Options
         ReplaceFilters = new ToggleSetting(manifest,
             "replace_filters", () => Text("quick_swap_filters"),
             () => Text("quickly_swap_filters_by_dragging_a_new_filter_onto_the_installed_filter"), defaultValue: true);
+        RememberLabels = new ToggleSetting(manifest,
+            "remember_labels", () => Text("remember_labeler_edits"),
+            () => Text("remember_last_label_for_reuse"), defaultValue: true);
         YeastBioreactorTool = new ToggleSetting(manifest,
             "yeast_bioreactor_tool", () => Text("yeast_bioreactor_tool"),
             () => Text("use_the_equipped_yeast_bioreactor_to_start_fermentation"), defaultValue: true);
@@ -130,6 +134,7 @@ internal sealed class Options
         AutoOpenAppraisalGuides.Register();
         ChemFinisherBatches.Register();
         ReplaceFilters.Register();
+        RememberLabels.Register();
         YeastBioreactorTool.Register();
         DiscardAppraisalSlips.Register();
         DiscardEventReceipts.Register();
@@ -146,6 +151,7 @@ internal sealed class Options
         DiscardEventReceipts.Unregister();
         DiscardAppraisalSlips.Unregister();
         YeastBioreactorTool.Unregister();
+        RememberLabels.Unregister();
         ReplaceFilters.Unregister();
         ChemFinisherBatches.Unregister();
         AutoOpenAppraisalGuides.Unregister();
