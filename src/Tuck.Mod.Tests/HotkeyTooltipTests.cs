@@ -101,6 +101,39 @@ public class HotkeyTooltipTests : IDisposable
         Assert.Equal("", HotkeyTooltips.ButtonHint(_options, HotkeyTooltips.ButtonAction.ControlHints));
     }
 
+    [Fact]
+    public void SleepAndTabletHintsFollowBindingsWithoutHoldInstructions()
+    {
+        var field = AccessTools.Field(typeof(HotkeyTooltips), "_options");
+        var previous = field.GetValue(null);
+        field.SetValue(null, _options);
+        try
+        {
+            Check("Sleep (E)", "Tablet (T)");
+            Set("sleep_key", "F8");
+            Set("tablet_key", "F9");
+            Assert.Equal(KeyCode.F8, _options.Sleep.Key);
+            Assert.Equal(KeyCode.F9, _options.Tablet.Key);
+            Check("Sleep (F8)", "Tablet (F9)");
+            Set("show_hotkeys_in_tooltips", false);
+            Check("Sleep", "Tablet");
+            Set("show_hotkeys_in_tooltips", true);
+            Set("sleep_key", "None");
+            Set("tablet_key", "None");
+            Check("Sleep", "Tablet");
+        }
+        finally { field.SetValue(null, previous); }
+
+        static void Check(string expectedSleep, string expectedTablet)
+        {
+            string sleep = "Sleep", tablet = "Tablet";
+            HotkeyTooltips.SleepHint(ref sleep);
+            HotkeyTooltips.TabletHint(ref tablet);
+            Assert.Equal(expectedSleep, sleep);
+            Assert.Equal(expectedTablet, tablet);
+        }
+    }
+
     [Theory]
     [InlineData(typeof(MapUIManager), "ScavengeButtonClick", "Scavenge")]
     [InlineData(typeof(DumpingGroundLocation), "OnScavenge", "Scavenge")]

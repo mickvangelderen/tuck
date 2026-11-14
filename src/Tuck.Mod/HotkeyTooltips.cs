@@ -49,6 +49,18 @@ internal static class HotkeyTooltips
         if (ActiveOptions is { } options) __result = AppendHint(options, __result, options.NightActivities.Key);
     }
 
+    [HarmonyPostfix, HarmonyPatch(typeof(StoreBedroll), nameof(StoreBedroll.GetTooltip))]
+    internal static void SleepHint(ref string __result)
+    {
+        if (ActiveOptions is { } options) __result = AppendHint(options, __result, options.Sleep.Key);
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(StoreTablet), nameof(StoreTablet.GetTooltip))]
+    internal static void TabletHint(ref string __result)
+    {
+        if (ActiveOptions is { } options) __result = AppendHint(options, __result, options.Tablet.Key);
+    }
+
     [HarmonyPostfix, HarmonyPatch(typeof(StoreBell), nameof(StoreBell.GetTooltip))]
     private static void BellHint(StoreBell __instance, ref string __result)
     {

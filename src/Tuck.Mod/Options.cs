@@ -20,6 +20,8 @@ internal sealed class Options
     public KeyBinding Return { get; }
     public KeyBinding Shutters { get; }
     public KeyBinding NightActivities { get; }
+    public KeyBinding Sleep { get; }
+    public KeyBinding Tablet { get; }
     public KeyBinding DragAllMatching { get; }
     public KeyBinding DragEntireInventory { get; }
     public KeyBinding DragPrecisePlacement { get; }
@@ -57,6 +59,8 @@ internal sealed class Options
         Return = new KeyBinding(manifest, "return_key", () => Text("return_from_night_activity_hold"), KeyCode.R);
         Shutters = new KeyBinding(manifest, "shutters_key", () => Text("open_close_shutters"), KeyCode.C);
         NightActivities = new KeyBinding(manifest, "night_activities_key", () => Text("open_night_activities"), KeyCode.Q);
+        Sleep = new KeyBinding(manifest, "sleep_key", () => Text("sleep"), KeyCode.E);
+        Tablet = new KeyBinding(manifest, "tablet_key", () => Text("open_close_shop_tablet"), KeyCode.T);
         DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftAlt);
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
         DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift);
@@ -127,6 +131,8 @@ internal sealed class Options
         Return.Register();
         Shutters.Register();
         NightActivities.Register();
+        Sleep.Register();
+        Tablet.Register();
         DragAllMatching.Register();
         DragEntireInventory.Register();
         DragPrecisePlacement.Register();
@@ -169,6 +175,8 @@ internal sealed class Options
         DragPrecisePlacement.Unregister();
         DragEntireInventory.Unregister();
         DragAllMatching.Unregister();
+        Tablet.Unregister();
+        Sleep.Unregister();
         NightActivities.Unregister();
         Shutters.Unregister();
         Return.Unregister();

@@ -11,6 +11,8 @@ scavenge,Scavenge
 return_from_night_activity_hold,Return from night activity (hold)
 open_close_shutters,Open/close shutters
 open_night_activities,Open night activities
+sleep,Sleep
+open_close_shop_tablet,Open/close shop tablet
 drag_all_matching_items_hold,Drag all matching items (hold)
 drag_entire_inventory_hold,Drag entire inventory (hold)
 place_dragged_items_in_formation_hold,Place dragged items in formation (hold)
