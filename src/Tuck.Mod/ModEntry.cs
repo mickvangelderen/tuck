@@ -21,6 +21,7 @@ public sealed partial class ModEntry : IMod
     public void OnEnable()
     {
         _options.Register();
+        OverlappingKeyBindings.Register(_options);
         _ground.Register();
         RegisterDebugRecorder();
         ScavengingReturn.Register(_options);
@@ -63,6 +64,7 @@ public sealed partial class ModEntry : IMod
         ScavengingReturn.Unregister();
         UnregisterDebugRecorder();
         _ground.Unregister();
+        OverlappingKeyBindings.Unregister();
         _options.Unregister();
         Log.Info("Disabled.");
     }

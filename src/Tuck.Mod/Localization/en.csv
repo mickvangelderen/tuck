@@ -14,6 +14,8 @@ open_night_activities,Open night activities
 drag_all_matching_items_hold,Drag all matching items (hold)
 drag_entire_inventory_hold,Drag entire inventory (hold)
 place_dragged_items_in_formation_hold,Place dragged items in formation (hold)
+allow_overlapping_keybindings,Allow overlapping keybindings
+allow_multiple_actions_to_share_the_same_key,Allow multiple actions to share the same key when rebinding vanilla or mod controls. Turn off to reject conflicts on future rebinds. Existing bindings are kept.
 scavenging_warning_threshold,Scavenging warning threshold
 warn_before_returning_when_items_left_behind_are_worth,Warn before returning from scavenging when items left behind are worth at least this many credits. Vanilla: 0. Disable: 1000.
 center_backpack_selection_menu,Center backpack selection menu
