@@ -40,12 +40,14 @@ public sealed partial class ModEntry : IMod
         FilterReplacement.Register(_options);
         LabelMemory.Register(_options);
         YeastBioreactor.Register(_options);
+        ReleaseNotesWindow.Register(_manifest, _options);
         Log.Info("Enabled.");
     }
 
     // In reverse order of registration.
     public void OnDisable()
     {
+        ReleaseNotesWindow.Unregister();
         YeastBioreactor.Unregister();
         LabelMemory.Unregister();
         FilterReplacement.Unregister();

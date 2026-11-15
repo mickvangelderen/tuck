@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\CHANGELOG.md" LogicalName="Tuck.Changelog" />
     <InternalsVisibleTo Include="Tuck.Mod.Tests" />
     <ProjectReference Include="..\Tuck.PackSolver\Tuck.PackSolver.csproj" />
     <ProjectReference Include="..\Tuck.BitBoard\Tuck.BitBoard.csproj" />
@@ -39,6 +40,8 @@
       <HintPath>$(GameAssembliesDir)\UnityEngine.UIModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(GameAssembliesDir)\UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="UnityEngine.IMGUIModule" HintPath="$(GameAssembliesDir)\UnityEngine.IMGUIModule.dll" Private="false" />
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GameAssembliesDir)\UnityEngine.UI.dll</HintPath>
       <Private>false</Private>

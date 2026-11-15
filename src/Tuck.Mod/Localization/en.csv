@@ -1,5 +1,10 @@
 # English fallback. Keep keys and numbered placeholders unchanged in translations.
 # Values use string.Format; no Smart String or plural syntax.
+changelog,Changelog
+feedback,Feedback
+copies_tucks_discord_link,Copies Tuck's discord link to your clipboard in case you want to leave any feedback.
+avoids_the_mod_requiring_permission_to_open_the_link,Avoids the mod requiring the permission to open the link for you.
+close,Close
 pack,Pack
 packing_solver,Packing solver
 choose_the_solver_for_the_next_pack,Choose how Tuck packs your loot. Applies to the next Pack action without restarting. Default: Container first.

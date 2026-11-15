@@ -21,6 +21,8 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+- Display the changelog when Tuck is updated.
+
 ## [1.2.0] - 2026-11-12
 
 - Dragging all matching items now binds to Alt+drag instead of Shift+drag, so Shift+drag preserves vanilla formation placement.

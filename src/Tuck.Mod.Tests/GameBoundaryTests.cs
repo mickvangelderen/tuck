@@ -41,11 +41,12 @@ public class GameBoundaryTests
                 typeof(global::Tuck.BitBoard.BitTile).Assembly.Location],
             ["netstandard", "Assembly-CSharp", "UnityEngine.CoreModule", "0Harmony", "Newtonsoft.Json", "UnityEngine.InputLegacyModule",
                 "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule",
-                "Assembly-CSharp-firstpass", "UnityEngine.AudioModule"]);
+                "Assembly-CSharp-firstpass", "UnityEngine.AudioModule", "UnityEngine.TextRenderingModule", "UnityEngine.IMGUIModule"]);
         Assert.Null(scan.Error);
         Assert.DoesNotContain("reflection-external", scan.Capabilities);
         Assert.DoesNotContain(scan.Pending, f => f.Kind == "reflection-external");
         Assert.False(scan.Refused, scan.FormatFindings());
+        Assert.Empty(scan.Capabilities);
 #if !DEBUG
         Assert.Null(typeof(ModEntry).Assembly.GetType("Tuck.Mod.DebugRecording.PackJson"));
         Assert.DoesNotContain(typeof(ModEntry).Assembly.GetReferencedAssemblies(), a => a.Name == "Newtonsoft.Json");
