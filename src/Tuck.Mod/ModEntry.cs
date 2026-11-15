@@ -1,9 +1,13 @@
+using UnityEngine;
+
 namespace Tuck.Mod;
 
 public sealed partial class ModEntry : IMod
 {
     // Assigned in Init. The loader calls Init and OnEnable once at launch, and only calls OnDisable if both succeeded.
     private Options _options = null!;
+    private Hotkey[] _hotkeys = null!;
+    private StoreHotkeys _storeHotkeys = null!;
     private AfterhourGround _ground = null!;
     private NightActivitySelection _nightActivitySelection = null!;
     private ModManifest _manifest = null!;
@@ -13,7 +17,14 @@ public sealed partial class ModEntry : IMod
         _manifest = manifest;
         Log.Init(manifest);
         _options = new Options(manifest);
-        _ground = new AfterhourGround(_options, manifest.ID);
+        var returnHotkey = new Hotkey(_options.Return, _options.ReturnHoldDuration, _options.HoldTimeoutDuration);
+        var shutters = new Hotkey(_options.Shutters);
+        var nightActivities = new Hotkey(_options.NightActivities);
+        var sleep = new Hotkey(_options.Sleep);
+        var tablet = new Hotkey(_options.Tablet);
+        _hotkeys = [returnHotkey, shutters, nightActivities, sleep, tablet];
+        _storeHotkeys = new StoreHotkeys(shutters, nightActivities, sleep, tablet);
+        _ground = new AfterhourGround(_options, manifest.ID, returnHotkey);
         _nightActivitySelection = new NightActivitySelection(_options);
         Log.Info($"Initialized v{manifest.ModVersion}.");
     }
@@ -22,12 +33,15 @@ public sealed partial class ModEntry : IMod
     {
         _options.Register();
         OverlappingKeyBindings.Register(_options);
+        HoldRingPresenter.Register(_hotkeys);
+        Application.focusChanged += OnFocusChanged;
         _ground.Register();
         RegisterDebugRecorder();
         ScavengingReturn.Register(_options);
         WorkspaceWarning.Register(_options);
         BellHold.Register(_options);
-        StoreHotkeys.Register(_options);
+        VanillaHoldTimeouts.Register(_options);
+        _storeHotkeys.Register();
         HotkeyGlyphs.Register(_manifest.ID);
         HotkeyTooltips.Register(_options);
         ItemWarnings.Register(_options, _manifest.ID);
@@ -64,15 +78,25 @@ public sealed partial class ModEntry : IMod
         ItemWarnings.Unregister();
         HotkeyTooltips.Unregister();
         HotkeyGlyphs.Unregister();
-        StoreHotkeys.Unregister();
+        _storeHotkeys.Unregister();
+        VanillaHoldTimeouts.Unregister();
         BellHold.Unregister();
         WorkspaceWarning.Unregister();
         ScavengingReturn.Unregister();
         UnregisterDebugRecorder();
         _ground.Unregister();
+        Application.focusChanged -= OnFocusChanged;
+        HoldRingPresenter.Unregister();
         OverlappingKeyBindings.Unregister();
         _options.Unregister();
         Log.Info("Disabled.");
+    }
+
+    private void OnFocusChanged(bool focused)
+    {
+        if (focused) return;
+        // Cancel on the event: the game may stop polling input until focus returns.
+        foreach (var hotkey in _hotkeys) hotkey.Cancel();
     }
 
     // Implemented only in DebugRecording; declarations and calls disappear from other builds.

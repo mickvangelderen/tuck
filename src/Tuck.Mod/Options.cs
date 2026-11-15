@@ -48,6 +48,7 @@ internal sealed class Options
     public ScalarSetting WorkspaceOccupiedPercent { get; }
     public ScalarSetting ReturnHoldDuration { get; }
     public ScalarSetting BellHoldDuration { get; }
+    public ScalarSetting HoldTimeoutDuration { get; }
 
     private readonly Func<string, object[], string> _localize;
 
@@ -146,6 +147,11 @@ internal sealed class Options
             "bell_hold_duration", () => Text("bell_hold_duration"),
             () => Text("how_long_to_hold_the_bell_button_or_key"),
             defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
+        HoldTimeoutDuration = new ScalarSetting(manifest,
+            "hold_timeout_duration", () => Text("hold_timeout"),
+            () => Text("holds_are_cancelled_after_becoming_ready"),
+            defaultValue: 1.5f, min: 0.5f, max: HoldTimeout.DisabledAt, step: 0.1f,
+            valueText: value => HoldTimeout.GetSeconds(value).HasValue ? Text("x_seconds", value) : Text("disabled"));
     }
 
     public void Register()
@@ -186,10 +192,12 @@ internal sealed class Options
         WorkspaceOccupiedPercent.Register();
         ReturnHoldDuration.Register();
         BellHoldDuration.Register();
+        HoldTimeoutDuration.Register();
     }
 
     public void Unregister()
     {
+        HoldTimeoutDuration.Unregister();
         BellHoldDuration.Unregister();
         ReturnHoldDuration.Unregister();
         WorkspaceOccupiedPercent.Unregister();

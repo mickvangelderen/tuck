@@ -5,14 +5,16 @@ internal sealed class AfterhourGround
 {
     private readonly Options _options;
     private readonly string _modId;
+    private readonly Hotkey _returnHotkey;
     // Compared with Unity's null: Tuck is also destroyed if the game destroys the scene.
     private TuckMascot? _mascot;
     private AfterhourReturnControls? _returnControls;
 
-    public AfterhourGround(Options options, string modId)
+    public AfterhourGround(Options options, string modId, Hotkey returnHotkey)
     {
         _options = options;
         _modId = modId;
+        _returnHotkey = returnHotkey;
     }
 
     public void Register()
@@ -34,7 +36,7 @@ internal sealed class AfterhourGround
         // Returning also works at locations without a Tuck sprite or a visible Ground window.
         var map = MapUIManager.Instance;
         if (_returnControls == null && map != null)
-            _returnControls = AfterhourReturnControls.Install(map, _options);
+            _returnControls = AfterhourReturnControls.Install(map, _returnHotkey);
         if (Install())
         {
             Log.Info($"Added Tuck at '{locationId}'.");

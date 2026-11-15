@@ -23,6 +23,7 @@ public class HoldSettingsTests : IDisposable
             (key, args) => string.Format(english[key], args));
         _options.ReturnHoldDuration.Register();
         _options.BellHoldDuration.Register();
+        _options.HoldTimeoutDuration.Register();
     }
 
     [Theory]
@@ -44,6 +45,31 @@ public class HoldSettingsTests : IDisposable
             Assert.Equal(tick / 10f, entry.Value, 5);
             Assert.Equal((float)tick, slider.getFloat());
             Assert.Equal($"{tick / 10f:0.0} s", slider.valueText(tick));
+        }
+    }
+
+    [Fact]
+    public void TimeoutSliderStoresTenthsAndDisablesAtMaximum()
+    {
+        var slider = GameOptionRegistry.Find(ModHelper.GameOptionId(_modId, "hold_timeout_duration"));
+        var entry = (ConfigEntry<float>)_config.Get("hold_timeout_duration");
+        Assert.Equal(GameOptionRegistry.Kind.Slider, slider.kind);
+        Assert.True(slider.wholeNumbers);
+        Assert.Equal(0f, slider.min);
+        Assert.Equal(25f, slider.max);
+        Assert.Equal(10f, slider.getFloat());
+        Assert.Equal(1.5f, entry.Default);
+        Assert.Equal(1.5f, HoldTimeout.GetSeconds(_options.HoldTimeoutDuration.Value));
+        for (int tick = 0; tick <= 25; tick++)
+        {
+            float seconds = 0.5f + tick / 10f;
+            WithoutSaving(entry, () => slider.setFloat(tick));
+            Assert.Equal(seconds, entry.Value, 5);
+            Assert.Equal((float)tick, slider.getFloat());
+            float? timeout = HoldTimeout.GetSeconds(_options.HoldTimeoutDuration.Value);
+            if (tick == 25) Assert.Null(timeout);
+            else Assert.Equal(seconds, timeout!.Value, 5);
+            Assert.Equal(tick == 25 ? "Disabled" : $"{seconds:0.0} s", slider.valueText(tick));
         }
     }
 
@@ -102,6 +128,7 @@ public class HoldSettingsTests : IDisposable
         BellHold.Unregister();
         _options.ReturnHoldDuration.Unregister();
         _options.BellHoldDuration.Unregister();
+        _options.HoldTimeoutDuration.Unregister();
         Configs.Remove(_modId);
     }
 }
