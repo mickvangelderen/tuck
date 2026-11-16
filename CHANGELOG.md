@@ -21,7 +21,24 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
-- Display the changelog when Tuck is updated.
+- Configurable machine warning icons:
+  - stolen (only shown during inspections, can be configured)
+  - battery low
+  - missing ingredients (it's supposed to resemble a gear)
+  - insufficient water
+  - depleted filter
+  - machine output overflow
+- Labelers now apply their last applied setting to items on right click. 
+- The yeast bioreactor can be used as a tool to start fermentation.
+- New hotkeys:
+  - E to go to sleep,
+  - T to open/close the tablet.
+  - A to accept/confirm (generic positive actions).
+  - D to decline/reject (generic negative actions).
+- Hotkeys for actions that can not be undone generally require holding down the action.
+- Mouse/keyboard holds time out after 1.5s.
+- The in game options now allow binding the same hotkey to multiple actions. 
+- Changelog is now shown when the mod is updated
 
 ## [1.2.0] - 2026-11-12
 
