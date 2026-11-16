@@ -20,7 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\..\CHANGELOG.md" LogicalName="Tuck.Changelog" />
+    <ProjectReference Include="..\..\tools\RenderChangelog\RenderChangelog.csproj"
+                      ReferenceOutputAssembly="false" PrivateAssets="all" Private="false"
+                      SkipGetTargetFrameworkProperties="true" OutputItemType="ChangelogRenderer" />
     <InternalsVisibleTo Include="Tuck.Mod.Tests" />
     <ProjectReference Include="..\Tuck.PackSolver\Tuck.PackSolver.csproj" />
     <ProjectReference Include="..\Tuck.BitBoard\Tuck.BitBoard.csproj" />
@@ -71,6 +73,20 @@
     <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <Target Name="RenderChangelog" DependsOnTargets="ResolveProjectReferences"
+          Inputs="$(MSBuildProjectDirectory)\..\..\CHANGELOG.md;@(ChangelogRenderer);$(MSBuildAllProjects)"
+          Outputs="$(IntermediateOutputPath)Changelog.txt">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Exec Command="dotnet &quot;@(ChangelogRenderer->'%(FullPath)')&quot; &quot;$(MSBuildProjectDirectory)\..\..\CHANGELOG.md&quot; &quot;$(IntermediateOutputPath)Changelog.txt&quot;" />
+  </Target>
+
+  <Target Name="EmbedChangelog" BeforeTargets="AssignTargetPaths" DependsOnTargets="RenderChangelog">
+    <ItemGroup>
+      <EmbeddedResource Include="$(IntermediateOutputPath)Changelog.txt" LogicalName="Tuck.Changelog" />
+      <FileWrites Include="$(IntermediateOutputPath)Changelog.txt" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="ValidateGameReferences" BeforeTargets="ResolveAssemblyReferences">
     <Error Condition="!Exists('$(GameAssembliesDir)\Assembly-CSharp.dll')"

@@ -11,6 +11,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     <Using Include="Xunit" />
     <ProjectReference Include="..\Tuck.Mod\Tuck.Mod.csproj" />
+    <ProjectReference Include="..\..\tools\RenderChangelog\RenderChangelog.csproj" />
     <Reference Include="Assembly-CSharp" HintPath="$(GameAssembliesDir)\Assembly-CSharp.dll" />
     <Reference Include="0Harmony" HintPath="$(GameAssembliesDir)\0Harmony.dll" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(GameAssembliesDir)\UnityEngine.CoreModule.dll" />

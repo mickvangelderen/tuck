@@ -89,7 +89,7 @@ internal static class ReleaseNotesWindow
         _window.frame.titleText.enableWordWrapping = false;
         _window.frame.titleText.overflowMode = TextOverflowModes.Overflow;
         builder.BeginScrollFlexible();
-        builder.AddLabel(ReleaseNotes.FormatChangelog(ReleaseNotes.ReadChangelog()));
+        builder.AddLabel(ReleaseNotes.ReadChangelog());
         builder.Last.SetFlexible(1f, 0f);
         builder.Last.text.alignment = TextAlignmentOptions.TopLeft;
         builder.Last.text.richText = true;

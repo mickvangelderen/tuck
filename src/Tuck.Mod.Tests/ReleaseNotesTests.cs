@@ -1,3 +1,5 @@
+using Tuck.Build;
+
 namespace Tuck.Mod.Tests;
 
 public class ReleaseNotesTests
@@ -35,6 +37,7 @@ public class ReleaseNotesTests
             - Second change. <!-- hidden -->
             ## [1.1.0] - 2026-11-11
             Older change.
+
             [Unreleased]: https://example.com/upcoming
             [1.2.0]: https://example.com/current
             [1.1.0]: https://example.com/old
@@ -53,7 +56,7 @@ public class ReleaseNotesTests
             <size=120%><b>1.1.0 - 2026-11-11</b></size>
 
             Older change.
-            """.Replace("\r\n", "\n"), ReleaseNotes.FormatChangelog(changelog));
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
     }
 
     [Theory]
@@ -63,7 +66,7 @@ public class ReleaseNotesTests
     {
         string changelog = string.Join(newline, "## [Unreleased]", "", "## [1.2.0] - 2026-11-12", "Released.");
         Assert.Equal("<size=120%><b>[Unreleased]</b></size>\n\n<size=120%><b>[1.2.0] - 2026-11-12</b></size>\n\nReleased.",
-            ReleaseNotes.FormatChangelog(changelog));
+            ChangelogRenderer.Render(changelog));
     }
 
     [Fact]
@@ -76,6 +79,8 @@ public class ReleaseNotesTests
             - [Details](https://example.com/details).
             - [Release][release], [release] and [release][].
             - [Unknown] stays readable.
+            - __Bold with *nested italic*__ and [**formatted** label](https://example.com/a_(b)).
+
             [release]: https://example.com/release
             """;
         Assert.Equal("""
@@ -87,14 +92,29 @@ public class ReleaseNotesTests
             • Details.
             • Release, release and release.
             • [Unknown] stays readable.
-            """.Replace("\r\n", "\n"), ReleaseNotes.FormatChangelog(changelog));
+            • <b>Bold with <i>nested italic</i></b> and <b>formatted</b> label.
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
     }
 
     [Fact]
     public void DisplaysLiteralMarkupWithoutInterpretingItAsTmpTags()
     {
-        Assert.Equal("<size=120%><b>[Unreleased]</b></size>\n\n• <noparse><</noparse>sprite name=secret> and <noparse><</noparse>/noparse>.",
-            ReleaseNotes.FormatChangelog("## [Unreleased]\n- `<sprite name=secret>` and </noparse>."));
+        Assert.Equal("""
+            <size=120%><b>[Unreleased]</b></size>
+
+            • <noparse><</noparse>sprite name=secret> and <noparse><</noparse>/noparse>.
+            • <noparse><</noparse>b>raw<noparse><</noparse>/b> and <noparse><</noparse>sprite>.
+
+            <noparse><</noparse>/noparse><noparse><</noparse>sprite name=secret>
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render("""
+            ## [Unreleased]
+            - `<sprite name=secret>` and </noparse>.
+            - <b>raw</b> and &lt;sprite&gt;. <!-- hidden -->
+
+            ```
+            </noparse><sprite name=secret>
+            ```
+            """));
     }
 
     [Fact]
@@ -127,20 +147,20 @@ public class ReleaseNotesTests
             <size=120%><b>More changes</b></size>
 
             Another paragraph.
-            """.Replace("\r\n", "\n"), ReleaseNotes.FormatChangelog(changelog));
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
     }
 
     [Fact]
-    public void EmbedsTheChangelogIncludingItsReleaseHistory()
+    public void EmbedsRenderedChangelogIncludingItsReleaseHistory()
     {
-        string changelog = ReleaseNotes.ReadChangelog();
-        Assert.StartsWith("# Changelog", changelog);
-        string rendered = ReleaseNotes.FormatChangelog(changelog);
+        string rendered = ReleaseNotes.ReadChangelog();
         Assert.StartsWith("<size=120%><b>Unreleased</b></size>", rendered);
         Assert.Contains("Initial public release.", rendered);
         Assert.DoesNotContain("All notable changes", rendered);
         Assert.DoesNotContain("Keep a Changelog", rendered);
         Assert.DoesNotContain("https://", rendered);
+        Assert.DoesNotContain(typeof(ReleaseNotes).Assembly.GetReferencedAssemblies(),
+            assembly => assembly.Name is "Markdig" or "RenderChangelog");
 #if DEBUG
         Assert.True(ReleaseNotes.IsDevelopment);
 #else
