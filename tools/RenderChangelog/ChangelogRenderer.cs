@@ -9,10 +9,10 @@ internal static class ChangelogRenderer
     internal static string Render(string markdown) => Blocks(Markdown.Parse(markdown)
         .SkipWhile(block => block is not HeadingBlock { Level: 2 }));
 
-    private static string Blocks(IEnumerable<Block> blocks) =>
-        string.Join("\n\n", blocks.Select(Block).Where(text => text.Length != 0));
+    private static string Blocks(IEnumerable<Block> blocks, int indent = 0, string separator = "\n\n") =>
+        string.Join(separator, blocks.Select(block => Block(block, indent)).Where(text => text.Length != 0));
 
-    private static string Block(Block block)
+    private static string Block(Block block, int indent)
     {
         switch (block)
         {
@@ -22,8 +22,13 @@ internal static class ChangelogRenderer
                 return Inlines(paragraph.Inline!).TrimEnd();
             case ListBlock list:
                 int number = list.IsOrdered ? int.Parse(list.OrderedStart!) : 0;
-                return string.Join("\n", list.Select(item =>
-                    (list.IsOrdered ? $"{number++}. " : "• ") + Block(item).Replace("\n", "\n  ")));
+                int markerWidth = list.IsOrdered ? (number + list.Count - 1).ToString().Length / 2 + 2 : 1;
+                int contentIndent = indent + markerWidth;
+                string separator = list.IsLoose ? "\n\n" : "\n";
+                // TMP indent persists through wrapping and restores the parent indent after a nested list.
+                return string.Join(separator, list.Cast<ListItemBlock>().Select(item =>
+                    $"<pos={indent}em>" + (list.IsOrdered ? $"{number++}." : "•")
+                    + $"<indent={contentIndent}em>" + Blocks(item, contentIndent, separator) + "</indent>"));
             case HtmlBlock { Type: HtmlBlockType.Comment }:
             case LinkReferenceDefinitionGroup:
             case LinkReferenceDefinition:
@@ -35,7 +40,7 @@ internal static class ChangelogRenderer
             case ThematicBreakBlock:
                 return "—";
             case ContainerBlock container:
-                return Blocks(container);
+                return Blocks(container, indent);
             default:
                 throw new NotSupportedException($"Unsupported changelog block: {block.GetType().Name}");
         }

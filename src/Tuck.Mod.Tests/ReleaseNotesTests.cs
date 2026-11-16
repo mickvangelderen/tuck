@@ -46,12 +46,12 @@ public class ReleaseNotesTests
         Assert.Equal("""
             <size=120%><b>Unreleased</b></size>
 
-            • Future work.
+            <pos=0em>•<indent=1em>Future work.</indent>
 
             <size=120%><b>1.2.0 - 2026-11-12</b></size>
 
-            • First change. Its continuation.
-            • Second change.
+            <pos=0em>•<indent=1em>First change. Its continuation.</indent>
+            <pos=0em>•<indent=1em>Second change.</indent>
 
             <size=120%><b>1.1.0 - 2026-11-11</b></size>
 
@@ -88,11 +88,11 @@ public class ReleaseNotesTests
 
             <size=120%><b>Improvements</b></size>
 
-            • <b>Bold</b>, <i>italic</i>, and code.
-            • Details.
-            • Release, release and release.
-            • [Unknown] stays readable.
-            • <b>Bold with <i>nested italic</i></b> and <b>formatted</b> label.
+            <pos=0em>•<indent=1em><b>Bold</b>, <i>italic</i>, and code.</indent>
+            <pos=0em>•<indent=1em>Details.</indent>
+            <pos=0em>•<indent=1em>Release, release and release.</indent>
+            <pos=0em>•<indent=1em>[Unknown] stays readable.</indent>
+            <pos=0em>•<indent=1em><b>Bold with <i>nested italic</i></b> and <b>formatted</b> label.</indent>
             """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
     }
 
@@ -102,8 +102,8 @@ public class ReleaseNotesTests
         Assert.Equal("""
             <size=120%><b>[Unreleased]</b></size>
 
-            • <noparse><</noparse>sprite name=secret> and <noparse><</noparse>/noparse>.
-            • <noparse><</noparse>b>raw<noparse><</noparse>/b> and <noparse><</noparse>sprite>.
+            <pos=0em>•<indent=1em><noparse><</noparse>sprite name=secret> and <noparse><</noparse>/noparse>.</indent>
+            <pos=0em>•<indent=1em><noparse><</noparse>b>raw<noparse><</noparse>/b> and <noparse><</noparse>sprite>.</indent>
 
             <noparse><</noparse>/noparse><noparse><</noparse>sprite name=secret>
             """.Replace("\r\n", "\n"), ChangelogRenderer.Render("""
@@ -141,12 +141,82 @@ public class ReleaseNotesTests
 
             Second paragraph.
 
-            • First item continued here.
-            • Second item.
+            <pos=0em>•<indent=1em>First item continued here.</indent>
+            <pos=0em>•<indent=1em>Second item.</indent>
 
             <size=120%><b>More changes</b></size>
 
             Another paragraph.
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
+    }
+
+    [Fact]
+    public void KeepsNestedListsTightAndIndentsWrappedAndHardBrokenLines()
+    {
+        const string changelog = """
+            ## [Unreleased]
+            - New hotkeys:
+              - E to go to sleep,
+              - T to open/close
+                the tablet.\
+                Also works here.
+                - A deeper note.
+            - Holding the action is required for changes that cannot be undone.
+
+            A paragraph outside the list.
+            """;
+
+        Assert.Equal("""
+            <size=120%><b>[Unreleased]</b></size>
+
+            <pos=0em>•<indent=1em>New hotkeys:
+            <pos=1em>•<indent=2em>E to go to sleep,</indent>
+            <pos=1em>•<indent=2em>T to open/close the tablet.
+            Also works here.
+            <pos=2em>•<indent=3em>A deeper note.</indent></indent></indent>
+            <pos=0em>•<indent=1em>Holding the action is required for changes that cannot be undone.</indent>
+
+            A paragraph outside the list.
+            """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
+    }
+
+    [Fact]
+    public void PreservesParagraphsInLooseListsAndRestoresIndentAfterNestedLists()
+    {
+        const string changelog = """
+            ## [Unreleased]
+            9. First paragraph.
+
+               Second paragraph.
+
+               - Nested item.
+               - Another nested item.
+
+               Back to the parent paragraph.
+
+            10. Next item.
+
+            ### After the list
+            Normal paragraph.
+            """;
+
+        Assert.Equal("""
+            <size=120%><b>[Unreleased]</b></size>
+
+            <pos=0em>9.<indent=3em>First paragraph.
+
+            Second paragraph.
+
+            <pos=3em>•<indent=4em>Nested item.</indent>
+            <pos=3em>•<indent=4em>Another nested item.</indent>
+
+            Back to the parent paragraph.</indent>
+
+            <pos=0em>10.<indent=3em>Next item.</indent>
+
+            <size=120%><b>After the list</b></size>
+
+            Normal paragraph.
             """.Replace("\r\n", "\n"), ChangelogRenderer.Render(changelog));
     }
 
