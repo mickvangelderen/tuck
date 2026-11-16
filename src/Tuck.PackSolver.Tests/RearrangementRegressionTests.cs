@@ -104,7 +104,7 @@ public class RearrangementRegressionTests
         var final = Replay(state, steps);
         AssertTargets(final, targets);
         Assert.Equal("ground", final.Items.Single(i => i.Id == "cheap").Location.InventoryId);
-        Assert.Equal(21, PlanReplay.ReturnedValue(final));
+        Assert.Equal(21, new ModelPackReplay(final).ReturnedValue);
     }
 
     private static InventoryState Ground(int width) => new("ground",
@@ -112,7 +112,7 @@ public class RearrangementRegressionTests
 
     private static PackState Replay(PackState initial, IEnumerable<TransferStep> steps)
     {
-        var final = PlanReplay.Replay(initial, new(initial.StateId, steps));
+        var final = ModelPackReplay.Replay(initial, new(initial.StateId, steps));
         // Every original instance survives, including items left on the ground.
         Assert.Equal(initial.Items.OrderBy(i => i.Id).Select(i => (i.Id, i.UnitCount)),
             final.Items.OrderBy(i => i.Id).Select(i => (i.Id, i.UnitCount)));

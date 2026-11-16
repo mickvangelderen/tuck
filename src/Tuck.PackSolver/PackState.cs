@@ -60,7 +60,7 @@ public sealed class ItemState
     internal ItemState At(ItemLocation location) => new(Id, Identifier, location, UnitCount, UnitValue, Shape, State, UnitBaseValue);
 }
 
-public enum AdmissionKind { Owned, Ground, Backpack, Container, Toolbox, Tagged, Unsupported, SourceOnly }
+public enum AdmissionKind { Owned, Ground, Backpack, Container, Toolbox, Tagged, Unsupported, SourceOnly, MachineBay }
 
 public sealed class AdmissionRule
 {

@@ -32,11 +32,11 @@ public class PackValueTests
             Item("fixed", "right", 1, tags: ["PINNED_TAG"])
         ], null, new ItemDefinition("stack", new(new(10))));
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
 
         Assert.Equal(21, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(final, "stack"));
-        Assert.False(PlanReplay.IsReturned(final, "single"));
+        Assert.True(ModelPackReplay.IsReturned(final, "stack"));
+        Assert.False(ModelPackReplay.IsReturned(final, "single"));
     }
 
     [Theory]
@@ -58,7 +58,7 @@ public class PackValueTests
         else
         {
             Assert.Equal(48, result.FinalValue);
-            Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), "module"));
+            Assert.True(ModelPackReplay.IsReturned(ModelPackReplay.Replay(state, result.Plan), "module"));
         }
     }
 
@@ -70,12 +70,12 @@ public class PackValueTests
         var state = State([Item("held", "left", 40), Item("keep", "right", 100),
             Item("module", "ground", 30, identifier: "system_module_ruined")]);
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(140, result.InitialValue);
         Assert.Equal(148, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(final, "module"));
-        Assert.False(PlanReplay.IsReturned(final, "held"));
-        Assert.Equal(30, new StateView(final).Effective("module").UnitValue);
+        Assert.True(ModelPackReplay.IsReturned(final, "module"));
+        Assert.False(ModelPackReplay.IsReturned(final, "held"));
+        Assert.Equal(30, new ModelPackReplay(final).Items["module"].GetValue(singleValue: true));
     }
 
     [Theory]
@@ -100,9 +100,9 @@ public class PackValueTests
             Item("module", "inside", 30, identifier: "system_module_ruined")], inventories,
             new ItemDefinition("system_module_ruined", rules: new(unsupportedTransfer: "fixed attachment")));
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(150, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(final, "box"));
+        Assert.True(ModelPackReplay.IsReturned(final, "box"));
         Assert.Equal("inside", final.Items.Single(i => i.Id == "module").Location.InventoryId);
     }
 }

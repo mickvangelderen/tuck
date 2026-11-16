@@ -9,6 +9,9 @@ public abstract partial class GameItem : GameItemFunc, GraphNodeStorage, Directo
     public virtual List<GraphNodeStorage> children => child == null ? new() : new() { child };
     public GridShape shape { get; set; }
     public GridShape modifiedShape { get; set; }
+    public int modifiedXOrigin { get; set; }
+    public int modifiedYOrigin { get; set; }
+    public List<string> itemTypes = new();
     public TagSystem state { get; set; } = new();
     public TagSystem modifiedState { get; set; } = new();
     public string identifier { get; set; }
@@ -40,12 +43,20 @@ public abstract partial class GameItem : GameItemFunc, GraphNodeStorage, Directo
     public void ValidateShapeState()
     {
         Tuck.ProbablyStolenTestModel.ModelSupport.RequireSupportedAncestors(this);
+        Tuck.ProbablyStolenTestModel.ModelGunGeometry.Resolve(this);
         modifiedState = state.Clone();
         Validate();
         parentInventory?.Validate();
     }
 
     public bool IsTag(string tagName) => modifiedState.IsTag(tagName);
+    public bool IsOneOfTags(List<string> tags) => tags.Any(IsTag);
+    public bool IsGameItemType(string gameItemType) => itemTypes.Contains(gameItemType);
+    public void SetGameItemType(string gameItemType)
+    {
+        EnableTag(gameItemType);
+        if (!itemTypes.Contains(gameItemType)) itemTypes.Add(gameItemType);
+    }
     public bool EnableTag(string tagName, bool skipValidate = false)
     {
         if (state.IsTag(tagName)) return false;

@@ -43,8 +43,8 @@ public class EquipmentPackingTests
             Inventories().Append(Equipment(true)).ToArray());
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(150, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "machine"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "machine"));
         Assert.Equal("equipment", final.Items.Single(i => i.Id == "component").Location.InventoryId);
     }
 
@@ -63,7 +63,7 @@ public class EquipmentPackingTests
             new(AdmissionKind.Container), "bag")).ToArray());
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(53, result.FinalValue);
-        Assert.Equal("inside", PlanReplay.Replay(state, result.Plan).Items.Single(i => i.Id == "component").Location.InventoryId);
+        Assert.Equal("inside", ModelPackReplay.Replay(state, result.Plan).Items.Single(i => i.Id == "component").Location.InventoryId);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class EquipmentPackingTests
             new(AdmissionKind.Container), "bag")).ToArray());
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(13, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), "loot"));
+        Assert.True(ModelPackReplay.IsReturned(ModelPackReplay.Replay(state, result.Plan), "loot"));
     }
 
     // No lock, stuck tag or unsupported callback is needed: equipment is excluded by policy.

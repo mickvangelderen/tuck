@@ -13,7 +13,7 @@ public class PackRecordingTests
             RecordingFixtures.Inventories().Append(new InventoryState("counter-front",
                 new InventoryLayout.Grid(ShapeState.Rectangle(4, 2, 0, 1)), new(AdmissionKind.SourceOnly))).ToArray());
         var json = PackJson.Serialize(state, new(), new(state.StateId, [RecordingFixtures.Place("machine", "left")]));
-        Assert.Equal(5, (int)JObject.Parse(json)["rulesVersion"]!);
+        Assert.Equal(6, (int)JObject.Parse(json)["rulesVersion"]!);
         var recording = PackJson.Deserialize(json);
         Assert.Null(StateComparison.Difference(state, recording.State));
         Assert.Equal(400, PlanReplay.ReturnedValue(PlanReplay.Replay(recording.State, recording.Plan!)));

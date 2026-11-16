@@ -91,7 +91,7 @@ public class SequenceSearchTests
             new(AdmissionKind.Container), "bag")).ToArray());
         TransferStep[] targets = [Place("a", "right"), Place("b", "left")];
         // All three movable items are refused by the ground. The bag [. C .] must be rearranged.
-        PlanReplay.Replay(state, new(state.StateId,
+        ModelPackReplay.Replay(state, new(state.StateId,
             [Grid("clutter", 0), Grid("a", 1), targets[1], targets[0]]));
 
         var (_, steps) = Solve(state, targets, new(64, 2000));
@@ -115,7 +115,7 @@ public class SequenceSearchTests
         TransferStep[] targets = [Place("a", "right"), Place("b", "left")];
         // Bag [. C C .], ground [. D]. Hand items cannot fit on the ground, so D is
         // discovered only when trying to relocate C. Neither clutter item has a goal.
-        PlanReplay.Replay(state, new(state.StateId,
+        ModelPackReplay.Replay(state, new(state.StateId,
             [Grid("d", 0), Place("c", "ground"), Grid("a", 1), targets[1], targets[0]]));
 
         var (_, steps) = Solve(state, targets, new(200, 10000));
@@ -156,12 +156,12 @@ public class SequenceSearchTests
         var search = new SequenceSearch(new() { ["loot"] = target }, ["cheap"], new(64, 2000), default);
 
         var steps = Assert.IsType<List<TransferStep>>(search.Run(simulation));
-        var final = PlanReplay.Replay(state, new(state.StateId, steps));
+        var final = ModelPackReplay.Replay(state, new(state.StateId, steps));
 
         Assert.False(search.Limited);
         Assert.Null(StateComparison.Difference(state, simulation.Snapshot()));
         Assert.Equal(target.Destination, final.Items.Single(i => i.Id == "loot").Location);
-        Assert.False(PlanReplay.IsReturned(final, "cheap"));
+        Assert.False(ModelPackReplay.IsReturned(final, "cheap"));
         Assert.DoesNotContain(steps, s => s.SourceItemId == "clutter");
     }
 
@@ -210,7 +210,7 @@ public class SequenceSearchTests
         var state = State([Item("a", "left", 1), Item("b", "right", 1)]);
         TransferStep[] targets = [Place("a", "right"), Place("b", "left")];
         // A legal witness distinguishes budget exhaustion from an impossible hand swap.
-        var witness = PlanReplay.Replay(state, new(state.StateId,
+        var witness = ModelPackReplay.Replay(state, new(state.StateId,
             [Place("a", "ground"), Place("b", "left"), Place("a", "right")]));
         Assert.Equal("right", witness.Items.Single(i => i.Id == "a").Location.InventoryId);
         Assert.Equal("left", witness.Items.Single(i => i.Id == "b").Location.InventoryId);
@@ -248,7 +248,7 @@ public class SequenceSearchTests
         var steps = Assert.IsType<List<TransferStep>>(search.Run(simulation));
         Assert.False(search.Limited);
         Assert.Null(StateComparison.Difference(state, simulation.Snapshot()));
-        var final = PlanReplay.Replay(state, new(state.StateId, steps));
+        var final = ModelPackReplay.Replay(state, new(state.StateId, steps));
         foreach (var target in targets)
             Assert.Equal(target.Destination, final.Items.Single(i => i.Id == target.SourceItemId).Location);
         Assert.Equal(state.Items.Count, final.Items.Count);
@@ -259,7 +259,7 @@ public class SequenceSearchTests
         int peak = 0;
         for (int count = 1; count <= steps.Count; count++)
         {
-            var partial = PlanReplay.Replay(state, new(state.StateId, steps.Take(count)));
+            var partial = ModelPackReplay.Replay(state, new(state.StateId, steps.Take(count)));
             peak = Math.Max(peak, partial.Items.Count(i => i.Location.InventoryId == state.Roots.Ground));
         }
         return peak;

@@ -67,7 +67,11 @@ internal static class SolverUnderTest
         {
             Assert.True(originals.ContainsKey(step.SourceItemId), "Packing cannot create item identities.");
         });
-        var final = PlanReplay.Replay(problem.State, result.Plan);
+        var model = new ModelPackReplay(problem.State);
+        long initialValue = model.ReturnedValue;
+        model.Execute(result.Plan);
+        var final = model.Snapshot();
+        Assert.Null(StateComparison.Difference(final, PlanReplay.Replay(problem.State, result.Plan)));
         Assert.Equal(originals.Keys.OrderBy(id => id), final.Items.Select(i => i.Id).OrderBy(id => id));
         foreach (var item in final.Items)
         {
@@ -86,8 +90,8 @@ internal static class SolverUnderTest
         }
         else
         {
-            Assert.Equal(PlanReplay.ReturnedValue(problem.State), result.InitialValue);
-            Assert.Equal(PlanReplay.ReturnedValue(final), result.FinalValue);
+            Assert.Equal(initialValue, result.InitialValue);
+            Assert.Equal(model.ReturnedValue, result.FinalValue);
             Assert.True(result.FinalValue >= result.InitialValue, "A solver must retain a feasible incumbent at least as valuable as the input.");
             if (result.Metrics?.RelaxedValueBound is long bound)
                 Assert.True(bound >= result.FinalValue, $"The reported upper bound {bound} is below the replayed value {result.FinalValue}.");

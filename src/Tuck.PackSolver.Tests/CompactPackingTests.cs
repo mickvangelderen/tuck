@@ -34,11 +34,11 @@ public class CompactPackingTests
             Place("held-fabric", "satchel-interior", new Placement.Grid(3, 0)),
             Place("shiv", "satchel-interior", new Placement.Grid(0, 1))
         ]);
-        AssertPreferredResult(PlanReplay.Replay(state, witness), "satchel", occupiedHands: 0);
+        AssertPreferredResult(ModelPackReplay.Replay(state, witness), "satchel", occupiedHands: 0);
 
         var result = SolverUnderTest.Solve(solverName, new(state));
 
-        AssertPreferredResult(PlanReplay.Replay(state, result.Plan), "satchel", occupiedHands: 0);
+        AssertPreferredResult(ModelPackReplay.Replay(state, result.Plan), "satchel", occupiedHands: 0);
     }
 
     [Theory]
@@ -72,11 +72,11 @@ public class CompactPackingTests
             Place("flux-a", "kids-interior", new Placement.Grid(3, 0)),
             Place("flux-b", "kids-interior", new Placement.Grid(4, 0))
         ]);
-        AssertPreferredResult(PlanReplay.Replay(state, witness), "kids-backpack", occupiedHands: 1);
+        AssertPreferredResult(ModelPackReplay.Replay(state, witness), "kids-backpack", occupiedHands: 1);
 
         var result = SolverUnderTest.Solve(solverName, new(state));
 
-        AssertPreferredResult(PlanReplay.Replay(state, result.Plan), "kids-backpack", occupiedHands: 1);
+        AssertPreferredResult(ModelPackReplay.Replay(state, result.Plan), "kids-backpack", occupiedHands: 1);
     }
 
     [Theory]
@@ -89,10 +89,10 @@ public class CompactPackingTests
     public void FreesBothHandsWithoutLosingAlreadyReturnedLoot(string solverName, ReturnedLoot scenario)
     {
         var (state, witness) = ReturnedLootScenario(scenario);
-        AssertPreferredResult(PlanReplay.Replay(state, witness), "bag", occupiedHands: 0);
+        AssertPreferredResult(ModelPackReplay.Replay(state, witness), "bag", occupiedHands: 0);
 
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         AssertPreferredResult(final, "bag", occupiedHands: 0);
         Assert.Equal(result.InitialValue, result.FinalValue);
         Assert.Equal(PlanningStatus.Improved, result.Status);
@@ -107,7 +107,7 @@ public class CompactPackingTests
     public void LeavesAlreadyCompactLootAlone(string solverName, ReturnedLoot scenario)
     {
         var (state, witness) = ReturnedLootScenario(scenario);
-        var compact = PlanReplay.Replay(state, witness);
+        var compact = ModelPackReplay.Replay(state, witness);
         AssertPreferredResult(compact, "bag", occupiedHands: 0);
 
         var result = SolverUnderTest.Solve(solverName, new(compact));
@@ -127,10 +127,10 @@ public class CompactPackingTests
         ], Inventories().Concat([Grid("small-grid", "small", 1, 1), Grid("large-grid", "large", 2, 1)]).ToArray());
         var witness = new PackPlan(state.StateId,
             [Place("small", "ground"), Place("large", "back"), Place("small", "left")]);
-        AssertPreferredResult(PlanReplay.Replay(state, witness), "large", occupiedHands: 2);
+        AssertPreferredResult(ModelPackReplay.Replay(state, witness), "large", occupiedHands: 2);
 
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         AssertPreferredResult(final, "large", occupiedHands: 2);
         Assert.Equal("right", final.Items.Single(i => i.Id == "fixed").Location.InventoryId);
         Assert.Equal(result.InitialValue, result.FinalValue);
@@ -152,7 +152,7 @@ public class CompactPackingTests
         Assert.Equal(PlanningStatus.Unchanged, result.Status);
         Assert.Equal(15, result.FinalValue);
         Assert.Empty(result.Plan.Steps);
-        AssertPreferredResult(PlanReplay.Replay(state, result.Plan), "small", occupiedHands: 0);
+        AssertPreferredResult(ModelPackReplay.Replay(state, result.Plan), "small", occupiedHands: 0);
     }
 
     [Theory]
@@ -167,7 +167,7 @@ public class CompactPackingTests
 
         Assert.Equal(PlanningStatus.Unchanged, result.Status);
         Assert.Empty(result.Plan.Steps);
-        AssertPreferredResult(PlanReplay.Replay(state, result.Plan), "bag", occupiedHands: 1);
+        AssertPreferredResult(ModelPackReplay.Replay(state, result.Plan), "bag", occupiedHands: 1);
     }
 
     [Theory]
@@ -182,7 +182,7 @@ public class CompactPackingTests
 
         Assert.Equal(115, result.FinalValue);
         Assert.Empty(result.Plan.Steps);
-        AssertPreferredResult(PlanReplay.Replay(state, result.Plan), "bag", occupiedHands: 1);
+        AssertPreferredResult(ModelPackReplay.Replay(state, result.Plan), "bag", occupiedHands: 1);
     }
 
     private static (PackState State, PackPlan Witness) ReturnedLootScenario(ReturnedLoot scenario)
@@ -228,7 +228,7 @@ public class CompactPackingTests
 
     private static void AssertPreferredResult(PackState final, string equippedBackpack, int occupiedHands)
     {
-        Assert.All(final.Items, item => Assert.True(PlanReplay.IsReturned(final, item.Id),
+        Assert.All(final.Items, item => Assert.True(ModelPackReplay.IsReturned(final, item.Id),
             $"{item.Id} must be returned."));
         Assert.Equal(equippedBackpack,
             Assert.Single(final.Items, item => item.Location.InventoryId == final.Roots.Backpack).Id);

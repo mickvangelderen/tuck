@@ -50,12 +50,12 @@ public class SolverSearchTests
 
         // An independently replayed witness establishes a reachable value. An upper bound
         // must include the contents even before their enclosing container is returned.
-        long reachable = PlanReplay.ReturnedValue(PlanReplay.Replay(state, new(state.StateId, [Place("bag", "back")])));
+        long reachable = new ModelPackReplay(ModelPackReplay.Replay(state, new(state.StateId, [Place("bag", "back")]))).ReturnedValue;
         Assert.Equal(103, reachable);
         var result = Solve(solverName, state);
         Assert.Equal(reachable, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "bag"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "bag"));
         Assert.Equal(state.Items.Single(i => i.Id == "valuable").Location,
             final.Items.Single(i => i.Id == "valuable").Location);
     }
@@ -133,11 +133,11 @@ public class SolverSearchTests
         // Filling a ground container before acquiring it is legal; neither this order
         // nor an exact transfer count is required of the solver.
         var witness = new PackPlan(state.StateId, [Place("loot", "inside"), Place("bag", "back")]);
-        Assert.Equal(54, PlanReplay.ReturnedValue(PlanReplay.Replay(state, witness)));
+        Assert.Equal(54, new ModelPackReplay(ModelPackReplay.Replay(state, witness)).ReturnedValue);
         var result = Solve(solverName, state);
         Assert.Equal(54, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.All(final.Items, i => Assert.True(PlanReplay.IsReturned(final, i.Id), i.Id));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.All(final.Items, i => Assert.True(ModelPackReplay.IsReturned(final, i.Id), i.Id));
     }
 
     [Theory]
@@ -152,9 +152,9 @@ public class SolverSearchTests
             Item("fixed", "right", 1, tags: ["PINNED_TAG"])], inventories);
         var result = Solve(solverName, state);
         Assert.Equal(21, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "loot"));
-        Assert.False(PlanReplay.IsReturned(final, "cheap"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "loot"));
+        Assert.False(ModelPackReplay.IsReturned(final, "cheap"));
         Assert.Equal("right", final.Items.Single(i => i.Id == "fixed").Location.InventoryId);
     }
 
@@ -171,9 +171,9 @@ public class SolverSearchTests
             new ItemDefinition("coins", new(new(10))));
         var result = Solve(solverName, state);
         Assert.Equal(51, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "coins"));
-        Assert.False(PlanReplay.IsReturned(final, "cheap"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "coins"));
+        Assert.False(ModelPackReplay.IsReturned(final, "cheap"));
     }
 
     [Theory]
@@ -191,10 +191,10 @@ public class SolverSearchTests
                 new(AdmissionKind.Container), "bag")).ToArray(), new ItemDefinition("coins", rules: new(new(10))));
         var result = Solve(solverName, state);
         Assert.Equal(1052, result.FinalValue);
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "loot"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "loot"));
         Assert.Equal(2, final.Items.Count(i => i.Identifier == "coins"));
-        Assert.Single(final.Items, i => i.Identifier == "coins" && !PlanReplay.IsReturned(final, i.Id));
+        Assert.Single(final.Items, i => i.Identifier == "coins" && !ModelPackReplay.IsReturned(final, i.Id));
     }
 
     [Theory]
@@ -236,7 +236,7 @@ public class SolverSearchTests
         Assert.Empty(interrupted.Plan.Steps);
         var result = SolverUnderTest.Solve(solver, new(state));
         Assert.Equal(10, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), "loot"));
+        Assert.True(ModelPackReplay.IsReturned(ModelPackReplay.Replay(state, result.Plan), "loot"));
     }
 
     [Theory]

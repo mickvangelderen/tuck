@@ -37,10 +37,10 @@ public class PackSolverTests
     {
         var state = State([Item("cheap", "left", 1), Item("keep", "right", 20), Item("loot", "ground", 10)]);
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(30, result.FinalValue);
         Assert.Equal("ground", final.Items.Single(i => i.Id == "cheap").Location.InventoryId);
-        Assert.True(PlanReplay.IsReturned(final, "loot"));
+        Assert.True(ModelPackReplay.IsReturned(final, "loot"));
     }
 
     [Theory]
@@ -51,9 +51,9 @@ public class PackSolverTests
         var state = State([Item("bag", "back", 1, tags: ["BACKPACK_TAG", "CONTAINER_TAG"]),
             Item("pin", "bag-grid", 1, tags: ["PINNED_TAG"]), Item("loot", "ground", 50)], Inventories().Append(BagGrid(2)).ToArray());
         Assert.Throws<InvalidOperationException>(() => PlanReplay.Replay(state, new("test", [Place("bag", "ground", placement: new Placement.Grid(1))])));
-        var final = PlanReplay.Replay(state, SolverUnderTest.Solve(solverName, new(state)).Plan);
+        var final = ModelPackReplay.Replay(state, SolverUnderTest.Solve(solverName, new(state)).Plan);
         Assert.Equal("back", final.Items.Single(i => i.Id == "bag").Location.InventoryId);
-        Assert.True(PlanReplay.IsReturned(final, "loot"));
+        Assert.True(ModelPackReplay.IsReturned(final, "loot"));
     }
     [Theory]
     [SolverData]
@@ -64,7 +64,7 @@ public class PackSolverTests
             Inventories().Append(BagGrid()).ToArray(), new ItemDefinition("fixed", rules: new(unsupportedTransfer: "attachment admission")));
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(91, result.FinalValue); Assert.Single(result.UnsupportedRules);
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal("bag-grid", final.Items.Single(i => i.Id == "fixed").Location.InventoryId);
     }
 
@@ -76,7 +76,7 @@ public class PackSolverTests
     {
         var state = State([Item("source", "ground", 2, count: 4, identifier: "coins"), Item("target", "left", 2, count: 3, identifier: "coins"),
             Item("fixed", "right", 1, tags: ["PINNED_TAG"])], null, Coins());
-        var result = SolverUnderTest.Solve(solverName, new(state)); var final = PlanReplay.Replay(state, result.Plan);
+        var result = SolverUnderTest.Solve(solverName, new(state)); var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(9, result.FinalValue);
         Assert.Equal("left", final.Items.Single(i => i.Id == "source").Location.InventoryId);
         Assert.Equal("ground", final.Items.Single(i => i.Id == "target").Location.InventoryId);
@@ -110,7 +110,7 @@ public class PackSolverTests
         var state = State([Item("box", "left", 1, tags: ["CONTAINER_TAG", "NESTABLE_DEVICE_TAG"], unlocked: 3),
             Item("tool", "ground", 50, shape: ShapeState.Rectangle(3, 1), types: ["TOOL"]), Item("fixed", "right", 1, tags: ["PINNED_TAG"])], inventories);
         var result = SolverUnderTest.Solve(solverName, new(state)); Assert.Equal(52, result.FinalValue);
-        Assert.Equal("socket0", PlanReplay.Replay(state, result.Plan).Items.Single(i => i.Id == "tool").Location.InventoryId);
+        Assert.Equal("socket0", ModelPackReplay.Replay(state, result.Plan).Items.Single(i => i.Id == "tool").Location.InventoryId);
         Assert.Throws<InvalidOperationException>(() => PlanReplay.Replay(state, new("test", [Place("tool", "socket3", placement: new Placement.Slot())])));
     }
     [Fact]

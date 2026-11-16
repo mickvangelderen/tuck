@@ -11,7 +11,7 @@ public class MachineryPanelRow : GraphNodeStorage
 
     public MachineryPanelRow() { }
 
-    internal MachineryPanelRow(params GraphNodeStorage[] inventories)
+    public MachineryPanelRow(params GraphNodeStorage[] inventories)
     {
         if (inventories.Any(i => i == null || i.parents.Count != 0)
             || inventories.Distinct().Count() != inventories.Length)

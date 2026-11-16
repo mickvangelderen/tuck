@@ -60,8 +60,8 @@ public class ContainerFirstPackSolverTests
         var target = Assert.IsType<Placement.Grid>(assignment.ContainerLocations["box"].Placement);
         Assert.Equal(1, target.Orientation % 2);
         var result = SolverUnderTest.Solve(new ContainerFirstPackSolver(), new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
-        Assert.True(PlanReplay.IsReturned(final, "box"));
+        var final = ModelPackReplay.Replay(state, result.Plan);
+        Assert.True(ModelPackReplay.IsReturned(final, "box"));
         Assert.Equal(state.Items.Single(i => i.Id == "pin").Location, final.Items.Single(i => i.Id == "pin").Location);
     }
 

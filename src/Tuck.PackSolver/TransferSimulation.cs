@@ -62,7 +62,7 @@ internal sealed class TransferSimulation
     // Only explicitly modeled storage exposes nested capacity to packing. Equipment sockets
     // and unclassified inventories retain their contents, even without callbacks or locks.
     internal static bool IsPackingStorage(InventoryState inventory) => inventory.OwnerItemId == null
-        || inventory.Admission.Kind is AdmissionKind.Container or AdmissionKind.Toolbox;
+        || inventory.Admission.Kind is AdmissionKind.Container or AdmissionKind.Toolbox or AdmissionKind.MachineBay;
     internal int Removable(ItemState item)
     {
         var source = Inventories[item.Location.InventoryId];
@@ -91,6 +91,10 @@ internal sealed class TransferSimulation
             case AdmissionKind.Owned: return true;
             case AdmissionKind.Ground: return rule.AllowsHazardousWaste || !facts.IsTag("HAZARDOUS_WASTE_TAG");
             case AdmissionKind.Backpack: return facts.IsTag("BACKPACK_TAG");
+            case AdmissionKind.MachineBay:
+                return !facts.IsTag("BACKPACK_TAG") && (!facts.IsTag("STORAGE")
+                    || facts.IsTag("NESTABLE_DEVICE_TAG")
+                    || facts.IsTag("STORABLE_PACKAGE_TAG") && ownerFacts != null && ownerFacts.Types.Contains("STORAGE"));
             case AdmissionKind.Container:
                 bool nestable = facts.IsTag("NESTABLE_DEVICE_TAG")
                     || facts.IsTag("STORABLE_PACKAGE_TAG") && !facts.IsTag("BACKPACK_TAG") && ownerFacts != null && ownerFacts.Types.Contains("STORAGE");

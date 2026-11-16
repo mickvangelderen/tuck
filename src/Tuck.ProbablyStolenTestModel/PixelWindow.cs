@@ -10,7 +10,7 @@ public class PixelWindow : GraphNodeWindow
     public int yPadding => 0;
 
     public PixelWindow() { }
-    internal PixelWindow(GraphNodeStorage storage)
+    public PixelWindow(GraphNodeStorage storage)
     {
         if (!storage.AddParent(this))
             throw new ArgumentException("Storage already has a parent.", nameof(storage));

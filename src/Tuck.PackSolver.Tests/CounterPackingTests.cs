@@ -22,11 +22,11 @@ public class CounterPackingTests
         ], Inventories().Concat([Counter("front"), Counter("back-counter")]).ToArray());
 
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(0, result.InitialValue);
         Assert.Equal(700, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(final, "machine2"));
-        Assert.True(PlanReplay.IsReturned(final, "machine3"));
+        Assert.True(ModelPackReplay.IsReturned(final, "machine2"));
+        Assert.True(ModelPackReplay.IsReturned(final, "machine3"));
         Assert.Equal(stock.Location, final.Items.Single(i => i.Id == "stock").Location);
         Assert.Equal("back-counter", final.Items.Single(i => i.Id == "pinned").Location.InventoryId);
         Assert.DoesNotContain(result.Plan.Steps, step => step.Destination.InventoryId is "front" or "back-counter");
@@ -51,9 +51,9 @@ public class CounterPackingTests
         ]).ToArray());
 
         var result = SolverUnderTest.Solve(solverName, new(state));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
         Assert.Equal(951, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(final, "machine"));
+        Assert.True(ModelPackReplay.IsReturned(final, "machine"));
         Assert.Equal("socket", final.Items.Single(i => i.Id == "installed").Location.InventoryId);
         Assert.Equal("bag-grid", final.Items.Single(i => i.Id == "loose-module").Location.InventoryId);
     }

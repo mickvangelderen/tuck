@@ -31,10 +31,10 @@ public class SolverBudgetTests
         // Node budgets have different meanings across implementations. Validate the
         // returned loadout, not which search expansion or direct pickup produced it.
         var result = SolverUnderTest.Solve(solverName, new(state), new(nodes, checks));
-        var final = PlanReplay.Replay(state, result.Plan);
+        var final = ModelPackReplay.Replay(state, result.Plan);
 
         Assert.NotEqual(PlanningStatus.Unsupported, result.Status);
-        Assert.True(PlanReplay.IsReturned(final, "held"));
+        Assert.True(ModelPackReplay.IsReturned(final, "held"));
         Assert.InRange(result.FinalValue!.Value, 100, 120);
     }
 
@@ -47,7 +47,7 @@ public class SolverBudgetTests
 
         Assert.Equal(PlanningStatus.SearchLimit, result.Status);
         Assert.True(result.FinalValue > result.InitialValue);
-        Assert.Contains(PlanReplay.Replay(state, result.Plan).Items,
+        Assert.Contains(ModelPackReplay.Replay(state, result.Plan).Items,
             i => i.Location.InventoryId is "left" or "right");
     }
 }

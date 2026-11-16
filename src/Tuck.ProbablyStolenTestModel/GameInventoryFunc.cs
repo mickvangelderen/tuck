@@ -35,6 +35,7 @@ public abstract class GameInventoryFunc : TagSystem
     public Func<GameItem, GameInventory, SlotMarker, GameItem, bool> slotSearchPassthroughForItemFunc { get; set; }
 
     public Func<GameItem, GameInventory, SlotMarker, GridShape, TagSystem, GameItem, GridShape> parentItemShapeModifierForItemFunc { get; set; }
+    public Delegate parentItemStateModifierForItemFunc { get; set; }
 
     public Func<GameItem, GameInventory, SlotMarker, GridShape, TagSystem, bool> isItemStateValidFunc { get; set; }
 

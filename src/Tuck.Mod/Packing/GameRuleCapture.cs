@@ -18,7 +18,7 @@ internal static class GameRuleCapture
     internal static readonly string[] Tags =
     {
         "IS_OWNED_TAG", "PINNED_TAG", "LOCKED_TAG", "MODULE_STUCK_TAG", "DEBRIS_PILE_TAG", "ITEM_BEHIND_LOCK_TAG",
-        "BACKPACK_TAG", "CONTAINER_TAG", "NESTABLE_DEVICE_TAG", "STORABLE_PACKAGE_TAG", "HAZARDOUS_WASTE_TAG",
+        "BACKPACK_TAG", "CONTAINER_TAG", "NESTABLE_DEVICE_TAG", "STORABLE_PACKAGE_TAG", "HAZARDOUS_WASTE_TAG", "STORAGE",
         "CAN_USE_ON_NON_OWNED_TAG", "TOOLBOX_ITEM_TAG", "LIQUID_CONTAINER_DROPPER_TAG",
         "FIREARM", "GUN_MOD", "AMMUNITION", "CHEMICAL_SUPPLIES", "LIQUID_CONTAINER_TAG", "NARCOTIC", "MEDICAL",
         "WATER_PURIFICATION_SUPPLY", "CHEMICAL_PRODUCT_TAG", "power_source_item", "armor_item", "ORGAN_ITEM_TAG", "not_purchased"
@@ -59,6 +59,7 @@ internal static class GameRuleCapture
             return (new(AdmissionKind.Toolbox, slotIndex: slot), null);
         // Only the content grid is covered; an examine/attachment inventory is a different rule family.
         bool contentGrid = owner?.contentWindow?.child == inventory && inventory is GameGridInventory;
+        if (contentGrid && owner!.identifier is "machine_bay" or "machine_bay_ext") return (new(AdmissionKind.MachineBay), null);
         if (contentGrid && OrdinaryContainers.Contains(owner!.identifier)) return (new(AdmissionKind.Container), null);
         if (contentGrid && owner!.identifier == "storage_bay_gun")
             return (new(AdmissionKind.Container, new[] { "FIREARM", "GUN_MOD", "AMMUNITION" },

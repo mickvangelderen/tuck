@@ -43,9 +43,12 @@ internal static class ModelSupport
                 throw new NotSupportedException(fixture.UnsupportedBehavior);
             fixture.ValidateQuantity();
         }
-        if (node is GameItem { parentItemShapeModifierForItemFunc: not null }
+        if (node is GameItem { parentItemShapeModifierForItemFunc: not null } item && !ModelGunGeometry.IsSupported(item)
             || node is GameInventory { parentItemShapeModifierForItemFunc: not null })
             throw new NotSupportedException("Dynamic parent shape modifiers are not modeled.");
+        if (node is GameItem { parentItemStateModifierForItemFunc: not null }
+            || node is GameInventory { parentItemStateModifierForItemFunc: not null })
+            throw new NotSupportedException("Dynamic parent state modifiers are not modeled.");
     }
 
     internal static void RequireSplitFactory(GameItem source)

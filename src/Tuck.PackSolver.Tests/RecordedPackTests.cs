@@ -35,8 +35,9 @@ public class RecordedPackTests
     public void ExpectedValueHasALegalWitness(string caseName)
     {
         var test = RecordedPackCases.All[caseName];
-        var final = PlanReplay.Replay(test.State, new(test.State.StateId, test.Witness));
-        Assert.Equal(test.MinimumReturnedValue, PlanReplay.ReturnedValue(final));
+        var model = new ModelPackReplay(test.State);
+        model.Execute(new(test.State.StateId, test.Witness));
+        Assert.Equal(test.MinimumReturnedValue, model.ReturnedValue);
     }
 
 }

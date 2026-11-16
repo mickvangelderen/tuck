@@ -16,7 +16,7 @@ public class PackingPolicyTests
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(stuck ? 0 : 70, result.FinalValue);
         if (stuck) Assert.Empty(result.Plan.Steps);
-        else Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), "ordinary_item"));
+        else Assert.True(ModelPackReplay.IsReturned(ModelPackReplay.Replay(state, result.Plan), "ordinary_item"));
     }
 
     [Theory]
@@ -56,7 +56,7 @@ public class PackingPolicyTests
         var result = SolverUnderTest.Solve(solverName, new(state));
 
         Assert.Equal(7 * count, result.FinalValue);
-        Assert.True(PlanReplay.IsReturned(PlanReplay.Replay(state, result.Plan), id));
+        Assert.True(ModelPackReplay.IsReturned(ModelPackReplay.Replay(state, result.Plan), id));
     }
 
     [Theory]

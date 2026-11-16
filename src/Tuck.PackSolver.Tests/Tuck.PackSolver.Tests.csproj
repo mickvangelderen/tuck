@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tuck.PackSolver\Tuck.PackSolver.csproj" />
+    <ProjectReference Include="..\Tuck.ProbablyStolenTestModel\Tuck.ProbablyStolenTestModel.csproj" />
+  </ItemGroup>
+
+  <!-- Compile the production boundary against the headless game implementation. -->
+  <ItemGroup>
+    <Compile Include="..\Tuck.Mod\Packing\PackCapture.cs" Link="Integration\PackCapture.cs" />
+    <Compile Include="..\Tuck.Mod\Packing\GameRuleCapture.cs" Link="Integration\GameRuleCapture.cs" />
+    <Compile Include="..\Tuck.Mod\Packing\PackExecutor.cs" Link="Integration\PackExecutor.cs" />
+    <Compile Include="..\Tuck.Mod\DebugRecording\PackJson.cs" Link="Integration\PackJson.cs" />
+    <Compile Include="..\Tuck.Mod\DebugRecording\PackObservations.cs" Link="Integration\PackObservations.cs" />
+    <Compile Include="..\Tuck.Mod\DebugRecording\GameObservations.cs" Link="Integration\GameObservations.cs" />
   </ItemGroup>
 
 </Project>

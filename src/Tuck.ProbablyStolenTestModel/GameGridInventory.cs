@@ -8,6 +8,7 @@ public partial class GameGridInventory : GameInventory
     public override List<GraphNodeStorage> children => new(items);
     public GameGridInventory(int width, int height)
         => inventoryShape = new GridShapeBuilder(width, height).SetDataFill(0).SetDataOutside(1).Build();
+    public GameGridInventory(GridShape shape) => inventoryShape = shape.Clone();
     public GameGridInventory(string shape, int width)
         => inventoryShape = new GridShapeBuilder().SetData(shape, width).SetDataOutside(1).Build();
     public GameGridInventory SetShape(int width, int height)

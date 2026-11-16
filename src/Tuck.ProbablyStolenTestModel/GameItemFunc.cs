@@ -31,6 +31,8 @@ public abstract class GameItemFunc
     public Func<GameItem, GameInventory, SlotMarker, GameItem, bool> slotSearchPassthroughForItemFunc { get; set; }
 
     public Func<GameItem, GameInventory, SlotMarker, GridShape, TagSystem, GameItem, GridShape> parentItemShapeModifierForItemFunc { get; set; }
+    // Presence is exposed to capture; evaluating arbitrary state modifiers remains unsupported.
+    public Delegate parentItemStateModifierForItemFunc { get; set; }
 
     public Func<GameItem, GameInventory, SlotMarker, GridShape, TagSystem, bool> isItemStateValidFunc { get; set; }
 

@@ -28,11 +28,11 @@ public class NestedStorageSolverTests
             Place("pack", "box-slot", new Placement.Slot()), Place("loot", "pack-grid"),
             Place("box", "bag-grid"), Place("extra", "bag-grid", new Placement.Grid(2))
         ]);
-        AssertAllReturned(PlanReplay.Replay(state, witness));
+        AssertAllReturned(ModelPackReplay.Replay(state, witness));
 
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(91, result.FinalValue);
-        AssertAllReturned(PlanReplay.Replay(state, result.Plan));
+        AssertAllReturned(ModelPackReplay.Replay(state, result.Plan));
     }
 
     [Theory]
@@ -51,8 +51,8 @@ public class NestedStorageSolverTests
                 new(AdmissionKind.Container, allowedTags: ["NESTABLE_DEVICE_TAG"]), "bag"),
             new InventoryState("box-grid", new InventoryLayout.Grid(ShapeState.Rectangle(3, 3, 0, 1)), new(AdmissionKind.Container), "box")
         ]).ToArray());
-        var stored = PlanReplay.Replay(state, new(state.StateId, [Place("loot", "box-grid")]));
-        Assert.False(PlanReplay.IsReturned(stored, "loot"));
+        var stored = ModelPackReplay.Replay(state, new(state.StateId, [Place("loot", "box-grid")]));
+        Assert.False(ModelPackReplay.IsReturned(stored, "loot"));
 
         var result = SolverUnderTest.Solve(solverName, new(state));
         Assert.Equal(3, result.FinalValue);
@@ -60,5 +60,5 @@ public class NestedStorageSolverTests
     }
 
     private static void AssertAllReturned(PackState state) =>
-        Assert.All(state.Items, i => Assert.True(PlanReplay.IsReturned(state, i.Id), i.Id));
+        Assert.All(state.Items, i => Assert.True(ModelPackReplay.IsReturned(state, i.Id), i.Id));
 }

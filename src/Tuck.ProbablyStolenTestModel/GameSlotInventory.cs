@@ -9,6 +9,7 @@ public partial class GameSlotInventory : GameInventory
     public override List<GraphNodeStorage> children => currentItem == null ? new() : new() { currentItem };
     public GameSlotInventory() : this(1, 1) { }
     public GameSlotInventory(int defaultGridWidth, int defaultGridHeight, bool stealUI = false, bool isUIDown = false) { }
+    public GameSlotInventory(int orientation) => defaultOrientation = orientation;
     public override void Validate()
     {
         if (currentItem?.modifiedShape is GridShapeBuilder builder) builder.SetPosition(0, 0);

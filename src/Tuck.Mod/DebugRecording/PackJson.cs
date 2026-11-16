@@ -15,7 +15,7 @@ internal static class PackJson
         IEnumerable<ItemObservation>? observations = null) => new JObject
         {
             ["schemaVersion"] = 4,
-            ["rulesVersion"] = 5,
+            ["rulesVersion"] = 6,
             ["recordedUtc"] = DateTime.UtcNow.ToString("O"),
             ["state"] = new JObject
             {
@@ -59,7 +59,7 @@ internal static class PackJson
         var root = JObject.Parse(json);
         int schema = (int)root["schemaVersion"]!;
         int rules = (int)root["rulesVersion"]!;
-        if (!(schema == 4 && rules is 4 or 5 || schema == 3 && rules is 3 or 4))
+        if (!(schema == 4 && rules is 4 or 5 or 6 || schema == 3 && rules is 3 or 4))
             throw new NotSupportedException("Unknown packing recording schema or rules version.");
         var state = root["state"]!; var roots = state["roots"]!;
         var captured = new PackState((string)state["stateId"]!,
@@ -162,6 +162,7 @@ internal static class PackJson
         "Tagged" => AdmissionKind.Tagged,
         "Unsupported" => AdmissionKind.Unsupported,
         "SourceOnly" => AdmissionKind.SourceOnly,
+        "MachineBay" => AdmissionKind.MachineBay,
         _ => throw new NotSupportedException("Unknown admission rule.")
     },
         r["allowedTags"]?.Select(t => (string)t!), r["allowedIdentifiers"]?.Select(t => (string)t!),
