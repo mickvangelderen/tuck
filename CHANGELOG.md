@@ -21,6 +21,8 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-15
+
 - Configurable machine warning icons:
   - stolen (only shown during inspections, can be configured)
   - battery low
@@ -66,7 +68,8 @@ Initial public release.
 - Add hotkeys for many interactions.
 - Improved appraisal and chem finisher UI.
 
-[Unreleased]: https://github.com/mickvangelderen/tuck/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/mickvangelderen/tuck/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.2.0
 [1.2.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.2.0
 [1.1.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.1.0
 [1.0.0]: https://github.com/mickvangelderen/tuck/releases/tag/1.0.0
