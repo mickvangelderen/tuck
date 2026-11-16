@@ -99,7 +99,8 @@ internal sealed class Hotkeys : MonoBehaviour
         bool canScavenge = groundAllowed && map!.Current is DumpingGroundLocation && canMoveItems && !dialogueOpen;
         // These actions previously ran from StoreUIManager.Update, so require that manager to be active.
         bool actionsAllowed = ui != null && ui.isActiveAndEnabled && CanUseActionHotkeys(ui, draggingItem);
-        bool shopAllowed = actionsAllowed && CanUseShopHotkeys(map);
+        // End-day captures A/D, but its blocker must still prevent shop actions.
+        bool shopAllowed = actionsAllowed && !ui!.backgroundBlocking.activeInHierarchy && CanUseShopHotkeys(map);
         var targets = actionsAllowed ? PanelButtons.FindTargets(ui!) : default;
         UpdatePanelTarget(_accept, targets.Accept, ref _acceptTarget);
         UpdatePanelTarget(_decline, targets.Decline, ref _declineTarget);
@@ -206,12 +207,6 @@ internal sealed class Hotkeys : MonoBehaviour
         // - RunSummaryUI.Build covers the screen with an overlay Image, leaving the shop objects enabled.
         // - Calling Interactable.HandleClick skips mouse hit-testing, so the overlay alone does not block hotkeys.
         if (RunSummaryUI.IsOpen) return false;
-
-        // Finish or cancel the end-of-day screen before starting another shop action.
-        // Evidence:
-        // - EndOfDayUIManager.OpenUI enables backgroundBlocking to prevent clicks on the shop behind it.
-        // - Our direct click calls bypass that blocker.
-        if (ui.backgroundBlocking.activeInHierarchy) return false;
 
         // Do not let shortcuts bypass the Escape menu's (Resume, Options, Main Menu, Exit) mouse blocker.
         // Evidence:

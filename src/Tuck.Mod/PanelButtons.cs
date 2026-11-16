@@ -39,6 +39,10 @@ internal static class PanelButtons
         (_, nameof(GenericConfirmationUIManager.CancelButtonPressed)) when type == typeof(GenericConfirmationUIManager) => PanelAction.Decline,
         (_, nameof(ConfirmPanelUIManager.OnYesClick)) when type == typeof(ConfirmPanelUIManager) => PanelAction.Accept,
         (_, nameof(ConfirmPanelUIManager.OnNoClick)) when type == typeof(ConfirmPanelUIManager) => PanelAction.Decline,
+        (_, nameof(StoreShutterButton.EndAndClose)) when type == typeof(StoreShutterButton) => PanelAction.Accept,
+        (_, nameof(MapUIManager.OnGoOutsideConfirm)) when type == typeof(MapUIManager) => PanelAction.Accept,
+        (_, nameof(EndOfDayUIManager.OnEndDayButtonClick)) when type == typeof(EndOfDayUIManager) => PanelAction.Accept,
+        (_, nameof(EndOfDayUIManager.OnCloseButtonClick)) when type == typeof(EndOfDayUIManager) => PanelAction.Decline,
         _ => PanelAction.None
     };
 
@@ -47,9 +51,22 @@ internal static class PanelButtons
         for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
         {
             var target = button.onClick.GetPersistentTarget(i);
-            if (target != null) Bind(button, target.GetType(), button.onClick.GetPersistentMethodName(i));
+            string method = button.onClick.GetPersistentMethodName(i);
+            if (target != null) Bind(button, target.GetType(), method);
+            // These two scene panels wire No directly to SetActive(false) on their root.
+            if (target is GameObject panel && method == nameof(GameObject.SetActive)
+                && IsShopConfirmation(panel) && button.transform.IsChildOf(panel.transform))
+                PanelActionButton.Install(button, PanelAction.Decline, buy: false, wholesale: false);
         }
+        // The end-day tablet wires its close button with AddListener, outside TabletUI.BuildButton.
+        var endDay = button.GetComponentInParent<EndOfDayTabletFrame>(true);
+        if (endDay != null && button == endDay.closeButton)
+            Bind(button, typeof(EndOfDayUIManager), nameof(EndOfDayUIManager.OnCloseButtonClick));
     }
+
+    private static bool IsShopConfirmation(GameObject panel) =>
+        (StoreUIManager.Instance != null && panel == StoreUIManager.Instance.closeShutterConfirmationPanel)
+        || (MapUIManager.Instance != null && panel == MapUIManager.Instance.confirmationPanel);
 
     private static void Bind(Button button, Type type, string method)
     {
@@ -66,7 +83,7 @@ internal static class PanelButtons
         if (ActiveOptions != null && __instance is Button button) Discover(button);
     }
 
-    // Negotiation buttons use runtime listeners, so identify their supplied callback at creation.
+    // Tablet buttons use runtime listeners, so identify their supplied callback at creation.
     [HarmonyPostfix, HarmonyPatch(typeof(TabletUI), "BuildButton")]
     private static void TabletButtonCreated(TabletButton __result, Action onClick)
     {
@@ -106,6 +123,12 @@ internal static class PanelButtons
         if (generic != null && Visible(generic.panel)) return generic.panel;
         var confirmation = store.confirmPanelUIManager;
         if (confirmation != null && Visible(confirmation.panel)) return confirmation.panel;
+        // The end-day blocker captures focus even if a window behind it has a newer focus stamp.
+        if (Visible(store.backgroundBlocking))
+        {
+            var endDay = EndOfDayUIManager.Instance;
+            return endDay != null && Visible(endDay.UI) ? endDay.UI : null;
+        }
         // An unanswered prompt must not forward A/D to a window behind it, even if its buttons are unsupported.
         if (Visible(store.closeShutterConfirmationPanel)) return store.closeShutterConfirmationPanel;
         var map = MapUIManager.Instance;
