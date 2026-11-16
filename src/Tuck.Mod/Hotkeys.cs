@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tuck.Mod;
 
@@ -19,12 +20,17 @@ internal sealed class Hotkeys : MonoBehaviour
     private Hotkey _nightActivities = null!;
     private Hotkey _sleep = null!;
     private Hotkey _tablet = null!;
+    private Hotkey _accept = null!;
+    private Hotkey _decline = null!;
+    private Button? _acceptTarget;
+    private Button? _declineTarget;
     private Hotkey[] _all = [];
 
     public static void Register(Options options, AfterhourGround ground)
     {
         _options = options;
         _ground = ground;
+        PanelButtons.Register(options);
         if (CustomUIManager.Instance != null) Attach(CustomUIManager.Instance);
     }
 
@@ -38,6 +44,7 @@ internal sealed class Hotkeys : MonoBehaviour
             Destroy(_instance);
             _instance = null;
         }
+        PanelButtons.Unregister();
         HoldRingPresenter.Unregister();
     }
 
@@ -60,7 +67,9 @@ internal sealed class Hotkeys : MonoBehaviour
         _nightActivities = new Hotkey(options.NightActivities);
         _sleep = new Hotkey(options.Sleep);
         _tablet = new Hotkey(options.Tablet);
-        _all = [_pack, _scavenge, _return, _shutters, _nightActivities, _sleep, _tablet];
+        _accept = new Hotkey(options.Accept, options.AcceptHoldDuration, options.HoldTimeoutDuration);
+        _decline = new Hotkey(options.Decline, options.DeclineHoldDuration, options.HoldTimeoutDuration);
+        _all = [_pack, _scavenge, _return, _shutters, _nightActivities, _sleep, _tablet, _accept, _decline];
     }
 
     private void Update()
@@ -89,9 +98,15 @@ internal sealed class Hotkeys : MonoBehaviour
                 && GenericConfirmationUIManager.Instance.panel.activeInHierarchy);
         bool canScavenge = groundAllowed && map!.Current is DumpingGroundLocation && canMoveItems && !dialogueOpen;
         // These actions previously ran from StoreUIManager.Update, so require that manager to be active.
-        bool shopAllowed = ui != null && ui.isActiveAndEnabled && CanUseShopHotkeys(ui, map, draggingItem);
+        bool actionsAllowed = ui != null && ui.isActiveAndEnabled && CanUseActionHotkeys(ui, draggingItem);
+        bool shopAllowed = actionsAllowed && CanUseShopHotkeys(map);
+        var targets = actionsAllowed ? PanelButtons.FindTargets(ui!) : default;
+        UpdatePanelTarget(_accept, targets.Accept, ref _acceptTarget);
+        UpdatePanelTarget(_decline, targets.Decline, ref _declineTarget);
 
         // Poll every shortcut before executing any action. Poll(false) also cancels an inapplicable hold.
+        bool accept = _accept.Poll(_acceptTarget != null);
+        bool decline = _decline.Poll(_declineTarget != null);
         bool pack = _pack.Poll(groundAllowed && canMoveItems);
         bool scavenge = _scavenge.Poll(canScavenge);
         bool returnToShop = _return.Poll(canReturn);
@@ -99,6 +114,9 @@ internal sealed class Hotkeys : MonoBehaviour
         bool nightActivities = _nightActivities.Poll(shopAllowed);
         bool sleep = _sleep.Poll(shopAllowed);
         bool tablet = _tablet.Poll(shopAllowed);
+
+        if (accept) PanelButtons.Click(_acceptTarget);
+        if (decline) PanelButtons.Click(_declineTarget);
 
         // Preserve Pack's existing precedence when Pack and Scavenge are pressed together.
         if (pack) ground!.Pack();
@@ -110,6 +128,13 @@ internal sealed class Hotkeys : MonoBehaviour
         if (nightActivities) TryClick(Object.FindObjectOfType<StoreDoor>());
         if (sleep) TryClick(Object.FindObjectOfType<StoreBedroll>());
         if (tablet) TryClick(Object.FindObjectOfType<StoreTablet>());
+    }
+
+    internal static void UpdatePanelTarget(Hotkey hotkey, Button? target, ref Button? previous)
+    {
+        // A hold must not transfer to a new panel, or from Buy to Wholesale.
+        if (!ReferenceEquals(target, previous)) hotkey.Cancel();
+        previous = target;
     }
 
     private void OnApplicationFocus(bool focused)
@@ -157,7 +182,7 @@ internal sealed class Hotkeys : MonoBehaviour
         return true;
     }
 
-    private static bool CanUseShopHotkeys(StoreUIManager ui, MapUIManager? map, bool draggingItem)
+    private static bool CanUseActionHotkeys(StoreUIManager ui, bool draggingItem)
     {
         // These hotkeys do not apply while dragging.
         var group = ItemMultiSelectHandler.current;
@@ -195,6 +220,11 @@ internal sealed class Hotkeys : MonoBehaviour
         // - Opening the menu does not pause Interactable; HandleClick bypasses that blocking Image.
         if (ui.escapeUIManager != null && ui.escapeUIManager.menuPanel.activeInHierarchy) return false;
 
+        return true;
+    }
+
+    private static bool CanUseShopHotkeys(MapUIManager? map)
+    {
         // Do not let shortcuts activate shop objects behind a generic confirmation's mouse blocker.
         // Evidence:
         // - GenericConfirmationUIManager.OpenPanel and OpenPanelSingleButton enable confirmationDarkness.

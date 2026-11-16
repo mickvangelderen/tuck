@@ -38,6 +38,17 @@ public class HotkeyTooltipTests : IDisposable
     }
 
     [Fact]
+    public void PanelCaptionsUseSmallerRaisedGlyphsAndStayIndependentOfTooltipSettings()
+    {
+        var glyph = HotkeyGlyphs.Tag(KeyCode.A);
+        Set("show_hotkeys_in_tooltips", false);
+        Assert.Equal($"Sell Items <voffset=0.2em><size=75%>{glyph}</size></voffset>",
+            PanelActionButton.FormatCaption(_options, "Sell Items", KeyCode.A, glyph));
+        Assert.Equal("Sell Items (A)", PanelActionButton.FormatCaption(_options, "Sell Items", KeyCode.A, null));
+        Assert.Equal("Sell Items", PanelActionButton.FormatCaption(_options, "Sell Items", KeyCode.None, glyph));
+    }
+
+    [Fact]
     public void ToggleDefaultsOnAndSuppressesPackHintsWithoutChangingText()
     {
         var row = GameOptionRegistry.Find(ModHelper.GameOptionId(_id, "show_hotkeys_in_tooltips"));

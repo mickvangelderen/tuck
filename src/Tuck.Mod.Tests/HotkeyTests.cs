@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tuck.Mod.Tests;
 
@@ -289,6 +291,55 @@ public class HotkeyTests : IDisposable
         onDisable();
         Assert.Null(hotkey.ReadHold());
         Assert.False(Release(hotkey, 11f));
+    }
+
+    [Fact]
+    public void AcceptAndDeclineUseIndependentDurationsAndBindings()
+    {
+        Assert.Equal(KeyCode.A, _options.Accept.Key);
+        Assert.Equal(KeyCode.D, _options.Decline.Key);
+        var accept = new Hotkey(_options.Accept, _options.AcceptHoldDuration, _options.HoldTimeoutDuration);
+        var decline = new Hotkey(_options.Decline, _options.DeclineHoldDuration, _options.HoldTimeoutDuration);
+        Set("accept_hold_duration", 0.2f);
+        Set("decline_hold_duration", 0.8f);
+        Assert.False(Press(accept, 10f));
+        Assert.False(Press(decline, 10f));
+        Assert.True(Release(accept, 10.5f));
+        Assert.False(Release(decline, 10.5f));
+
+        Set("accept_hold_duration", 0f);
+        Set("accept_key", "F8");
+        Assert.Equal(KeyCode.F8, _options.Accept.Key);
+        Assert.Equal(KeyCode.D, _options.Decline.Key);
+        Assert.True(Press(accept, 20f));
+        Assert.False(Press(decline, 20f));
+        Assert.True(Release(decline, 20.9f));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void SwitchingBetweenBuyAndWholesaleCancelsTheHoldUntilAFreshPress(bool initiallyBuyAvailable)
+    {
+        var buy = (Button)RuntimeHelpers.GetUninitializedObject(typeof(Button));
+        var wholesale = (Button)RuntimeHelpers.GetUninitializedObject(typeof(Button));
+        var hotkey = new Hotkey(_options.Accept, _options.AcceptHoldDuration, _options.HoldTimeoutDuration);
+        Button? previous = null;
+        var initial = PanelButtons.PreferredTarget([(buy, initiallyBuyAvailable, false), (wholesale, true, true)]);
+        Hotkeys.UpdatePanelTarget(hotkey, initial, ref previous);
+        Assert.False(Press(hotkey, 10f));
+        var changed = PanelButtons.PreferredTarget([(buy, !initiallyBuyAvailable, false), (wholesale, true, true)]);
+        Hotkeys.UpdatePanelTarget(hotkey, changed, ref previous);
+        Assert.False(Hold(hotkey, 10.5f));
+        Assert.False(Release(hotkey, 10.6f));
+        Assert.False(Press(hotkey, 20f));
+        Hotkeys.UpdatePanelTarget(hotkey, changed, ref previous);
+        Assert.True(Release(hotkey, 20.5f));
+
+        Assert.False(Press(hotkey, 30f));
+        Hotkeys.UpdatePanelTarget(hotkey, null, ref previous);
+        Hotkeys.UpdatePanelTarget(hotkey, changed, ref previous);
+        Assert.False(Release(hotkey, 30.5f));
     }
 
     private Hotkey CreateHeldHotkey() => new(_options.Return, _options.ReturnHoldDuration,

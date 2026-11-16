@@ -57,6 +57,12 @@ return_hold_duration,Return hold duration
 how_long_to_hold_the_return_key,How long to hold the return key before releasing it to leave a night activity. Set to 0.0 s to return on key press.
 bell_hold_duration,Bell hold duration
 how_long_to_hold_the_bell_button_or_key,How long to hold the bell button or key when the game's instant next customer setting is off and a customer is present. Set to 0.0 s for no hold.
+accept,Accept
+decline,Decline
+accept_hold_duration,Accept hold duration
+how_long_to_hold_accept,How long to hold Accept before releasing it to buy, sell, send an estimate or confirm. Set to 0.0 s to act on key press.
+decline_hold_duration,Decline hold duration
+how_long_to_hold_decline,How long to hold Decline before releasing it to use an existing decline or cancel button. Set to 0.0 s to act on key press.
 hold_timeout,Hold timeout
 holds_are_cancelled_after_becoming_ready,Holds are cancelled this long after becoming ready. Drag to max to disable.
 disabled,Disabled

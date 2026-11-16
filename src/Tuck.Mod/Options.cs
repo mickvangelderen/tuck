@@ -22,6 +22,8 @@ internal sealed class Options
     public KeyBinding NightActivities { get; }
     public KeyBinding Sleep { get; }
     public KeyBinding Tablet { get; }
+    public KeyBinding Accept { get; }
+    public KeyBinding Decline { get; }
     public KeyBinding DragAllMatching { get; }
     public KeyBinding DragEntireInventory { get; }
     public KeyBinding DragPrecisePlacement { get; }
@@ -48,6 +50,8 @@ internal sealed class Options
     public ScalarSetting WorkspaceOccupiedPercent { get; }
     public ScalarSetting ReturnHoldDuration { get; }
     public ScalarSetting BellHoldDuration { get; }
+    public ScalarSetting AcceptHoldDuration { get; }
+    public ScalarSetting DeclineHoldDuration { get; }
     public ScalarSetting HoldTimeoutDuration { get; }
 
     private readonly Func<string, object[], string> _localize;
@@ -69,6 +73,8 @@ internal sealed class Options
         NightActivities = new KeyBinding(manifest, "night_activities_key", () => Text("open_night_activities"), KeyCode.Q);
         Sleep = new KeyBinding(manifest, "sleep_key", () => Text("sleep"), KeyCode.E);
         Tablet = new KeyBinding(manifest, "tablet_key", () => Text("open_close_shop_tablet"), KeyCode.T);
+        Accept = new KeyBinding(manifest, "accept_key", () => Text("accept"), KeyCode.A);
+        Decline = new KeyBinding(manifest, "decline_key", () => Text("decline"), KeyCode.D);
         DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftAlt);
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
         DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift);
@@ -147,6 +153,14 @@ internal sealed class Options
             "bell_hold_duration", () => Text("bell_hold_duration"),
             () => Text("how_long_to_hold_the_bell_button_or_key"),
             defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
+        AcceptHoldDuration = new ScalarSetting(manifest,
+            "accept_hold_duration", () => Text("accept_hold_duration"),
+            () => Text("how_long_to_hold_accept"),
+            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
+        DeclineHoldDuration = new ScalarSetting(manifest,
+            "decline_hold_duration", () => Text("decline_hold_duration"),
+            () => Text("how_long_to_hold_decline"),
+            defaultValue: 0.4f, min: 0f, max: 1f, step: 0.1f, valueText: value => Text("x_seconds", value));
         HoldTimeoutDuration = new ScalarSetting(manifest,
             "hold_timeout_duration", () => Text("hold_timeout"),
             () => Text("holds_are_cancelled_after_becoming_ready"),
@@ -166,6 +180,8 @@ internal sealed class Options
         NightActivities.Register();
         Sleep.Register();
         Tablet.Register();
+        Accept.Register();
+        Decline.Register();
         DragAllMatching.Register();
         DragEntireInventory.Register();
         DragPrecisePlacement.Register();
@@ -192,12 +208,16 @@ internal sealed class Options
         WorkspaceOccupiedPercent.Register();
         ReturnHoldDuration.Register();
         BellHoldDuration.Register();
+        AcceptHoldDuration.Register();
+        DeclineHoldDuration.Register();
         HoldTimeoutDuration.Register();
     }
 
     public void Unregister()
     {
         HoldTimeoutDuration.Unregister();
+        DeclineHoldDuration.Unregister();
+        AcceptHoldDuration.Unregister();
         BellHoldDuration.Unregister();
         ReturnHoldDuration.Unregister();
         WorkspaceOccupiedPercent.Unregister();
@@ -224,6 +244,8 @@ internal sealed class Options
         DragPrecisePlacement.Unregister();
         DragEntireInventory.Unregister();
         DragAllMatching.Unregister();
+        Decline.Unregister();
+        Accept.Unregister();
         Tablet.Unregister();
         Sleep.Unregister();
         NightActivities.Unregister();

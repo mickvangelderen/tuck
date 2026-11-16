@@ -23,12 +23,16 @@ public class HoldSettingsTests : IDisposable
             (key, args) => string.Format(english[key], args));
         _options.ReturnHoldDuration.Register();
         _options.BellHoldDuration.Register();
+        _options.AcceptHoldDuration.Register();
+        _options.DeclineHoldDuration.Register();
         _options.HoldTimeoutDuration.Register();
     }
 
     [Theory]
     [InlineData("return_hold_duration")]
     [InlineData("bell_hold_duration")]
+    [InlineData("accept_hold_duration")]
+    [InlineData("decline_hold_duration")]
     public void DurationSlidersExposeElevenStepsAndStoreSeconds(string key)
     {
         var slider = GameOptionRegistry.Find(ModHelper.GameOptionId(_modId, key));
@@ -128,6 +132,8 @@ public class HoldSettingsTests : IDisposable
         BellHold.Unregister();
         _options.ReturnHoldDuration.Unregister();
         _options.BellHoldDuration.Unregister();
+        _options.AcceptHoldDuration.Unregister();
+        _options.DeclineHoldDuration.Unregister();
         _options.HoldTimeoutDuration.Unregister();
         Configs.Remove(_modId);
     }
