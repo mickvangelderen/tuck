@@ -16,9 +16,15 @@ Move all of kind (Alt + drag), move all of inventory (Ctrl + drag).
 
 ![Dragging items in bulk](./media/move-all.gif)
 
-### Quick swap water filter
+### Warning overlay
 
-![Swap water filters like batteries](./media/water-filter.gif)
+Various warning icons for things that require your attention! Less opening of containers just to see if the battery is empty. 
+
+> Prozix: Pixel art contributions welcome, I'm a software engineer not an artist.
+
+![Warning legend](./media/warning-grid.webp)
+
+![Warning in-gaem](./media/warning-overlays.webp)
 
 ### Better appraisal UI
 
@@ -43,6 +49,10 @@ Adds +5 and +20 output buttons.
 Hotkeys for vanilla and mod interactions! Hotkeys are shown in tooltips, and configurable.
 
 ![More hotkeys](./media/hotkeys.gif)
+
+### Quick swap water filter
+
+![Swap water filters like batteries](./media/water-filter.gif)
 
 ## Principles
 
