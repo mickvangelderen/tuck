@@ -5,6 +5,14 @@ feedback,Feedback
 copies_tucks_discord_link,Copies Tuck's discord link to your clipboard in case you want to leave any feedback.
 avoids_the_mod_requiring_permission_to_open_the_link,Avoids the mod requiring the permission to open the link for you.
 close,Close
+stolen_item_warnings,Stolen item warnings
+choose_when_stolen_item_warnings_appear,Show stolen item warnings only during a security inspection or always. Disabled hides these warnings.
+on_inspection,On Inspection
+always,Always
+low_battery_warnings,Low battery warnings
+missing_ingredients_warnings,Missing ingredients warnings
+warn_when_a_machine_is_missing_production_inputs,"Show animated warnings when a production machine lacks usable ingredients, seeds, water or other required inputs."
+warn_when_a_machine_cannot_power_the_next_night,Show animated warnings on machines whose power source is missing or cannot cover one night of their current power use.
 pack,Pack
 packing_solver,Packing solver
 choose_the_solver_for_the_next_pack,Choose how Tuck packs your loot. Applies to the next Pack action without restarting. Default: Container first.
@@ -72,3 +80,12 @@ secondary_click_to_apply_label,{0} to apply {1}
 secondary_click_to_choose_label,{0} to choose a label
 secondary_click_to_apply_name,"{0} to name ""{1}"""
 secondary_click_to_choose_name,{0} to choose a name
+
+missing_water_warnings,Missing water warnings
+warn_when_a_machine_has_insufficient_water,Warn when a machine has insufficient water.
+overflow_warning,Output overflow warnings
+warn_when_machine_outputs_reach_the_occupied_threshold,Show a warning when an overnight machine's output reaches the configured occupied percentage.
+overflow_warning_threshold,Output overflow warning threshold
+output_fullness_threshold_zero_means_any_contents,Warn at or above this occupied percentage. 0% means any contents; 100% means completely full.
+filter_durability_warnings,Filter durability warnings
+warn_when_all_installed_filters_are_depleted,Show a warning on items whose single-item slots contain filters that are all depleted. Empty slots and loose grid contents do not count. A working or nondurable filter clears the warning.

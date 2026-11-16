@@ -27,6 +27,13 @@ internal sealed class Options
     public KeyBinding DragPrecisePlacement { get; }
     public ToggleSetting AllowOverlappingKeyBindings { get; }
     public ToggleSetting ShowHotkeysInTooltips { get; }
+    public StolenWarningSetting StolenWarnings { get; }
+    public ToggleSetting LowBatteryWarnings { get; }
+    public ToggleSetting MissingIngredientsWarnings { get; }
+    public ToggleSetting MissingWaterWarnings { get; }
+    public ToggleSetting SpillWarnings { get; }
+    public ScalarSetting OutputOccupiedPercent { get; }
+    public ToggleSetting FilterDurabilityWarnings { get; }
     public ScalarSetting ScavengingLeaveWarningMinimumValue { get; }
     public ToggleSetting CenterBackpackSelection { get; }
     public ToggleSetting OneClickNightActivities { get; }
@@ -70,6 +77,26 @@ internal sealed class Options
         ShowHotkeysInTooltips = new ToggleSetting(manifest,
             "show_hotkeys_in_tooltips", () => Text("show_hotkeys_in_tooltips"),
             () => Text("show_current_hotkeys_in_action_tooltips"), defaultValue: true);
+        StolenWarnings = new StolenWarningSetting(manifest, this);
+        LowBatteryWarnings = new ToggleSetting(manifest,
+            "low_battery_warnings", () => Text("low_battery_warnings"),
+            () => Text("warn_when_a_machine_cannot_power_the_next_night"), defaultValue: true);
+        MissingIngredientsWarnings = new ToggleSetting(manifest,
+            "missing_ingredients_warnings", () => Text("missing_ingredients_warnings"),
+            () => Text("warn_when_a_machine_is_missing_production_inputs"), defaultValue: true);
+        MissingWaterWarnings = new ToggleSetting(manifest,
+            "missing_water_warnings", () => Text("missing_water_warnings"),
+            () => Text("warn_when_a_machine_has_insufficient_water"), defaultValue: true);
+        SpillWarnings = new ToggleSetting(manifest,
+            "spill_warnings", () => Text("overflow_warning"),
+            () => Text("warn_when_machine_outputs_reach_the_occupied_threshold"), defaultValue: true);
+        OutputOccupiedPercent = new ScalarSetting(manifest,
+            "output_occupied_percent", () => Text("overflow_warning_threshold"),
+            () => Text("output_fullness_threshold_zero_means_any_contents"),
+            defaultValue: 50f, min: 0f, max: 100f, step: 5f, valueText: value => Text("x_percent", value));
+        FilterDurabilityWarnings = new ToggleSetting(manifest,
+            "filter_durability_warnings", () => Text("filter_durability_warnings"),
+            () => Text("warn_when_all_installed_filters_are_depleted"), defaultValue: true);
         ScavengingLeaveWarningMinimumValue = new ScalarSetting(manifest,
             "scavenging_leave_warning_minimum_value", () => Text("scavenging_warning_threshold"),
             () => Text("warn_before_returning_when_items_left_behind_are_worth"),
@@ -138,6 +165,13 @@ internal sealed class Options
         DragPrecisePlacement.Register();
         AllowOverlappingKeyBindings.Register();
         ShowHotkeysInTooltips.Register();
+        StolenWarnings.Register();
+        LowBatteryWarnings.Register();
+        MissingIngredientsWarnings.Register();
+        MissingWaterWarnings.Register();
+        SpillWarnings.Register();
+        OutputOccupiedPercent.Register();
+        FilterDurabilityWarnings.Register();
         ScavengingLeaveWarningMinimumValue.Register();
         CenterBackpackSelection.Register();
         OneClickNightActivities.Register();
@@ -170,6 +204,13 @@ internal sealed class Options
         OneClickNightActivities.Unregister();
         CenterBackpackSelection.Unregister();
         ScavengingLeaveWarningMinimumValue.Unregister();
+        FilterDurabilityWarnings.Unregister();
+        OutputOccupiedPercent.Unregister();
+        SpillWarnings.Unregister();
+        MissingWaterWarnings.Unregister();
+        MissingIngredientsWarnings.Unregister();
+        LowBatteryWarnings.Unregister();
+        StolenWarnings.Unregister();
         ShowHotkeysInTooltips.Unregister();
         AllowOverlappingKeyBindings.Unregister();
         DragPrecisePlacement.Unregister();

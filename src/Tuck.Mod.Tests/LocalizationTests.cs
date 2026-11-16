@@ -47,6 +47,7 @@ public class LocalizationTests
                     case ScalarSetting scalar: scalar.Register(); break;
                     case ToggleSetting toggle: toggle.Register(); break;
                     case PackingSolverSetting solver: solver.Register(); break;
+                    case StolenWarningSetting stolen: stolen.Register(); break;
                 }
             }
 
@@ -63,6 +64,8 @@ public class LocalizationTests
             Assert.Equal("Disabled", occupancy.valueText(20));
             var solverRow = GameOptionRegistry.Find(ModHelper.GameOptionId(id, "packing_solver"));
             Assert.Equal(new[] { "Container first", "Relaxed A*", "Anytime", "Baseline" }, solverRow.options());
+            var stolenRow = GameOptionRegistry.Find(ModHelper.GameOptionId(id, "stolen_warnings"));
+            Assert.Equal(new[] { "Disabled", "On Inspection", "Always" }, stolenRow.options());
 
             // Switch the supplied language after registration, including argument order and units.
             translations = english.ToDictionary(pair => pair.Key, pair => "translated: " + pair.Value);
@@ -73,6 +76,7 @@ public class LocalizationTests
             Assert.Equal($"seconds: {0.4f:0.0}", duration.valueText(4));
             Assert.Equal("translated: Disabled", occupancy.valueText(20));
             Assert.Equal(new[] { "translated: Container first", "translated: Relaxed A*", "translated: Anytime", "translated: Baseline" }, solverRow.options());
+            Assert.Equal(new[] { "translated: Disabled", "translated: On Inspection", "translated: Always" }, stolenRow.options());
             Assert.Equal("20 total; 3 done", options.Text("printing_x_of_y", 3, 20));
             Assert.Equal("(G): dialogue", options.Text("text_with_key_hint", "dialogue", "(G)"));
 

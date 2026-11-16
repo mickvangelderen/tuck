@@ -62,6 +62,8 @@
     <None Include="@(TuckSprite)" Link="assets\tuck\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <HotkeyAsset Include="..\..\assets\hotkeys\hotkeys.png;..\..\assets\hotkeys\hotkeys.json" />
     <None Include="@(HotkeyAsset)" Link="assets\hotkeys\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <WarningAsset Include="..\..\assets\warnings\*.png" />
+    <None Include="@(WarningAsset)" Link="assets\warnings\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="manifest.xml" CopyToOutputDirectory="Always" />
     <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
     <TuckLocalization Include="Localization\*.csv" />
@@ -96,6 +98,8 @@
           DestinationFolder="$(ModStagingDir)assets\tuck\" />
     <Copy SourceFiles="@(HotkeyAsset->'$(TargetDir)assets\hotkeys\%(Filename)%(Extension)')"
           DestinationFolder="$(ModStagingDir)assets\hotkeys\" />
+    <Copy SourceFiles="@(WarningAsset->'$(TargetDir)assets\warnings\%(Filename)%(Extension)')"
+          DestinationFolder="$(ModStagingDir)assets\warnings\" />
     <Copy SourceFiles="@(TuckLocalization->'$(TargetDir)Localization\%(Filename)%(Extension)')"
           DestinationFolder="$(ModStagingDir)Localization\" />
   </Target>
