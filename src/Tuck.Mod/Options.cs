@@ -27,6 +27,7 @@ internal sealed class Options
     public KeyBinding DragAllMatching { get; }
     public KeyBinding DragEntireInventory { get; }
     public KeyBinding DragPrecisePlacement { get; }
+    public ToggleSetting RotateDraggedGroups { get; }
     public ToggleSetting AllowOverlappingKeyBindings { get; }
     public ToggleSetting ShowHotkeysInTooltips { get; }
     public StolenWarningSetting StolenWarnings { get; }
@@ -80,6 +81,9 @@ internal sealed class Options
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
         DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift,
             () => Text("key_binding_for_the_base_games_formation_placement"));
+        RotateDraggedGroups = new ToggleSetting(manifest,
+            "rotate_dragged_groups", () => Text("rotate_dragged_groups"),
+            () => Text("rotate_selected_items_together_while_dragging"), defaultValue: true);
         AllowOverlappingKeyBindings = new ToggleSetting(manifest,
             "allow_overlapping_keybindings", () => Text("allow_overlapping_keybindings"),
             () => Text("allow_multiple_actions_to_share_the_same_key"), defaultValue: true);
@@ -190,6 +194,7 @@ internal sealed class Options
         DragAllMatching.Register();
         DragEntireInventory.Register();
         DragPrecisePlacement.Register();
+        RotateDraggedGroups.Register();
         AllowOverlappingKeyBindings.Register();
         ShowHotkeysInTooltips.Register();
         StolenWarnings.Register();
@@ -248,6 +253,7 @@ internal sealed class Options
         StolenWarnings.Unregister();
         ShowHotkeysInTooltips.Unregister();
         AllowOverlappingKeyBindings.Unregister();
+        RotateDraggedGroups.Unregister();
         DragPrecisePlacement.Unregister();
         DragEntireInventory.Unregister();
         DragAllMatching.Unregister();

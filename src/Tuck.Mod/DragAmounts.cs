@@ -7,17 +7,23 @@ namespace Tuck.Mod;
 
 /// <summary>Temporarily expands a drag using the game's rectangular-selection handler.</summary>
 [HarmonyPatch]
-internal static class DragAmounts
+internal static partial class DragAmounts
 {
     private static Options? _options;
     private static Session? _session;
     private static List<GameItemElement>? _pendingSelection;
     private static bool _changingHandlers;
 
-    public static void Register(Options options) => _options = options;
+    public static void Register(Options options)
+    {
+        _options = options;
+        options.RotateDraggedGroups.OnChanged += RotationSettingChanged;
+    }
 
     public static void Unregister()
     {
+        if (_options != null) _options.RotateDraggedGroups.OnChanged -= RotationSettingChanged;
+        RotationSettingChanged(false);
         _options = null;
         if (_session?.Group.IsGroupDragging == true) _session.Shrink();
         _session = null;
@@ -249,6 +255,8 @@ internal static class DragAmounts
         internal SingleDrag? Single;
         internal BandStart? Band;
         internal Expansion Mode;
+        internal int QuarterTurns;
+        internal bool Dropping;
         private readonly SelectionKinds _kinds;
         private readonly Dictionary<GameItemElement, Vector2> _homePositions;
 
@@ -278,12 +286,13 @@ internal static class DragAmounts
                 if (items.Contains(item)) continue;
                 var anchor = items.FirstOrDefault(i => _kinds.Originals.Contains(i) && homes[i] == item.parentInventory);
                 if (anchor == null) continue;
-                var offset = offsets[anchor] + HomePosition(item) - _homePositions[anchor];
+                var offset = offsets[anchor] + RotateOffset(HomePosition(item) - _homePositions[anchor], QuarterTurns);
                 item.contentWindow?.Hide();
                 item.examineWindow?.Hide();
                 item.UpdateFakeReal(item.MaxNumRemove());
                 item.ToggleFakeBackground(true, UISettings.current.dragOpacity);
                 item.tempShape.Set(item.modifiedShape);
+                SetGhostOrientation(item, RotateShape(item.modifiedShape, QuarterTurns));
                 item.fakeBackground.image.raycastTarget = false;
                 items.Add(item);
                 homes[item] = item.parentInventory;
@@ -309,7 +318,24 @@ internal static class DragAmounts
                 Group.Cancel();
                 return;
             }
-            if (Single != null) Single.Resume(Group);
+            if (Single != null) Single.Resume(Group, QuarterTurns);
+        }
+
+        internal void Rotate(int turns)
+        {
+            turns = (turns % 4 + 4) % 4;
+            if (turns == 0) return;
+            QuarterTurns = (QuarterTurns + turns) % 4;
+            var offsets = Offsets(Group);
+            var mouse = MousePosition;
+            foreach (var item in Items(Group))
+            {
+                offsets[item] = RotateOffset(offsets[item], turns);
+                for (int i = 0; i < turns; i++) item.GridRotCCW();
+                var center = mouse + offsets[item];
+                item.SetCenteredPosition(center.x, center.y);
+            }
+            ModReflect.Call(Group, "ClearDropTarget");
         }
 
         private void RetainItems(HashSet<GameItem> keep)
@@ -341,7 +367,7 @@ internal static class DragAmounts
             _shape = item.tempShape.Clone();
         }
 
-        internal void Resume(ItemMultiSelectHandler group)
+        internal void Resume(ItemMultiSelectHandler group, int quarterTurns)
         {
             if (!Items(group).Contains(_item) || _item.parentInventory == null || !Eligible(_item, _item.parentInventory))
             {
@@ -360,7 +386,7 @@ internal static class DragAmounts
                 ModReflect.Set(_handler, "lastMouseClickedKey", _key);
                 ModReflect.Call(_handler, "StartDrag");
                 _item.fakeBackground.image.raycastTarget = true;
-                SetGhostOrientation(_item, _shape);
+                SetGhostOrientation(_item, RotateShape(_shape, quarterTurns));
                 _item.SetCenteredPosition(center.Item1, center.Item2);
                 int amount = System.Math.Min(_amount, _item.MaxNumRemove());
                 ModReflect.Set(_handler, "currentRemove", amount);
