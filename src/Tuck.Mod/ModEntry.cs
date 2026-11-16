@@ -39,6 +39,7 @@ public sealed partial class ModEntry : IMod
         DragAmounts.Register(_options);
         AppraisalSteps.Register(_options);
         AppraisalGuides.Register(_options);
+        MagnifierPosition.Register(_options);
         DocumentDiscard.Register(_options);
         ChemFinisherBatch.Register(_options);
         FilterReplacement.Register(_options);
@@ -57,6 +58,7 @@ public sealed partial class ModEntry : IMod
         FilterReplacement.Unregister();
         ChemFinisherBatch.Unregister();
         DocumentDiscard.Unregister();
+        MagnifierPosition.Unregister();
         AppraisalGuides.Unregister();
         AppraisalSteps.Unregister();
         DragAmounts.Unregister();

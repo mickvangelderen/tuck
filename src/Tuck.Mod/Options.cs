@@ -43,6 +43,7 @@ internal sealed class Options
     public ToggleSetting OneClickNightActivities { get; }
     public ToggleSetting AppraisalFiftyButtons { get; }
     public ToggleSetting AutoOpenAppraisalGuides { get; }
+    public ToggleSetting RememberMagnifierPosition { get; }
     public ToggleSetting ChemFinisherBatches { get; }
     public ToggleSetting ReplaceFilters { get; }
     public ToggleSetting RememberLabels { get; }
@@ -130,6 +131,9 @@ internal sealed class Options
         AutoOpenAppraisalGuides = new ToggleSetting(manifest,
             "auto_open_appraisal_guides", () => Text("auto_open_appraisal_guides"),
             () => Text("open_owned_reference_documents_when_inspecting_an_item"), defaultValue: true);
+        RememberMagnifierPosition = new ToggleSetting(manifest,
+            "remember_magnifier_position", () => Text("remember_magnifier_position"),
+            () => Text("keep_the_magnifying_glass_where_you_left_it"), defaultValue: true);
         ChemFinisherBatches = new ToggleSetting(manifest,
             "chem_finisher_batches", () => Text("chem_finisher_batch_buttons"),
             () => Text("add_1_5_and_20_batch_buttons_to_the_chem_finisher"), defaultValue: true);
@@ -210,6 +214,7 @@ internal sealed class Options
         OneClickNightActivities.Register();
         AppraisalFiftyButtons.Register();
         AutoOpenAppraisalGuides.Register();
+        RememberMagnifierPosition.Register();
         ChemFinisherBatches.Register();
         ReplaceFilters.Register();
         RememberLabels.Register();
@@ -238,6 +243,7 @@ internal sealed class Options
         RememberLabels.Unregister();
         ReplaceFilters.Unregister();
         ChemFinisherBatches.Unregister();
+        RememberMagnifierPosition.Unregister();
         AutoOpenAppraisalGuides.Unregister();
         AppraisalFiftyButtons.Unregister();
         OneClickNightActivities.Unregister();

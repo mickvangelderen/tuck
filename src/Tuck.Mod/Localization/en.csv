@@ -45,6 +45,8 @@ travel_immediately_when_selecting_a_night_activity,Travel immediately when selec
 appraisal_plus_minus_50_buttons,Appraisal ±50 buttons
 arrange_appraisal_buttons_in_two_rows_above_the_estimate_and_send_button,"Arrange +/-5, 10, 50 and 100 appraisal buttons in two rows above the estimate and send button."
 auto_open_appraisal_guides,Auto-open appraisal guides
+remember_magnifier_position,Remember magnifier position
+keep_the_magnifying_glass_where_you_left_it,Keep the magnifying glass where you left it between inspections. Bring its center back on-screen when opening if needed. Forget its position when you exit the game or disable this feature.
 open_owned_reference_documents_when_inspecting_an_item,Automatically open reference documents you own when inspecting an item with the magnifying glass. Close those guides when the inspection window closes.
 chem_finisher_batch_buttons,Chem finisher batch buttons
 add_1_5_and_20_batch_buttons_to_the_chem_finisher,"Add 1, 5 and 20 batch buttons to the chem finisher. Turn off to restore its original controls."

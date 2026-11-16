@@ -40,7 +40,7 @@ public class GameBoundaryTests
         var scan = ModScanner.Scan([typeof(ModEntry).Assembly.Location, typeof(IPackSolver).Assembly.Location,
                 typeof(global::Tuck.BitBoard.BitTile).Assembly.Location],
             ["netstandard", "Assembly-CSharp", "UnityEngine.CoreModule", "0Harmony", "Newtonsoft.Json", "UnityEngine.InputLegacyModule",
-                "UnityEngine.UI", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule",
+                "UnityEngine.UI", "UnityEngine.UIModule", "Unity.TextMeshPro", "UnityEngine.Physics2DModule", "UnityEngine.ImageConversionModule",
                 "Assembly-CSharp-firstpass", "UnityEngine.AudioModule", "UnityEngine.TextRenderingModule", "UnityEngine.IMGUIModule"]);
         Assert.Null(scan.Error);
         Assert.DoesNotContain("reflection-external", scan.Capabilities);
