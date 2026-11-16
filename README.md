@@ -16,6 +16,10 @@ Move all of kind (Alt + drag), move all of inventory (Ctrl + drag).
 
 ![Dragging items in bulk](./media/move-all.gif)
 
+You can now rotate multiple items at once when dragging selections or using the above modifiers.
+
+![Rotate multiple items](./media/drag-rotate.webp)
+
 ### Warning overlay
 
 Various warning icons for things that require your attention! Less opening of containers just to see if the battery is empty. 
@@ -53,6 +57,12 @@ Hotkeys for vanilla and mod interactions! Hotkeys are shown in tooltips, and con
 ### Quick swap water filter
 
 ![Swap water filters like batteries](./media/water-filter.gif)
+
+### Other stuff
+
+- Labelers remember their last setting and let you re-apply it with right-click.
+- Your backpack remembers where it belongs and returns to its proper place after night activities.
+- Your magnifier remembers wher you put it.
 
 ## Principles
 
