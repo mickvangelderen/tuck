@@ -14,9 +14,10 @@ internal sealed class KeyBinding
     public KeyCode Key { get; private set; }
     public event Action? Changed;
 
-    public KeyBinding(ModManifest manifest, string id, Func<string> label, KeyCode defaultKey = KeyCode.None)
+    public KeyBinding(ModManifest manifest, string id, Func<string> label, KeyCode defaultKey = KeyCode.None,
+        Func<string>? tooltip = null)
     {
-        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultKey.ToString(), "Keybind", label);
+        _setting = ModHelper.GetConfig(manifest.ID).Define(id, defaultKey.ToString(), "Keybind", label, tooltip: tooltip);
         _menuLabel = () => Options.FormatMenuLabel(manifest, label());
         Key = Parse();
         _setting.OnChanged += _ =>
@@ -34,7 +35,8 @@ internal sealed class KeyBinding
             _setting.Config.ModId, ModHelper.OPTION_SECTION_KEYBIND, _setting.Key,
             _menuLabel,
             () => Key,
-            key => _setting.Set(key.ToString()));
+            key => _setting.Set(key.ToString()),
+            _setting.Tooltip);
     }
 
     public void Unregister() => ModHelper.RemoveGameOption(_setting.Config.ModId, _setting.Key);

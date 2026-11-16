@@ -21,6 +21,10 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+- Tuck now properly Packs machines into machine bays.
+- The drag modifier keys are now work independently.
+- Clarified that the "keep formation" key binding just allows you to assign a custom keybinding to that behavior.
+
 ## [1.3.0] - 2026-11-15
 
 - Configurable machine warning icons:

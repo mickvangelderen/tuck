@@ -77,7 +77,8 @@ internal sealed class Options
         Decline = new KeyBinding(manifest, "decline_key", () => Text("decline"), KeyCode.D);
         DragAllMatching = new KeyBinding(manifest, "drag_all_matching_key", () => Text("drag_all_matching_items_hold"), KeyCode.LeftAlt);
         DragEntireInventory = new KeyBinding(manifest, "drag_entire_inventory_key", () => Text("drag_entire_inventory_hold"), KeyCode.LeftControl);
-        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift);
+        DragPrecisePlacement = new KeyBinding(manifest, "drag_precise_placement_key", () => Text("place_dragged_items_in_formation_hold"), KeyCode.LeftShift,
+            () => Text("key_binding_for_the_base_games_formation_placement"));
         AllowOverlappingKeyBindings = new ToggleSetting(manifest,
             "allow_overlapping_keybindings", () => Text("allow_overlapping_keybindings"),
             () => Text("allow_multiple_actions_to_share_the_same_key"), defaultValue: true);

@@ -29,6 +29,7 @@ open_close_shop_tablet,Open/close shop tablet
 drag_all_matching_items_hold,Drag all matching items (hold)
 drag_entire_inventory_hold,Drag entire inventory (hold)
 place_dragged_items_in_formation_hold,Place dragged items in formation (hold)
+key_binding_for_the_base_games_formation_placement,"This key binding lets you change the key for the <b>base game's</b> formation placement. Normally, Shift + drag keeps items in the same formation when transferring them between containers. Unbinding disables this action."
 allow_overlapping_keybindings,Allow overlapping keybindings
 allow_multiple_actions_to_share_the_same_key,Allow multiple actions to share the same key when rebinding vanilla or mod controls. Turn off to reject conflicts on future rebinds. Existing bindings are kept.
 scavenging_warning_threshold,Scavenging warning threshold
