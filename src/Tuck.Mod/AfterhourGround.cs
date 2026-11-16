@@ -1,20 +1,19 @@
 namespace Tuck.Mod;
 
-/// <summary>Owns night return controls, and Tuck and packing controls at supported locations.</summary>
+/// <summary>Owns Tuck and packing controls at supported locations.</summary>
 internal sealed class AfterhourGround
 {
     private readonly Options _options;
     private readonly string _modId;
-    private readonly Hotkey _returnHotkey;
     // Compared with Unity's null: Tuck is also destroyed if the game destroys the scene.
     private TuckMascot? _mascot;
-    private AfterhourReturnControls? _returnControls;
 
-    public AfterhourGround(Options options, string modId, Hotkey returnHotkey)
+    internal AfterhourGroundControls? Controls => _mascot != null ? _mascot.Controls : null;
+
+    public AfterhourGround(Options options, string modId)
     {
         _options = options;
         _modId = modId;
-        _returnHotkey = returnHotkey;
     }
 
     public void Register()
@@ -33,10 +32,6 @@ internal sealed class AfterhourGround
     // Late: Current, the stage and the vanilla window layout are now ready.
     private void OnAfterhourArriveLate(string locationId)
     {
-        // Returning also works at locations without a Tuck sprite or a visible Ground window.
-        var map = MapUIManager.Instance;
-        if (_returnControls == null && map != null)
-            _returnControls = AfterhourReturnControls.Install(map, _returnHotkey);
         if (Install())
         {
             Log.Info($"Added Tuck at '{locationId}'.");
@@ -71,8 +66,6 @@ internal sealed class AfterhourGround
 
     private bool Uninstall()
     {
-        if (_returnControls != null) _returnControls.Uninstall();
-        _returnControls = null;
         var mascot = _mascot;
         _mascot = null;
         if (mascot == null)

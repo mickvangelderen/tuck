@@ -22,6 +22,7 @@ public class HoldTimeoutTests
     [InlineData(typeof(VanillaHoldTimeouts))]
     [InlineData(typeof(VanillaHoldRing))]
     [InlineData(typeof(HoldRingPresenter))]
+    [InlineData(typeof(Hotkeys))]
     public void HoldPatchesMatchTheGamesPrivateMethodsAndHoldFields(Type patchType)
     {
         foreach (var method in patchType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic))

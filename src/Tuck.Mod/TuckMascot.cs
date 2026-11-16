@@ -22,6 +22,8 @@ internal sealed class TuckMascot : MonoBehaviour, IPointerClickHandler, IPointer
     private bool _hovered;
     private bool _tooltipShown;
 
+    internal AfterhourGroundControls Controls => _controls;
+
     public static TuckMascot? Install(AfterhourLocation location, PixelWindow window, Options options, string modId)
     {
         var placement = TuckPlacement.ForLocation(location.Id);

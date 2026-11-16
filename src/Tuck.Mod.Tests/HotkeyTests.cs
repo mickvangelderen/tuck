@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Tuck.Mod.Tests;
 
@@ -183,7 +184,7 @@ public class HotkeyTests : IDisposable
     }
 
     [Fact]
-    public void StartupHotkeysReadLiveSettingsAndCanBeReusedAfterCancellation()
+    public void SharedHotkeysReadLiveSettingsAndCanBeReusedAfterLeavingTheirContext()
     {
         var returnHotkey = CreateHeldHotkey();
         var tablet = new Hotkey(_options.Tablet);
@@ -195,7 +196,8 @@ public class HotkeyTests : IDisposable
         Set("return_hold_duration", 0.5f);
         Assert.Equal(0.5f, HoldRingPresenter.GetProgress(hotkeys, null, 10.25f));
 
-        returnHotkey.Cancel(); // The night controls cancel their shared hotkey when uninstalled.
+        // Leaving the location makes Return unavailable, while its instance stays with the manager.
+        Assert.False(returnHotkey.Poll(canExecute: false, now: 10.25f, pressed: false, held: true, released: false));
         Assert.Null(HoldRingPresenter.GetProgress(hotkeys, null, 10.25f));
         Assert.False(Release(returnHotkey, 11f));
         Assert.False(Press(returnHotkey, 20f));
@@ -244,12 +246,12 @@ public class HotkeyTests : IDisposable
         var second = CreateHeldHotkey();
         var instant = new Hotkey(_options.Tablet);
         Hotkey[] hotkeys = [first, second, instant];
-        var entry = new ModEntry();
-        typeof(ModEntry).GetField("_hotkeys", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .SetValue(entry, hotkeys);
-        var onFocusChanged = (Action<bool>)typeof(ModEntry)
-            .GetMethod("OnFocusChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .CreateDelegate(typeof(Action<bool>), entry);
+        var manager = (Hotkeys)RuntimeHelpers.GetUninitializedObject(typeof(Hotkeys));
+        typeof(Hotkeys).GetField("_all", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(manager, hotkeys);
+        var onFocusChanged = (Action<bool>)typeof(Hotkeys)
+            .GetMethod("OnApplicationFocus", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .CreateDelegate(typeof(Action<bool>), manager);
 
         Assert.False(Press(first, 10f));
         Assert.False(Press(second, 10.75f));
@@ -270,6 +272,23 @@ public class HotkeyTests : IDisposable
         Assert.False(Press(second, 20f));
         Assert.True(Release(second, 21f));
         Assert.True(Press(instant, 21f));
+    }
+
+    [Fact]
+    public void DisablingTheManagerCancelsPendingHoldsWithoutFiringThem()
+    {
+        var hotkey = CreateHeldHotkey();
+        var manager = (Hotkeys)RuntimeHelpers.GetUninitializedObject(typeof(Hotkeys));
+        typeof(Hotkeys).GetField("_all", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(manager, new[] { hotkey });
+        var onDisable = (Action)typeof(Hotkeys)
+            .GetMethod("OnDisable", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .CreateDelegate(typeof(Action), manager);
+
+        Assert.False(Press(hotkey, 10f));
+        onDisable();
+        Assert.Null(hotkey.ReadHold());
+        Assert.False(Release(hotkey, 11f));
     }
 
     private Hotkey CreateHeldHotkey() => new(_options.Return, _options.ReturnHoldDuration,

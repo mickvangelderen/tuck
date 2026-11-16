@@ -3,9 +3,7 @@ using UnityEngine;
 
 namespace Tuck.Mod;
 
-/// <summary>Packing and scavenge input, owned by Tuck's scene object.</summary>
-// Check dialogue before StoreUIManager.Update can end it with the same key press.
-[DefaultExecutionOrder(-100)]
+/// <summary>Packing and mouse interaction, owned by Tuck's scene object.</summary>
 internal sealed partial class AfterhourGroundControls : MonoBehaviour
 {
     private PixelWindow _window = null!;
@@ -36,61 +34,18 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
     }
 
     // The old column inherited the Ground window's visibility. The scene object must check it explicitly.
-    public bool InputAllowed() => isActiveAndEnabled
-        && _window.handler != null && _window.handler.gameObject.activeInHierarchy
-        && MapUIManager.Instance != null && MapUIManager.Instance.Current != null
-        && !MapUIManager.Instance.IsInTransit && HotkeysAllowed();
+    internal bool IsAvailable => isActiveAndEnabled
+        && _window.handler != null && _window.handler.gameObject.activeInHierarchy;
+
+    public bool InputAllowed() => Hotkeys.CanUseGroundControls(this);
 
     public void ClickPack()
     {
         if (InputAllowed()) Pack();
     }
 
-    private void Update()
-    {
-        if (!InputAllowed())
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(_options.Pack.Key))
-        {
-            Pack();
-        }
-        else if (Input.GetKeyDown(_options.Scavenge.Key))
-        {
-            Scavenge();
-        }
-    }
-
-    // The first two are what the game's InputActionManager checks for every key; the rest are what the game's own
-    // hotkeys check: response windows (StoreBell), dialogue choices (ToolboxHelper), and the Options window.
-    // Tuck also applies these to clicks; the EventSystem handles UI occlusion of the scene collider.
-    private static bool HotkeysAllowed() =>
-        !StoreUIManager.IsAnyTyping()
-        && !KeyBindHelper.SuppressHotkeys
-        && !Interactable.isPaused
-        && !(DialogUIManager.Instance != null && DialogUIManager.Instance.IsChoice())
-        && !(GameOptionUIManager.Instance != null && GameOptionUIManager.Instance.IsOpen);
-
-    private static void Scavenge()
-    {
-        var map = MapUIManager.Instance;
-        if (map == null || map.Current is not DumpingGroundLocation || map.IsInTransit
-            || ItemPinHelper.BlocksClicks
-            || (ItemMouseDragHandler.current != null && ItemMouseDragHandler.current.IsDraggingItem)
-            || (DialogUIManager.Instance != null && DialogUIManager.Instance.currentDialog != null)
-            || (DialoguePhoneUIManager.Instance != null && DialoguePhoneUIManager.Instance.currentDialog != null))
-        {
-            return;
-        }
-
-        // Use the game's button action, including its attempt/injury limits and UI refresh.
-        map.ScavengeButtonClick();
-    }
-
     // Called by Tuck and the hotkey.
-    private void Pack()
+    internal void Pack()
     {
         // While leaving, the game moves the bag's contents itself; and moving items while one is on the cursor
         // would work from a stale picture of the ground.
