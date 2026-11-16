@@ -24,6 +24,9 @@ links at the bottom once the corresponding Git tags exist.
 - Tuck now properly Packs machines into machine bays.
 - The drag modifier keys are now work independently.
 - Clarified that the "keep formation" key binding just allows you to assign a custom keybinding to that behavior.
+- Your night activity backpack now keeps it's position when you return.
+- The appraisal magnifier position is no longer reset every time you appraise.
+- You can now rotate multiple items together while dragging.
 
 ## [1.3.0] - 2026-11-15
 
