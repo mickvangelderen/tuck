@@ -34,6 +34,7 @@ public sealed partial class ModEntry : IMod
         ItemWarnings.Register(_options, _manifest.ID);
         ItemWarningPreset.Register(_manifest);
         BackpackSelection.Register(_options);
+        BackpackReturn.Register(_options);
         _nightActivitySelection.Register();
         DragAmounts.Register(_options);
         AppraisalSteps.Register(_options);
@@ -60,6 +61,7 @@ public sealed partial class ModEntry : IMod
         AppraisalSteps.Unregister();
         DragAmounts.Unregister();
         _nightActivitySelection.Unregister();
+        BackpackReturn.Unregister();
         BackpackSelection.Unregister();
         ItemWarningPreset.Unregister();
         ItemWarnings.Unregister();

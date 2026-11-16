@@ -38,6 +38,7 @@ internal sealed class Options
     public ToggleSetting FilterDurabilityWarnings { get; }
     public ScalarSetting ScavengingLeaveWarningMinimumValue { get; }
     public ToggleSetting CenterBackpackSelection { get; }
+    public ToggleSetting ReturnBackpack { get; }
     public ToggleSetting OneClickNightActivities { get; }
     public ToggleSetting AppraisalFiftyButtons { get; }
     public ToggleSetting AutoOpenAppraisalGuides { get; }
@@ -113,6 +114,9 @@ internal sealed class Options
         CenterBackpackSelection = new ToggleSetting(manifest,
             "center_backpack_selection", () => Text("center_backpack_selection_menu"),
             () => Text("center_the_backpack_selection_menu_when_opening_night_activities"), defaultValue: true);
+        ReturnBackpack = new ToggleSetting(manifest,
+            "return_backpack", () => Text("return_backpack_to_its_previous_place"),
+            () => Text("restore_backpack_position_and_rotation_after_night_activities_when_space_is_available"), defaultValue: true);
         OneClickNightActivities = new ToggleSetting(manifest,
             "one_click_night_activities", () => Text("one_click_night_activities"),
             () => Text("travel_immediately_when_selecting_a_night_activity"), defaultValue: true);
@@ -197,6 +201,7 @@ internal sealed class Options
         FilterDurabilityWarnings.Register();
         ScavengingLeaveWarningMinimumValue.Register();
         CenterBackpackSelection.Register();
+        ReturnBackpack.Register();
         OneClickNightActivities.Register();
         AppraisalFiftyButtons.Register();
         AutoOpenAppraisalGuides.Register();
@@ -231,6 +236,7 @@ internal sealed class Options
         AutoOpenAppraisalGuides.Unregister();
         AppraisalFiftyButtons.Unregister();
         OneClickNightActivities.Unregister();
+        ReturnBackpack.Unregister();
         CenterBackpackSelection.Unregister();
         ScavengingLeaveWarningMinimumValue.Unregister();
         FilterDurabilityWarnings.Unregister();
