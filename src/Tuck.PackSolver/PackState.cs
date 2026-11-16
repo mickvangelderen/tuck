@@ -60,7 +60,7 @@ public sealed class ItemState
     internal ItemState At(ItemLocation location) => new(Id, Identifier, location, UnitCount, UnitValue, Shape, State, UnitBaseValue);
 }
 
-public enum AdmissionKind { Owned, Ground, Backpack, Container, Toolbox, Tagged, Unsupported }
+public enum AdmissionKind { Owned, Ground, Backpack, Container, Toolbox, Tagged, Unsupported, SourceOnly }
 
 public sealed class AdmissionRule
 {
@@ -191,9 +191,10 @@ public sealed class PackState
         if (Items.Any(i => !invMap.ContainsKey(i.Location.InventoryId) || !Definitions.ContainsKey(i.Identifier))
             || Inventories.Any(i => i.OwnerItemId != null && !itemMap.ContainsKey(i.OwnerItemId)))
             throw new ArgumentException("Dangling containment/definition reference.");
-        if (Inventories.Any(i => i.OwnerItemId == null && !rootIds.Contains(i.Id))
+        if (Inventories.Any(i => i.OwnerItemId == null && !rootIds.Contains(i.Id)
+                && (i.Admission.Kind != AdmissionKind.SourceOnly || i.Layout is not InventoryLayout.Grid))
             || invMap[roots.Ground].Layout is not InventoryLayout.Grid || rootIds.Skip(1).Any(id => invMap[id].Layout is not InventoryLayout.Slot))
-            throw new ArgumentException("Only the ground and three carry slots can be roots.");
+            throw new ArgumentException("Roots must be the ground, three carry slots, or additional source grids.");
         foreach (var item in Items)
         {
             var seen = new HashSet<string> { item.Id };

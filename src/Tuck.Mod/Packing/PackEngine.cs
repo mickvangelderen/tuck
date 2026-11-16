@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using global::Tuck.PackSolver;
 
@@ -10,14 +11,16 @@ internal sealed partial class PackEngine
     private bool _running;
     internal PackEngine(Options options) => _options = options;
     internal IPackSolver Solver => _options.PackingSolver.Value;
-    internal PackResult Pack(GameInventory ground, GameSlotInventory backpack, GameSlotInventory left, GameSlotInventory right)
+    internal PackResult Pack(GameInventory ground, GameSlotInventory backpack, GameSlotInventory left, GameSlotInventory right,
+        IReadOnlyDictionary<string, GameInventory>? sources = null)
     {
         if (_running) return new PackResult(null, null);
         _running = true;
         try
         {
             var captured = PackCapture.Capture(ground, backpack, left, right,
-                () => MapUIManager.Instance != null && MapUIManager.Instance.Current != null && MapUIManager.Instance.Current.AllowsHazardousWaste);
+                () => MapUIManager.Instance != null && MapUIManager.Instance.Current != null && MapUIManager.Instance.Current.AllowsHazardousWaste,
+                sources);
             var options = new PlanningOptions();
             RecordState(captured, options);
             PlanningResult planned;

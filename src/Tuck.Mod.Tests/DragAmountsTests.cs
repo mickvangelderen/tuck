@@ -20,6 +20,36 @@ public class DragAmountsTests : IDisposable
     public void Dispose() => UISettings.current = _previousSettings;
 
     [Fact]
+    public void ResumingSingleDragOnlyWritesWritableGameMembers()
+    {
+        // Check the actual reflection targets without starting Unity's rendering/input loop.
+        using var module = DseCecil.ModuleDefinition.ReadModule(typeof(DragAmounts).Assembly.Location);
+        var resume = module.GetType(typeof(DragAmounts).FullName).NestedTypes.Single(t => t.Name == "SingleDrag")
+            .Methods.Single(m => m.Name == "Resume");
+        string? member = null;
+        var writes = new List<string>();
+        foreach (var instruction in resume.Body.Instructions)
+        {
+            if (instruction.OpCode == DseCecil.Cil.OpCodes.Ldstr) member = (string)instruction.Operand;
+            if (instruction.Operand is DseCecil.MethodReference { Name: "Set", DeclaringType.Name: "ModReflect" })
+                writes.Add(Assert.IsType<string>(member));
+        }
+        Assert.NotEmpty(writes);
+        var handler = (ItemMouseDragHandler)RuntimeHelpers.GetUninitializedObject(typeof(ItemMouseDragHandler));
+        foreach (var name in writes)
+        {
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var field = typeof(ItemMouseDragHandler).GetField(name, flags);
+            var property = typeof(ItemMouseDragHandler).GetProperty(name, flags);
+            var type = field?.FieldType ?? property?.PropertyType;
+            Assert.NotNull(type);
+            var value = type.IsValueType ? Activator.CreateInstance(type) : null;
+            var error = Record.Exception(() => ModReflect.Set(handler, name, value));
+            Assert.True(error == null, $"Resuming a drag cannot write ItemMouseDragHandler.{name}: {error}");
+        }
+    }
+
+    [Fact]
     public void ExpandsEveryOriginalKindWithoutChangingTheOriginalSelection()
     {
         var bolt = new Item("bolt");

@@ -363,9 +363,6 @@ internal static class DragAmounts
                 ModReflect.Set(_handler, "currentItem", _item);
                 ModReflect.Set(_handler, "lastMouseClickedKey", _key);
                 ModReflect.Call(_handler, "StartDrag");
-                ModReflect.Set(_handler, "isMult10", KeyHeld(_handler.scrollMult10Key));
-                ModReflect.Set(_handler, "isMult100", KeyHeld(_handler.scrollMult100Key));
-                ModReflect.Set(_handler, "isScrollIgnore", KeyHeld(_handler.scrollIgnoreKey));
                 _item.fakeBackground.image.raycastTarget = true;
                 SetGhostOrientation(_item, _shape);
                 _item.SetCenteredPosition(center.Item1, center.Item2);

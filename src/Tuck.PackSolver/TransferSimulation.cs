@@ -86,6 +86,8 @@ internal sealed class TransferSimulation
         var rule = inventory.Admission;
         switch (rule.Kind)
         {
+            // Merchant counters supply purchases; packing must not put items up for sale.
+            case AdmissionKind.SourceOnly: return false;
             case AdmissionKind.Owned: return true;
             case AdmissionKind.Ground: return rule.AllowsHazardousWaste || !facts.IsTag("HAZARDOUS_WASTE_TAG");
             case AdmissionKind.Backpack: return facts.IsTag("BACKPACK_TAG");

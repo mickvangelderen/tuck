@@ -43,12 +43,13 @@ internal static class GameRuleCapture
     }
 
     internal static (AdmissionRule Rule, string? Unsupported) InventoryRule(GameInventory inventory, GameItem? owner, string id,
-        PackRoots roots, bool allowsHazardousWaste)
+        PackRoots roots, bool allowsHazardousWaste, bool sourceOnly = false)
     {
         string? unsupported = null;
         if (inventory.parentItemShapeModifierForItemFunc != null || inventory.parentItemStateModifierForItemFunc != null)
             unsupported = "Inventory parent modifiers are not represented.";
         if (unsupported != null) return (new(AdmissionKind.Unsupported), unsupported);
+        if (sourceOnly) return (new(AdmissionKind.SourceOnly), null);
         if (id == roots.Backpack) return (new(AdmissionKind.Backpack), null);
         if (id == roots.Ground) return (new(AdmissionKind.Ground, allowsHazardousWaste: allowsHazardousWaste), null);
         if (id == roots.Left || id == roots.Right) return (new(AdmissionKind.Owned), null);

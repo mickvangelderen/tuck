@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Tuck.Mod.Packing;
 using UnityEngine;
 
@@ -50,7 +51,8 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
         // While leaving, the game moves the bag's contents itself; and moving items while one is on the cursor
         // would work from a stale picture of the ground.
         if (ItemPinHelper.BlocksClicks || (MapUIManager.Instance != null && MapUIManager.Instance.IsInTransit)
-            || (ItemMouseDragHandler.current != null && ItemMouseDragHandler.current.IsDraggingItem))
+            || (ItemMouseDragHandler.current != null && ItemMouseDragHandler.current.IsDraggingItem)
+            || (ItemMultiSelectHandler.current != null && ItemMultiSelectHandler.current.IsGroupDragging))
         {
             return;
         }
@@ -59,8 +61,14 @@ internal sealed partial class AfterhourGroundControls : MonoBehaviour
         if (entry == null || entry.afterhourInventory == null || entry.afterhourPocketSlotInvBackpack == null
             || entry.afterhourPocketSlotInvLeft == null || entry.afterhourPocketSlotInvRight == null) return;
 
+        var sources = new Dictionary<string, GameInventory>();
+        if (MapUIManager.Instance?.Current?.Id == "dr_jackson")
+        {
+            if (entry.frontInvinvElement != null) sources.Add("counter-front", entry.frontInvinvElement);
+            if (entry.backInvinvElement != null) sources.Add("counter-back", entry.backInvinvElement);
+        }
         var result = _pack.Pack(entry.afterhourInventory, entry.afterhourPocketSlotInvBackpack,
-            entry.afterhourPocketSlotInvLeft, entry.afterhourPocketSlotInvRight);
+            entry.afterhourPocketSlotInvLeft, entry.afterhourPocketSlotInvRight, sources);
         if (result.Planning == null) return;
         if (result.Execution == null)
         {

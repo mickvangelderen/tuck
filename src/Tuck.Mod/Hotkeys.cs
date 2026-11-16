@@ -88,7 +88,8 @@ internal sealed class Hotkeys : MonoBehaviour
         bool nightAllowed = CanUseNightHotkeys(map);
         bool groundAllowed = nightAllowed && GroundAvailable(ground);
         // R also resets a dragged item; finish item manipulation before packing, scavenging or returning.
-        bool canMoveItems = !ItemPinHelper.BlocksClicks && !draggingItem;
+        bool canMoveItems = !ItemPinHelper.BlocksClicks && !draggingItem
+            && !(ItemMultiSelectHandler.current != null && ItemMultiSelectHandler.current.IsGroupDragging);
         bool dialogueOpen = (DialogUIManager.Instance != null && DialogUIManager.Instance.currentDialog != null)
             || (DialoguePhoneUIManager.Instance != null && DialoguePhoneUIManager.Instance.currentDialog != null);
 

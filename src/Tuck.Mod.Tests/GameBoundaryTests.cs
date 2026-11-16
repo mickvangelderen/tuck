@@ -81,6 +81,43 @@ public class GameBoundaryTests
     }
 
     [Fact]
+    public void CounterCaptureRetainsPhysicalSourcesAndTracksMovesIntoHands()
+    {
+        var bought = new FixtureItem("printer", 400);
+        var other = new FixtureItem("furnace", 300);
+        var stock = new FixtureItem("unsold", 5000);
+        stock.DisableTag("IS_OWNED_TAG");
+        var front = Grid(bought);
+        var back = Grid(other, stock);
+        stock.modifiedShape = new GridShapeBuilder(stock.shape).SetPosition(1, 0);
+        // Capture must not probe or replace the live counter's callbacks.
+        front.mayInventoryRemoveItemFunc = (_, _) => throw new Exception("Capture must not probe counters.");
+        var callback = front.mayInventoryRemoveItemFunc;
+        var left = Raw<GameSlotInventory>();
+        var capture = PackCapture.Capture(Grid(), Raw<GameSlotInventory>(), left, Raw<GameSlotInventory>(), () => false,
+            new Dictionary<string, GameInventory> { ["counter-front"] = front, ["counter-back"] = back });
+        var state = capture.State;
+        Assert.Equal(2, state.Items.Count);
+        Assert.Equal(0, PlanReplay.ReturnedValue(state));
+        Assert.All(state.Inventories.Where(i => i.Id.StartsWith("counter-")),
+            inventory => Assert.Equal(AdmissionKind.SourceOnly, inventory.Admission.Kind));
+        Assert.Same(callback, front.mayInventoryRemoveItemFunc);
+        Assert.False(front.overrideLockInsert);
+        var machine = state.Items.Single(i => i.Identifier == "printer");
+        Assert.Equal("counter-front", machine.Location.InventoryId);
+        Assert.DoesNotContain(state.Items, i => i.Identifier == "unsold");
+        Assert.Same(back, stock.parentInventory);
+
+        var expected = PlanReplay.Replay(state,
+            new(state.StateId, [new(machine.Id, new(state.Roots.Left, new Placement.Slot()))]));
+        // Apply only the physical containment change; Unity owns live transfer rendering.
+        Field(front, typeof(GameGridInventory), "items", new List<GameItem>());
+        Field(left, typeof(GameSlotInventory), "currentItem", bought);
+        bought.parentInventory = left;
+        Assert.Null(StateComparison.Difference(expected, PackCapture.Read(capture.Bindings, state.StateId)));
+    }
+
+    [Fact]
     public void CaptureCopiesActualObjectsAndNeverRunsAdmissionCallbacks()
     {
         var item = new FixtureItem("loot", 17);

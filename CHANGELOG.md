@@ -39,6 +39,7 @@ links at the bottom once the corresponding Git tags exist.
 - Mouse/keyboard holds time out after 1.5s.
 - The in game options now allow binding the same hotkey to multiple actions. 
 - Changelog is now shown when the mod is updated
+- Fixed an issue where Tuck wasn't considering items on Dr. Jackson's counter.
 
 ## [1.2.0] - 2026-11-12
 

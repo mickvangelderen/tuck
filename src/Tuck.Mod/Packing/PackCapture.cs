@@ -26,6 +26,7 @@ internal sealed class LiveBindings
 {
     internal Dictionary<string, GameItem> Items { get; } = new();
     internal Dictionary<string, GameInventory> Inventories { get; } = new();
+    internal Dictionary<string, GameInventory> Sources { get; } = new();
     internal PackRoots Roots { get; } = new("ground", "backpack", "left", "right");
     internal Func<bool> AllowsHazardousWaste { get; }
     internal LiveBindings(Func<bool> allowsHazardousWaste) => AllowsHazardousWaste = allowsHazardousWaste;
@@ -34,13 +35,19 @@ internal sealed class LiveBindings
 internal static class PackCapture
 {
     internal static CapturedPack Capture(GameInventory ground, GameSlotInventory backpack, GameSlotInventory left,
-        GameSlotInventory right, Func<bool> allowsHazardousWaste)
+        GameSlotInventory right, Func<bool> allowsHazardousWaste, IReadOnlyDictionary<string, GameInventory>? sources = null)
     {
         var bindings = new LiveBindings(allowsHazardousWaste);
         bindings.Inventories.Add(bindings.Roots.Ground, ground);
         bindings.Inventories.Add(bindings.Roots.Backpack, backpack);
         bindings.Inventories.Add(bindings.Roots.Left, left);
         bindings.Inventories.Add(bindings.Roots.Right, right);
+        if (sources != null)
+            foreach (var source in sources)
+            {
+                bindings.Sources.Add(source.Key, source.Value);
+                bindings.Inventories.Add(source.Key, source.Value);
+            }
         var graph = Walk(bindings);
         foreach (var item in graph.Items) bindings.Items.Add("item-" + bindings.Items.Count, item);
         foreach (var inventory in graph.Owners.Keys)
@@ -59,7 +66,8 @@ internal static class PackCapture
         var inventories = graph.Owners.Select(pair =>
         {
             var live = pair.Key;
-            var rule = GameRuleCapture.InventoryRule(live, pair.Value, inventoryIds[live], bindings.Roots, allowsHazardousWaste);
+            var rule = GameRuleCapture.InventoryRule(live, pair.Value, inventoryIds[live], bindings.Roots, allowsHazardousWaste,
+                bindings.Sources.ContainsKey(inventoryIds[live]));
             if (live is not GameGridInventory && live is not GameSlotInventory)
                 throw new NotSupportedException("Packing contains an unsupported inventory kind.");
             if (live is GameGridInventory g && (g.inventoryShape.minX != 0 || g.inventoryShape.minY != 0
@@ -116,6 +124,7 @@ internal static class PackCapture
         var pending = new Queue<(GraphNodeStorage Node, GameItem? Owner)>();
         foreach (var id in new[] { bindings.Roots.Ground, bindings.Roots.Backpack, bindings.Roots.Left, bindings.Roots.Right })
             pending.Enqueue((bindings.Inventories[id], null));
+        foreach (var source in bindings.Sources.Values) pending.Enqueue((source, null));
         while (pending.Count > 0)
         {
             var (node, owner) = pending.Dequeue();
@@ -134,6 +143,9 @@ internal static class PackCapture
             }
             // Slot.children also includes borrowed UI; the physical contents are childItems.
             IEnumerable<GraphNodeStorage> children = node is GameInventory inv ? inv.childItems : node.children;
+            // Unsold stock is neither collectible nor an obstacle in a source-only inventory.
+            if (node is GameInventory source && bindings.Sources.ContainsValue(source))
+                children = source.childItems.Where(GeneralHelper.IsItemOwned);
             foreach (var child in children) if (child != null) pending.Enqueue((child, owner));
         }
         return graph;

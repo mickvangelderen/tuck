@@ -49,7 +49,8 @@ internal static class RelaxedPackingBound
             cost[i] = int.MaxValue;
             foreach (var inventory in state.Inventories.Values)
             {
-                if (inventory.Id == state.Roots.Ground || !TransferSimulation.IsPackingStorage(inventory)) continue;
+                if (inventory.Id == state.Roots.Ground || inventory.Admission.Kind == AdmissionKind.SourceOnly
+                    || !TransferSimulation.IsPackingStorage(inventory)) continue;
                 // Keeping an existing occupant requires no insertion, including when its container
                 // starts on the ground. Acquiring that container returns its contents intact.
                 // Excluding such an option would make this relaxation smaller than the real problem.
