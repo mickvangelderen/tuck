@@ -66,6 +66,8 @@
     <None Include="@(HotkeyAsset)" Link="assets\hotkeys\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <WarningAsset Include="..\..\assets\warnings\*.png" />
     <None Include="@(WarningAsset)" Link="assets\warnings\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="..\..\assets\ui\appraisal-positive.png" LogicalName="Tuck.AppraisalButton.positive.png" />
+    <EmbeddedResource Include="..\..\assets\ui\appraisal-negative.png" LogicalName="Tuck.AppraisalButton.negative.png" />
     <None Update="manifest.xml" CopyToOutputDirectory="Always" />
     <None Update="preview.png" CopyToOutputDirectory="PreserveNewest" />
     <TuckLocalization Include="Localization\*.csv" />

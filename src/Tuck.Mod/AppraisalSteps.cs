@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using HarmonyLib;
 using TMPro;
 using UnityEngine;
@@ -10,16 +11,19 @@ namespace Tuck.Mod;
 [HarmonyPatch(typeof(InspectionUIManager), nameof(InspectionUIManager.UpdateAppraisalPanel))]
 internal static class AppraisalSteps
 {
-    private static readonly Color32 PositiveTextColor = new(28, 78, 40, 255);
-    private static readonly Color32 NegativeTextColor = new(87, 10, 0, 255);
+    private static Sprite? _positiveSprite;
+    private static Sprite? _negativeSprite;
     private static Options? _options;
     private static RectTransform? _panel;
     private static RectTransform? _row;
+    private static RectTransform? _input;
     private static RectTransform? _send;
     private static RectTransform? _positiveRow;
     private static RectTransform? _negativeRow;
     private static Vector2 _rowOffset;
     private static Vector2 _sendOffset;
+    private static Vector2 _inputSizeOffset;
+    private static float _inputResizeFactor = 1f;
     private static readonly List<GameObject> HiddenButtons = new();
     private static readonly List<Button> AddedButtons = new();
 
@@ -34,6 +38,8 @@ internal static class AppraisalSteps
         if (_options != null) _options.AppraisalFiftyButtons.OnChanged -= OnSettingChanged;
         _options = null;
         RemoveLayout();
+        DestroySprite(ref _positiveSprite);
+        DestroySprite(ref _negativeSprite);
     }
 
     private static void OnSettingChanged(bool enabled)
@@ -64,6 +70,11 @@ internal static class AppraisalSteps
         if (minusTen == null || plusTen == null || send == null ||
             row.GetComponent<HorizontalLayoutGroup>() == null) return;
 
+        if (_positiveSprite == null)
+            _positiveSprite = LoadButtonSprite("positive");
+        if (_negativeSprite == null)
+            _negativeSprite = LoadButtonSprite("negative");
+
         _panel = (RectTransform)inspection.appraisalPanel.transform;
         _row = row;
         _send = send;
@@ -88,7 +99,16 @@ internal static class AppraisalSteps
         // The native row now centers just the input. Position it alongside Send without reparenting
         // either control, preserving input focus, native callbacks and the original panel dimensions.
         const float gap = 12f;
-        float inputWidth = ((RectTransform)inspection.apprisalServiceInputField.transform).rect.width;
+        var input = (RectTransform)inspection.apprisalServiceInputField.transform;
+        _input = input;
+        // Resize the sliced image's rectangle to keep its border at the native thickness.
+        _inputResizeFactor = send.rect.height * send.localScale.y /
+            (input.rect.height * input.localScale.y * row.localScale.y);
+        _inputSizeOffset = input.rect.size * (_inputResizeFactor - 1f);
+        input.sizeDelta += _inputSizeOffset;
+        foreach (var text in input.GetComponentsInChildren<TextMeshProUGUI>(true))
+            text.fontSize *= _inputResizeFactor;
+        float inputWidth = input.rect.width * input.localScale.x * row.localScale.x;
         _rowOffset = new Vector2(-(send.rect.width + gap) / 2f, -75f) - row.anchoredPosition;
         _sendOffset = new Vector2((inputWidth + gap) / 2f, -75f) - send.anchoredPosition;
         row.anchoredPosition += _rowOffset;
@@ -118,19 +138,61 @@ internal static class AppraisalSteps
         button.name = "Tuck " + label;
         var text = button.GetComponentInChildren<TextMeshProUGUI>(true);
         text.text = label;
-        text.color = amount > 0 ? PositiveTextColor : NegativeTextColor;
+        button.image.sprite = amount > 0 ? _positiveSprite : _negativeSprite;
         ((RectTransform)button.transform).sizeDelta = new Vector2(70f, 32f);
         // Replacing the event also removes the cloned persistent +/-10 callback.
         button.onClick = new Button.ButtonClickedEvent();
         button.onClick.AddListener(() => inspection.ChangeAppraisalServicePrice(amount));
     }
 
+    private static Sprite LoadButtonSprite(string name)
+    {
+        using var stream = typeof(AppraisalSteps).Assembly.GetManifestResourceStream($"Tuck.AppraisalButton.{name}.png")
+            ?? throw new System.InvalidOperationException("Missing appraisal button sprite.");
+        using var bytes = new MemoryStream();
+        stream.CopyTo(bytes);
+        var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp
+        };
+        try
+        {
+            if (!ImageConversion.LoadImage(texture, bytes.ToArray(), true))
+                throw new System.InvalidOperationException("Could not decode appraisal button sprite.");
+            // Preserve button_confront_2x's native size, pixel density, and four-pixel slicing border.
+            return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(4f, 4f, 4f, 4f));
+        }
+        catch
+        {
+            Object.Destroy(texture);
+            throw;
+        }
+    }
+
+    private static void DestroySprite(ref Sprite? sprite)
+    {
+        if (sprite == null) return;
+        Object.Destroy(sprite.texture);
+        Object.Destroy(sprite);
+        sprite = null;
+    }
+
     private static void RemoveLayout()
     {
         // Undo only our translations and visibility changes, rather than resetting the whole panel.
         if (_row != null) _row.anchoredPosition -= _rowOffset;
+        if (_input != null)
+        {
+            _input.sizeDelta -= _inputSizeOffset;
+            foreach (var text in _input.GetComponentsInChildren<TextMeshProUGUI>(true))
+                text.fontSize /= _inputResizeFactor;
+        }
         if (_send != null) _send.anchoredPosition -= _sendOffset;
         _rowOffset = _sendOffset = Vector2.zero;
+        _inputSizeOffset = Vector2.zero;
+        _inputResizeFactor = 1f;
         foreach (var button in HiddenButtons)
             if (button != null) button.SetActive(true);
         HiddenButtons.Clear();
@@ -145,6 +207,7 @@ internal static class AppraisalSteps
         _positiveRow = null;
         _negativeRow = null;
         _row = null;
+        _input = null;
         _send = null;
         _panel = null;
     }
