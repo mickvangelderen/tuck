@@ -3,8 +3,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Moves selected documents to the trash after the game gives them to the player.</summary>
-[HarmonyPatch(typeof(PlayerStore), nameof(PlayerStore.TryAddDirectSellingItemToTable),
-    new[] { typeof(GameItem), typeof(bool), typeof(bool), typeof(bool), typeof(int) })]
 internal static class DocumentDiscard
 {
     private static Options? _options;
@@ -13,6 +11,8 @@ internal static class DocumentDiscard
 
     public static void Unregister() => _options = null;
 
+    [HarmonyPostfix, HarmonyPatch(typeof(PlayerStore), nameof(PlayerStore.TryAddDirectSellingItemToTable),
+        new[] { typeof(GameItem), typeof(bool), typeof(bool), typeof(bool), typeof(int) })]
     private static void Postfix(GameItem gameItem, bool isOwend, bool __result)
     {
         if (!__result || !isOwend || _options == null || gameItem.identifier != "slip" ||

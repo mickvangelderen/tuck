@@ -6,7 +6,6 @@ using UnityEngine.UI;
 namespace Tuck.Mod;
 
 /// <summary>Decorates freshly generated tooltips, so bindings and translations stay live.</summary>
-[HarmonyPatch]
 internal static class HotkeyTooltips
 {
     private static Options? _options;

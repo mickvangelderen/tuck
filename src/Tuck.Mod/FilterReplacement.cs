@@ -4,7 +4,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Adds the battery-style drag interaction to installed water filters.</summary>
-[HarmonyPatch(typeof(GameItem))]
 internal static class FilterReplacement
 {
     private static Options? _options;
@@ -16,7 +15,7 @@ internal static class FilterReplacement
         source.IsTag("WATER_FILTER") && target.IsTag("WATER_FILTER") &&
         target.parentInventory is GameSlotInventory && source.parentInventory != target.parentInventory;
 
-    [HarmonyPrefix, HarmonyPatch(nameof(GameItem.MayTarget))]
+    [HarmonyPrefix, HarmonyPatch(typeof(GameItem), nameof(GameItem.MayTarget))]
     internal static bool MayTargetPrefix(GameItem __instance, GameItem targetItem, ref bool __result)
     {
         if (!IsFilterReplacement(__instance, targetItem)) return true;
@@ -24,11 +23,11 @@ internal static class FilterReplacement
         return false;
     }
 
-    [HarmonyPrefix, HarmonyPatch(nameof(GameItem.CanTarget))]
+    [HarmonyPrefix, HarmonyPatch(typeof(GameItem), nameof(GameItem.CanTarget))]
     internal static bool CanTargetPrefix(GameItem __instance, GameItem targetItem, ref bool __result) =>
         MayTargetPrefix(__instance, targetItem, ref __result);
 
-    [HarmonyPrefix, HarmonyPatch(nameof(GameItem.Target))]
+    [HarmonyPrefix, HarmonyPatch(typeof(GameItem), nameof(GameItem.Target))]
     internal static bool TargetPrefix(GameItem __instance, GameItem targetItem)
     {
         if (!IsFilterReplacement(__instance, targetItem)) return true;

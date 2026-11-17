@@ -6,7 +6,6 @@ using UnityEngine;
 namespace Tuck.Mod;
 
 /// <summary>Remembers deliberate labeler edits for the current game session.</summary>
-[HarmonyPatch]
 internal static class LabelMemory
 {
     private static Options? _options;
@@ -21,15 +20,19 @@ internal static class LabelMemory
         _options = options;
         options.RememberLabels.OnChanged += OnSettingChanged;
         ModHook.OnGameLoadedInit += ClearMemory;
+        ModHook.OnNewGameStarted += OnNewGameStarted;
     }
 
     public static void Unregister()
     {
         if (_options != null) _options.RememberLabels.OnChanged -= OnSettingChanged;
         ModHook.OnGameLoadedInit -= ClearMemory;
+        ModHook.OnNewGameStarted -= OnNewGameStarted;
         _options = null;
         ClearMemory();
     }
+
+    private static void OnNewGameStarted(string _) => ClearMemory();
 
     private static void OnSettingChanged(bool enabled)
     {

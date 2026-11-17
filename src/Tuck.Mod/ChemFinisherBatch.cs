@@ -5,7 +5,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Repeats the finisher's original single-output action, checking space before each click.</summary>
-[HarmonyPatch(typeof(MachineChemFinisher), nameof(MachineChemFinisher.ChemFinisher))]
 internal static class ChemFinisherBatch
 {
     private static Options? _options;
@@ -49,9 +48,9 @@ internal static class ChemFinisherBatch
 
     internal static void Forget(ChemFinisherControls controls) => Controls.Remove(controls);
 
+    [HarmonyPostfix, HarmonyPatch(typeof(MachineChemFinisher), nameof(MachineChemFinisher.ChemFinisher))]
     internal static void Postfix(GameItem __result)
     {
-        // The loader owns this passive Harmony postfix. Disabled means no UI access or handlers installed.
         if (!IsEnabled) return;
         Install(__result);
     }

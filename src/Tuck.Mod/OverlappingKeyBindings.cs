@@ -3,7 +3,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Optionally allows shared keys in the game's rebinding UI.</summary>
-[HarmonyPatch(typeof(GameOptionUIManager), "FindPendingKeyOwner")]
 internal static class OverlappingKeyBindings
 {
     private static Options? _options;
@@ -12,7 +11,7 @@ internal static class OverlappingKeyBindings
 
     public static void Unregister() => _options = null;
 
-    [HarmonyPostfix]
+    [HarmonyPostfix, HarmonyPatch(typeof(GameOptionUIManager), "FindPendingKeyOwner")]
     internal static void Postfix(ref string? __result)
     {
         if (_options?.AllowOverlappingKeyBindings.Value == true) __result = null;

@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using HarmonyLib;
 using UnityEngine;
 
 namespace Tuck.Mod;
 
 /// <summary>Applies the final ring display after native and mod input handlers have updated their holds.</summary>
-[HarmonyPatch]
 internal sealed class HoldRingPresenter : MonoBehaviour
 {
     private static IReadOnlyList<Hotkey>? _hotkeys;
@@ -31,7 +29,6 @@ internal sealed class HoldRingPresenter : MonoBehaviour
         CustomUIManager.Instance?.HideHoldRing();
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(CustomUIManager), "Awake")]
     private static void Attach(CustomUIManager __instance)
     {
         // The native UI manager survives scene changes and rejects duplicate instances in Awake.

@@ -1,3 +1,7 @@
+using HarmonyLib;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
 namespace Tuck.Mod;
 
 public sealed partial class ModEntry : IMod
@@ -7,10 +11,15 @@ public sealed partial class ModEntry : IMod
     private AfterhourGround _ground = null!;
     private NightActivitySelection _nightActivitySelection = null!;
     private ModManifest _manifest = null!;
+    private Harmony _harmony = null!;
+    private bool _optionsPatched;
+    private bool _gameplayRegistered;
+    private ReleaseNotesWindow? _releaseNotes;
 
     public void Init(ModManifest manifest)
     {
         _manifest = manifest;
+        _harmony = new Harmony("mod." + manifest.ID);
         Log.Init(manifest);
         _options = new Options(manifest);
         _ground = new AfterhourGround(_options, manifest.ID);
@@ -22,6 +31,37 @@ public sealed partial class ModEntry : IMod
     {
         _options.Register();
         OverlappingKeyBindings.Register(_options);
+        HotkeyGlyphs.Register(_manifest.ID);
+        ItemWarnings.Register(_options, _manifest.ID);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        Log.Info("Enabled.");
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var menu = MainMenuUIController.Instance;
+        bool isMenu = menu != null && menu.gameObject.scene == scene;
+        if (!isMenu && scene.name != "InventoryScene") return;
+
+        if (!_optionsPatched)
+        {
+            _harmony.CreateClassProcessor(typeof(OverlappingKeyBindings)).Patch();
+            _optionsPatched = true;
+        }
+        if (isMenu)
+        {
+            _releaseNotes = ReleaseNotesWindow.Attach(menu!, _manifest, _options);
+            return;
+        }
+        if (_gameplayRegistered) return;
+        _gameplayRegistered = true;
+        RegisterGameplay();
+        GamePatches.Install(_harmony);
+        Log.Info("Gameplay patches installed.");
+    }
+
+    private void RegisterGameplay()
+    {
         Hotkeys.Register(_options, _ground);
         _ground.Register();
         RegisterDebugRecorder();
@@ -29,9 +69,7 @@ public sealed partial class ModEntry : IMod
         WorkspaceWarning.Register(_options);
         BellHold.Register(_options);
         VanillaHoldTimeouts.Register(_options);
-        HotkeyGlyphs.Register(_manifest.ID);
         HotkeyTooltips.Register(_options);
-        ItemWarnings.Register(_options, _manifest.ID);
         ItemWarningPreset.Register(_manifest);
         BackpackSelection.Register(_options);
         BackpackReturn.Register(_options);
@@ -45,14 +83,31 @@ public sealed partial class ModEntry : IMod
         FilterReplacement.Register(_options);
         LabelMemory.Register(_options);
         YeastBioreactor.Register(_options);
-        ReleaseNotesWindow.Register(_manifest, _options);
-        Log.Info("Enabled.");
     }
 
     // In reverse order of registration.
     public void OnDisable()
     {
-        ReleaseNotesWindow.Unregister();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (_releaseNotes != null)
+        {
+            _releaseNotes.enabled = false;
+            Object.Destroy(_releaseNotes);
+            _releaseNotes = null;
+        }
+        if (_gameplayRegistered) UnregisterGameplay();
+        _gameplayRegistered = false;
+        ItemWarnings.Unregister();
+        HotkeyGlyphs.Unregister();
+        OverlappingKeyBindings.Unregister();
+        _options.Unregister();
+        _harmony.UnpatchAll(_harmony.Id);
+        _optionsPatched = false;
+        Log.Info("Disabled.");
+    }
+
+    private void UnregisterGameplay()
+    {
         YeastBioreactor.Unregister();
         LabelMemory.Unregister();
         FilterReplacement.Unregister();
@@ -66,9 +121,7 @@ public sealed partial class ModEntry : IMod
         BackpackReturn.Unregister();
         BackpackSelection.Unregister();
         ItemWarningPreset.Unregister();
-        ItemWarnings.Unregister();
         HotkeyTooltips.Unregister();
-        HotkeyGlyphs.Unregister();
         VanillaHoldTimeouts.Unregister();
         BellHold.Unregister();
         WorkspaceWarning.Unregister();
@@ -76,9 +129,6 @@ public sealed partial class ModEntry : IMod
         UnregisterDebugRecorder();
         _ground.Unregister();
         Hotkeys.Unregister();
-        OverlappingKeyBindings.Unregister();
-        _options.Unregister();
-        Log.Info("Disabled.");
     }
 
     // Implemented only in DebugRecording; declarations and calls disappear from other builds.

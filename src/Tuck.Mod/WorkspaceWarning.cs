@@ -4,16 +4,15 @@ using global::Tuck.BitBoard;
 namespace Tuck.Mod;
 
 /// <summary>Warns before going outside when workspace occupancy exceeds the configured threshold.</summary>
-[HarmonyPatch(typeof(MapUIManager), nameof(MapUIManager.IsShowingGoOutsideConfirm))]
 internal static class WorkspaceWarning
 {
-    // The loader owns the patch; leave it inert outside the mod's enabled lifetime.
     private static Options? _options;
 
     public static void Register(Options options) => _options = options;
 
     public static void Unregister() => _options = null;
 
+    [HarmonyPrefix, HarmonyPatch(typeof(MapUIManager), nameof(MapUIManager.IsShowingGoOutsideConfirm))]
     internal static bool Prefix(ref bool __result)
     {
         if (_options == null) return true;

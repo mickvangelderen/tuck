@@ -7,7 +7,6 @@ using Object = UnityEngine.Object;
 
 namespace Tuck.Mod;
 
-[HarmonyPatch]
 internal static class ItemWarningPreset
 {
     internal const string ButtonName = "Item warning test";

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace Tuck.Mod;
 
 /// <summary>Arranges appraisal increments above the estimate field and send button.</summary>
-[HarmonyPatch(typeof(InspectionUIManager), nameof(InspectionUIManager.UpdateAppraisalPanel))]
 internal static class AppraisalSteps
 {
     private static Sprite? _positiveSprite;
@@ -48,6 +47,7 @@ internal static class AppraisalSteps
         if (!enabled) RemoveLayout();
     }
 
+    [HarmonyPostfix, HarmonyPatch(typeof(InspectionUIManager), nameof(InspectionUIManager.UpdateAppraisalPanel))]
     internal static void Postfix(InspectionUIManager __instance)
     {
         if (_options?.AppraisalFiftyButtons.Value != true) return;

@@ -1,4 +1,3 @@
-using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ namespace Tuck.Mod;
 /// <summary>Owns Tuck's action shortcuts, their contexts, and hold cancellation.</summary>
 // Inspect context before the game's normal Update methods can dismiss dialogue or menus.
 [DefaultExecutionOrder(-100)]
-[HarmonyPatch]
 internal sealed class Hotkeys : MonoBehaviour
 {
     private static Options? _options;
@@ -48,7 +46,6 @@ internal sealed class Hotkeys : MonoBehaviour
         HoldRingPresenter.Unregister();
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(CustomUIManager), "Awake")]
     private static void Attach(CustomUIManager __instance)
     {
         // The UI manager persists across locations and rejects duplicate instances in Awake.

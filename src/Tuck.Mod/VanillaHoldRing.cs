@@ -5,7 +5,6 @@ using UnityEngine;
 namespace Tuck.Mod;
 
 /// <summary>Tracks native holders so the presenter can read their actual state after input processing.</summary>
-[HarmonyPatch]
 internal static class VanillaHoldRing
 {
     private static readonly List<Component> Holders = new();

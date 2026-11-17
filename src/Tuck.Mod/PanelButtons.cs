@@ -10,7 +10,6 @@ namespace Tuck.Mod;
 internal enum PanelAction { None, Accept, Decline }
 
 /// <summary>Identifies existing panel buttons; input and holds remain in Hotkeys.</summary>
-[HarmonyPatch]
 internal static class PanelButtons
 {
     internal static Options? ActiveOptions { get; private set; }

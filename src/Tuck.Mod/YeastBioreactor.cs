@@ -5,7 +5,6 @@ using HarmonyLib;
 
 namespace Tuck.Mod;
 
-[HarmonyPatch]
 internal static class YeastBioreactor
 {
     private static Options? _options;

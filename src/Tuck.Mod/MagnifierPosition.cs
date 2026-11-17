@@ -7,7 +7,6 @@ using UnityEngine.UI;
 namespace Tuck.Mod;
 
 /// <summary>Remembers the inspection glass and brings its center on-screen when opening.</summary>
-[HarmonyPatch]
 internal static class MagnifierPosition
 {
     private static Options? _options;

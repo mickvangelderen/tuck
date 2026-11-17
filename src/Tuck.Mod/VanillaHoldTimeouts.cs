@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Tuck.Mod;
 
 // Use each vanilla hold implementation's own cancellation to clear its state and presentation.
-[HarmonyPatch]
 internal static class VanillaHoldTimeouts
 {
     private static Options? _options;

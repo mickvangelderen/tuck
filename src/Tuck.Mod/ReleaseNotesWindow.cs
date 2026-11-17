@@ -1,36 +1,35 @@
 using System;
 using System.Collections;
 using System.IO;
-using HarmonyLib;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 namespace Tuck.Mod;
 
-[HarmonyPatch(typeof(MainMenuUIController), "Start")]
-internal static class ReleaseNotesWindow
+internal sealed class ReleaseNotesWindow : MonoBehaviour
 {
     private const string VersionFile = "acknowledged-release.txt";
-    private static ModManifest? _manifest;
-    private static Options? _options;
-    private static bool _assetsLoaded;
     private static bool _attempted;
-    private static CustomUIWindow? _window;
+    private ModManifest _manifest = null!;
+    private Options _options = null!;
+    private MainMenuUIController _menu = null!;
+    private CustomUIWindow? _window;
 
-    internal static void Register(ModManifest manifest, Options options)
+    internal static ReleaseNotesWindow? Attach(MainMenuUIController menu, ModManifest manifest, Options options)
     {
-        _manifest = manifest;
-        _options = options;
-        ModHook.OnModAssetsLoaded += OnAssetsLoaded;
+        if (_attempted) return null;
+        var component = menu.gameObject.AddComponent<ReleaseNotesWindow>();
+        component._menu = menu;
+        component._manifest = manifest;
+        component._options = options;
+        return component;
     }
 
-    internal static void Unregister()
+    private void OnDisable()
     {
-        ModHook.OnModAssetsLoaded -= OnAssetsLoaded;
-        _manifest = null;
-        _options = null;
-        _assetsLoaded = false;
+        StopAllCoroutines();
         if (_window != null)
         {
             // Disabling the mod is not an acknowledgement from the player.
@@ -40,35 +39,23 @@ internal static class ReleaseNotesWindow
         }
     }
 
-    private static void OnAssetsLoaded(LoadedMod mod)
+    private IEnumerator Start()
     {
-        if (mod.Manifest.ID == _manifest?.ID) _assetsLoaded = true;
-    }
-
-    [HarmonyPostfix]
-    internal static void AfterMenuStart(MainMenuUIController __instance, ref IEnumerator __result)
-    {
-        if (_manifest != null && !_attempted) __result = AfterMenuReady(__result, __instance);
-    }
-
-    private static IEnumerator AfterMenuReady(IEnumerator startup, MainMenuUIController menu)
-    {
-        // Start waits for vanilla localization and decides whether to show the welcome screen.
-        yield return startup;
-        while (_manifest != null && !_attempted)
-        {
-            if (_assetsLoaded && CustomUIManager.Instance != null
-                && (menu.welcomePanel == null || !menu.welcomePanel.activeInHierarchy))
-            {
-                _attempted = true;
-                ShowNotes(_manifest, _options!);
-                yield break;
-            }
+        yield return LocalizationSettings.InitializationOperation;
+        var locale = LocalizationSettings.AvailableLocales.GetLocale(LocHelper.ResolveStartupLocale())
+            ?? LocalizationSettings.AvailableLocales.GetLocale("en");
+        // Vanilla applies its saved choice in a separate coroutine after localization first initializes.
+        while (LocalizationSettings.SelectedLocale != locale) yield return null;
+        yield return LocalizationSettings.InitializationOperation;
+        // Let the menu finish deciding whether to show its welcome panel, even when the locale was unchanged.
+        yield return null;
+        while (CustomUIManager.Instance == null || (_menu.welcomePanel != null && _menu.welcomePanel.activeInHierarchy))
             yield return null;
-        }
+        _attempted = true;
+        ShowNotes(_manifest, _options);
     }
 
-    private static void ShowNotes(ModManifest manifest, Options options)
+    private void ShowNotes(ModManifest manifest, Options options)
     {
         bool development = ReleaseNotes.IsDevelopment;
         string? acknowledged = null;

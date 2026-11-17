@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Tuck.Mod;
 
 /// <summary>Optionally travels as soon as a night activity is selected.</summary>
-[HarmonyPatch(typeof(TransitUI))]
 internal sealed class NightActivitySelection
 {
     // Harmony callbacks are static; forward them only while this feature is registered.
@@ -34,14 +33,14 @@ internal sealed class NightActivitySelection
         else if (TransitUI.Root != null) HideTravelButton(TransitUI.Root.GetComponent<TransitFrame>());
     }
 
-    [HarmonyPostfix, HarmonyPatch(nameof(TransitUI.Open))]
+    [HarmonyPostfix, HarmonyPatch(typeof(TransitUI), nameof(TransitUI.Open))]
     internal static void OnOpened(TransitFrame ___frame)
     {
         if (_active?._options.OneClickNightActivities.Value != true || ___frame == null) return;
         _active.HideTravelButton(___frame);
     }
 
-    [HarmonyPostfix, HarmonyPatch(nameof(TransitUI.Select))]
+    [HarmonyPostfix, HarmonyPatch(typeof(TransitUI), nameof(TransitUI.Select))]
     internal static void OnSelected(AfterhourLocation location, AfterhourLocation? ___selected, TransitFrame ___frame)
     {
         if (_active?._options.OneClickNightActivities.Value != true || location == null || ___selected != location) return;

@@ -4,7 +4,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Returns the selected backpack to its previous placement when that space is still available.</summary>
-[HarmonyPatch]
 internal static class BackpackReturn
 {
     private static Options? _options;

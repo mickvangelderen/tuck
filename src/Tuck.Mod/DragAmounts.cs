@@ -6,7 +6,6 @@ using UnityEngine;
 namespace Tuck.Mod;
 
 /// <summary>Temporarily expands a drag using the game's rectangular-selection handler.</summary>
-[HarmonyPatch]
 internal static partial class DragAmounts
 {
     private static Options? _options;

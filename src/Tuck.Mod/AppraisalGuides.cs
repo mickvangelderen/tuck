@@ -6,7 +6,6 @@ using HarmonyLib;
 namespace Tuck.Mod;
 
 /// <summary>Reads owned reference documents when an item is inspected.</summary>
-[HarmonyPatch]
 internal static class AppraisalGuides
 {
     private static Options? _options;
