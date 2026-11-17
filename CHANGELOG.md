@@ -21,6 +21,12 @@ links at the bottom once the corresponding Git tags exist.
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-11-16
+
+- Fixed a translation issue where localization was applied before the user's preferred language was set
+- Improved the appraisal UI by coloring the backgrounds instead of the text and rescaling the estimate field to match the send button.
+- Build against 100-Rev15 (1.0.0.15).
+
 ## [1.4.0] - 2026-11-15
 
 - Tuck now properly Packs machines into machine bays.
