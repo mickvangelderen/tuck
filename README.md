@@ -28,13 +28,13 @@ Various warning icons for things that require your attention! Less opening of co
 
 ![Warning legend](./media/warning-grid.webp)
 
-![Warning in-gaem](./media/warning-overlays.webp)
+![Warning in-game](./media/warning-overlays.webp)
 
 ### Better appraisal UI
 
-Adds +50 and -50, rearranges for convenience.
+Adds +50 and -50, ergonomic layout.
 
-![Improved appraisal UI](./media/appraisal-ui.gif)
+![Improved appraisal UI](./media/appraisal-ui.png)
 
 ### Auto open appraisal guides
 
