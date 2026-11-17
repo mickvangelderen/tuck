@@ -29,8 +29,7 @@ $Repository = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, $Reposito
 $WorktreePath = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, $WorktreePath))
 $PropsPath = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, $PropsPath))
 if ($GameDir) { $GameDir = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, $GameDir)) }
-if (-not $Revision) { $Installed = $true }
-if ($Push -and -not $Installed) { throw 'Use -Installed -Push to publish an import.' }
+if (-not $Revision -and -not $Push) { $Installed = $true }
 if (-not [IO.Directory]::Exists($Repository)) { throw "Bare game repository not found: $Repository. Use git clone --bare or git init --bare first." }
 function Resolve-GameSelection([string]$Reference) {
     $location = if ($hasWorktree) { $WorktreePath } else { $Repository }
@@ -57,6 +56,19 @@ while ($true) {
     }
 }
 try {
+    $hasWorktree = $false
+    $null = Resolve-GameSelection 'HEAD'
+    $excludePath = Join-Path $Repository 'info/exclude'
+    $excludes = if ([IO.File]::Exists($excludePath)) { [IO.File]::ReadAllLines($excludePath) } else { @() }
+    $missingExcludes = @('/src/**/bin/', '/src/**/obj/') | Where-Object { $_ -notin $excludes }
+    if ($missingExcludes) {
+        [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($excludePath)) | Out-Null
+        [IO.File]::AppendAllText($excludePath, "`n" + ($missingExcludes -join "`n") + "`n")
+    }
+    if ($Push -and -not $Installed) {
+        Invoke-GameGit $Repository @('push', '--atomic', 'origin', 'refs/heads/*:refs/heads/*', '+refs/tags/*:refs/tags/*') | Out-Null
+        return
+    }
     $hasWorktree = [IO.Directory]::Exists($WorktreePath)
     if ($hasWorktree -and -not [IO.File]::Exists((Join-Path $WorktreePath '.git'))) {
         throw "Worktree path already exists and is not a linked Git worktree: $WorktreePath"
@@ -76,8 +88,9 @@ try {
         if (-not $Installed -and $Revision -ne $snapshot.'display-version' -and $Revision -ne $snapshot.'unity-version') {
             throw "Requested '$Revision', but the installed game is $($snapshot.'display-version') / $($snapshot.'unity-version')."
         }
-        $commit = Import-GameSnapshot $Repository (Join-Path $GameDir 'Probably Stolen_Data/Managed') $snapshot -Unsigned:$Unsigned
-        if ($Push) {
+        $created = $false
+        $commit = Import-GameSnapshot $Repository (Join-Path $GameDir 'Probably Stolen_Data/Managed') $snapshot -Unsigned:$Unsigned -Created ([ref]$created)
+        if ($created -and ($Push -or (Invoke-GameGit $Repository @('config', '--get', 'remote.origin.url') -AllowFailure))) {
             $branch = 'refs/heads/' + $snapshot.'unity-version'
             $refs = @('push', '--atomic', 'origin', "${branch}:${branch}")
             foreach ($label in @($snapshot.'display-version', $snapshot.'unity-version' | Select-Object -Unique)) {
@@ -85,6 +98,8 @@ try {
             }
             Invoke-GameGit $Repository $refs | Out-Null
         }
+        elseif ($created) { Write-Host 'New snapshot cached locally; no origin is configured.' }
+        else { Write-Host 'Snapshot unchanged; nothing to commit or push.' }
     }
 
     if ($hasWorktree) {

@@ -69,8 +69,10 @@ function Import-GameSnapshot(
         Write-Host 'Decompiling Assembly-CSharp.dll...'
         dotnet tool execute ilspycmd@11.2.0.10050 -- -p --disable-updatecheck -r $Lib -o $Src "$Lib/Assembly-CSharp.dll"
         if ($LASTEXITCODE -ne 0) { throw 'Decompilation failed.' }
-    }
+    },
+    [ref]$Created
 ) {
+    if ($Created) { $Created.Value = $false }
     $labels = @($Snapshot.'display-version', $Snapshot.'unity-version' | Select-Object -Unique)
     foreach ($label in $labels) { Invoke-GameGit $Repository @('check-ref-format', "refs/tags/$label") | Out-Null }
     $branch = 'refs/heads/' + $Snapshot.'unity-version'
@@ -139,6 +141,7 @@ function Import-GameSnapshot(
             if ($parent) { $arguments += @('-p', $parent) }
             $arguments += @('-m', "Import $($Snapshot.'display-version') (Unity $($Snapshot.'unity-version'))")
             $commit = Invoke-GameGit $Repository $arguments
+            if ($Created) { $Created.Value = $true }
         }
         $expected = if ($local) { $local } else { '0' * 40 }
         # Retain the commit on its branch before moving the convenience tags.

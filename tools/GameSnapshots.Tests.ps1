@@ -45,8 +45,10 @@ $fetch = "$mod/fetch.ps1"
 try {
     Initialize-Repository $repository
     Set-Dll 'A'
-    $first = Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile
+    $created = $false
+    $first = Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile -Created ([ref]$created)
     Assert ($first -match '\A[0-9a-f]{40}\z') 'Import did not return a commit.'
+    Assert $created 'New import was not reported as a new commit.'
     # Existing snapshots may have been written by another serializer or on another OS.
     $legacy = Join-Path $testRoot 'legacy-format'
     Invoke-GameGit $repository @('worktree', 'add', '--quiet', '--detach', $legacy, $first) | Out-Null
@@ -59,7 +61,8 @@ try {
         Invoke-GameGit $repository @('update-ref', $reference, $first) | Out-Null
     }
     Invoke-GameGit $repository @('worktree', 'remove', '--force', $legacy) | Out-Null
-    Assert ((Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile) -eq $first) 'Unchanged import created a new commit.'
+    Assert ((Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile -Created ([ref]$created)) -eq $first) 'Unchanged import created a new commit.'
+    Assert (-not $created) 'Unchanged import was reported as a new commit.'
     Assert ($counter.Count -eq 1) 'Unchanged import decompiled again.'
     Set-Dll 'B'
     $second = Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile
@@ -92,15 +95,20 @@ try {
 
     # A restore repairs edits and removes generated/ignored files without moving an attached branch.
     Invoke-GameGit $worktree @('switch', '--quiet', '-c', 'user-branch', $first) | Out-Null
-    [IO.File]::WriteAllText("$repository/info/exclude", "generated/`n")
+    [IO.File]::AppendAllText("$repository/info/exclude", "generated/`n")
     [IO.Directory]::CreateDirectory("$worktree/generated") | Out-Null
     [IO.Directory]::CreateDirectory("$worktree/src/obj") | Out-Null
+    [IO.Directory]::CreateDirectory("$worktree/src/bin") | Out-Null
     [IO.File]::WriteAllText("$worktree/generated/cache", 'ignored')
     [IO.File]::WriteAllText("$worktree/src/obj/project.assets.json", 'editor output')
+    [IO.File]::WriteAllText("$worktree/src/bin/Assembly-CSharp.dll", 'build output')
+    foreach ($generated in @('src/obj/project.assets.json', 'src/bin/Assembly-CSharp.dll', 'generated/cache')) {
+        Assert ((Invoke-GameGit $worktree @('check-ignore', '--', $generated)) -eq $generated) "Generated file $generated is not ignored."
+    }
     [IO.File]::WriteAllText("$worktree/lib/Assembly-CSharp.dll", 'edited')
     & $fetch
     Assert ([IO.File]::ReadAllText("$worktree/lib/Assembly-CSharp.dll") -eq 'A') 'Fetch did not restore the DLL.'
-    Assert (-not [IO.Directory]::Exists("$worktree/generated") -and -not [IO.Directory]::Exists("$worktree/src/obj")) 'Fetch did not clean generated files.'
+    Assert (-not [IO.Directory]::Exists("$worktree/generated") -and -not [IO.Directory]::Exists("$worktree/src/obj") -and -not [IO.Directory]::Exists("$worktree/src/bin")) 'Fetch did not clean generated files.'
     Assert ((Invoke-GameGit $repository @('rev-parse', 'refs/heads/user-branch')) -eq $first) 'Restore moved an attached branch.'
     Assert ($null -eq (Invoke-GameGit $worktree @('symbolic-ref', '-q', 'HEAD') -AllowFailure)) 'Restore left HEAD attached.'
 
@@ -128,6 +136,7 @@ try {
     Assert-Fails { & $fetch -Repository "$testRoot/missing" } 'not found'
     Invoke-GameGit $testRoot @('init', '--quiet', "$testRoot/ordinary") | Out-Null
     Assert-Fails { & $fetch -Repository "$testRoot/ordinary" -WorktreePath "$testRoot/not-created" } 'bare repository'
+    Assert-Fails { & $fetch -Repository "$testRoot/ordinary" -Push } 'bare repository'
 
     # Local tags remain local until explicitly refreshed; missing tags trigger a fetch.
     $remote = Join-Path $testRoot 'remote.git'
@@ -165,9 +174,77 @@ try {
     Set-Dll 'C'
     Import-GameSnapshot $repository $libraries (New-Version) -Decompile $decompile | Out-Null
     Invoke-GameGit $repository @('push', '--quiet', 'origin', 'refs/heads/0.46D', '+refs/tags/100-Rev13', '+refs/tags/0.46D') | Out-Null
+    $remoteTip = Invoke-GameGit $remote @('rev-parse', 'refs/heads/0.46D')
+    Assert-Fails { & $fetch -Repository $reader -Push } 'push failed'
+    Assert ((Invoke-GameGit $remote @('rev-parse', 'refs/tags/100-Rev13')) -eq $remoteTip) 'Rejected push changed remote tags.'
     Update-GameRepository $reader
     Assert-Fails { Import-GameSnapshot $reader $libraries (New-Version) -Decompile $decompile } 'histories diverged'
     Assert ((Invoke-GameGit $reader @('rev-parse', 'refs/heads/0.46D')) -eq $readerImport) 'Divergence replaced local history.'
+
+    # Stub only version extraction; exercise the real importer and Git push against local repositories.
+    [IO.File]::AppendAllText("$mod/tools/GameSnapshots.ps1", @'
+
+function Read-InstalledGameSnapshot([string]$Repository, [string]$GameDir) {
+    return Read-GameSnapshot ([IO.File]::ReadAllText((Join-Path $GameDir 'snapshot.json')))
+}
+'@)
+    $game = Join-Path $testRoot 'game'
+    [IO.Directory]::CreateDirectory("$game/Probably Stolen_Data/Managed") | Out-Null
+    [IO.File]::WriteAllText("$game/Probably Stolen.exe", '')
+    [IO.File]::WriteAllText("$game/Probably Stolen_Data/Managed/Assembly-CSharp.dll", 'A')
+    [IO.File]::WriteAllText("$game/snapshot.json", ((New-Version '100-Rev14') | ConvertTo-Json))
+    $pushRepository = Join-Path $testRoot 'push.git'
+    $pushRemote = Join-Path $testRoot 'push-remote.git'
+    Initialize-Repository $pushRepository
+    Initialize-Repository $pushRemote
+    Set-Dll 'A'
+    $seed = Import-GameSnapshot $pushRepository $libraries (New-Version) -Decompile $decompile
+    $pushArgs = @{
+        Repository = $pushRepository
+        WorktreePath = "$testRoot/push-mod/game"
+        PropsPath = "$testRoot/push-mod/game.props"
+        GameDir = $game
+    }
+    & $fetch @pushArgs -Installed
+    $localImport = Invoke-GameGit $pushRepository @('rev-parse', 'refs/heads/0.46D')
+    Assert ($localImport -ne $seed) 'Import without origin did not create a local commit.'
+    Invoke-GameGit $pushRepository @('remote', 'add', 'origin', $pushRemote) | Out-Null
+    [IO.File]::WriteAllText("$game/snapshot.json", ((New-Version '100-Rev15') | ConvertTo-Json))
+    & $fetch @pushArgs -Installed
+    $published = Invoke-GameGit $pushRepository @('rev-parse', 'refs/heads/0.46D')
+    foreach ($reference in @('refs/heads/0.46D', 'refs/tags/100-Rev15', 'refs/tags/0.46D')) {
+        Assert ((Invoke-GameGit $pushRemote @('rev-parse', $reference)) -eq $published) "New import did not automatically push $reference."
+    }
+
+    # Catching up to a known remote commit must not count as creating a new commit.
+    Invoke-GameGit $pushRepository @('update-ref', 'refs/heads/0.46D', $localImport) | Out-Null
+    Invoke-GameGit $pushRepository @('config', 'remote.origin.pushurl', "$testRoot/offline") | Out-Null
+    & $fetch @pushArgs -Installed
+    & $fetch @pushArgs -Installed -Push
+    Assert ((Invoke-GameGit $pushRepository @('rev-parse', 'refs/heads/0.46D')) -eq $published) 'Unchanged import created a commit or failed to catch up.'
+
+    [IO.File]::WriteAllText("$game/snapshot.json", ((New-Version '100-Rev16') | ConvertTo-Json))
+    Assert-Fails { & $fetch @pushArgs -Installed } 'push failed'
+    $pending = Invoke-GameGit $pushRepository @('rev-parse', 'refs/heads/0.46D')
+    Assert ($pending -ne $published) 'Failed push lost the local import.'
+    Assert ((Invoke-GameGit $pushRemote @('rev-parse', 'refs/heads/0.46D')) -eq $published) 'Failed push changed the remote branch.'
+
+    # With no revision, no valid installation, and a broken fetch URL, standalone push still works.
+    [IO.File]::WriteAllText("$mod/game-cache.local.json", '{}')
+    Invoke-GameGit $pushRepository @('remote', 'set-url', 'origin', "$testRoot/offline") | Out-Null
+    Invoke-GameGit $pushRepository @('config', 'remote.origin.pushurl', $pushRemote) | Out-Null
+    $pushArgs.GameDir = "$testRoot/not-installed"
+    $beforeProps = [IO.File]::ReadAllText($pushArgs.PropsPath)
+    $beforeHead = Invoke-GameGit $pushArgs.WorktreePath @('rev-parse', 'HEAD')
+    [IO.File]::WriteAllText("$($pushArgs.WorktreePath)/keep.txt", 'keep')
+    & $fetch @pushArgs -Push
+    foreach ($reference in @('refs/heads/0.46D', 'refs/tags/100-Rev16', 'refs/tags/0.46D')) {
+        Assert ((Invoke-GameGit $pushRemote @('rev-parse', $reference)) -eq $pending) "Standalone push did not publish $reference."
+    }
+    Assert ((Invoke-GameGit $pushRemote @('rev-parse', 'refs/tags/100-Rev14')) -eq $localImport) 'Standalone push missed an older unpublished tag.'
+    Assert ((Invoke-GameGit $pushArgs.WorktreePath @('rev-parse', 'HEAD')) -eq $beforeHead) 'Standalone push changed the selected worktree.'
+    Assert ([IO.File]::ReadAllText($pushArgs.PropsPath) -eq $beforeProps) 'Standalone push changed build properties.'
+    Assert ([IO.File]::Exists("$($pushArgs.WorktreePath)/keep.txt")) 'Standalone push cleaned the worktree.'
     Write-Host "Passed $script:assertions snapshot checks."
 }
 finally {

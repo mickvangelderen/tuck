@@ -36,8 +36,8 @@ All three settings are optional. The two paths above are the defaults; omitting
 `revision` selects the installed game. Optional `gameDir` overrides Steam discovery
 and `propsPath` overrides the generated `GameReferences.local.props` location.
 Paths are relative to the directory containing `fetch.ps1`, even when called from
-elsewhere. Command-line arguments override the config file. Import/push/signing
-switches remain explicit command-line choices.
+elsewhere. Command-line arguments override the config file. New imports are pushed
+automatically when `origin` is configured; unchanged imports do not push.
 
 ```powershell
 # Use the saved configuration.
@@ -48,10 +48,10 @@ switches remain explicit command-line choices.
 # Explicitly refresh existing tags from origin.
 .\fetch.ps1 -Refresh
 
-# Compare the installed game's actual DLLs, even when its labels already exist.
+# Import the installed game; push automatically if a new commit is created.
 .\fetch.ps1 -Installed
-# Import and publish the branch and both tags atomically.
-.\fetch.ps1 -Installed -Push
+# Publish all existing local branches and tags without fetching or importing.
+.\fetch.ps1 -Push
 
 dotnet build Tuck.slnx
 dotnet test Tuck.slnx
@@ -64,14 +64,22 @@ dotnet test Tuck.slnx
 imported from the installation only when it matches one of that game's labels;
 a missing commit ID or mismatched tag is an error. Import respects Git's signing
 configuration; `-Unsigned` explicitly disables signing for that import. Imports
-are committed directly to the bare repository. `-Installed -Push` also publishes
-the branch and both tags to its `origin`, if configured.
+are committed directly to the bare repository. When an import creates a new commit
+and `origin` is configured, its branch and both version tags are pushed atomically.
+An unchanged import never pushes, including with `-Installed -Push`.
+Without `origin`, imports remain local. If a push fails, the local commit is retained;
+retry with `-Push` to publish all local branches and tags without fetching, reading
+the installed game, or changing the selected worktree and build properties. This
+standalone push ignores the configured revision and requires `origin`. Branches
+must fast-forward; version tags may move.
 
 All mods using the same bare repository share its Git objects and committed
 decompiled sources. Each mod has its own worktree, so they can select different
 versions. Fetch updates that worktree in place when switching versions; finish
 active builds first. Fetch discards local edits and generated files in its worktree,
 restoring the selected snapshot. It refuses to overwrite unrelated directories.
+Fetch also maintains local ignore rules for `src/**/bin/` and `src/**/obj/`, so
+editor and build output does not appear as pending cache changes.
 Available local snapshots, including tags, are selected without a remote refresh
 or starting .NET. Fetch contacts `origin` when the requested revision is missing,
 when importing an installation, or with `-Refresh`. To pick up a moved remote tag,
